@@ -12,6 +12,7 @@ import { subscriptionStatus } from '../../utils/subscription';
 import Sk from '../../components/shared/Skeleton';
 import AppointmentDetailModal from '../../components/shared/AppointmentDetailModal';
 import './Dashboard.css';
+import { t, statusLabel } from '../../i18n';
 
 // Trial/expiry warnings only start mattering this close to the deadline —
 // no point nagging an owner with 25 days still left on their trial.
@@ -106,9 +107,9 @@ export default function Dashboard() {
     try {
       await update(business.id, { requiresAdvancePayment: next });
       setBusiness(b => ({ ...b, requiresAdvancePayment: next }));
-      toast.success(next ? 'Advance payment required.' : 'Advance payment turned off.');
+      toast.success(next ? t('Advance payment required.') : t('Advance payment turned off.'));
     } catch {
-      toast.error('Could not update. Try again.');
+      toast.error(t('Could not update. Try again.'));
     } finally {
       setTogglingPayment(false);
     }
@@ -139,8 +140,8 @@ export default function Dashboard() {
       <div className="admin-layout page">
         <div className="container">
           <div className="empty-state">
-            <p>No business found for your account.</p>
-            <Link to="/admin/register" className="btn btn-primary">Register Business</Link>
+            <p>{t('No clinic found for your account.')}</p>
+            <Link to="/admin/register" className="btn btn-primary">{t('Register Clinic')}</Link>
           </div>
         </div>
       </div>
@@ -153,12 +154,11 @@ export default function Dashboard() {
         <div className="container">
           <div className="empty-state">
             <Clock size={36} />
-            <p>"{business.name}" is waiting for approval.</p>
+            <p>{t('"{name}" is waiting for approval.', { name: business.name })}</p>
             <p className="text-muted">
               {/* A Qunjee SuperAdmin needs to review and approve your registration before customers */}
-              The Naqatar team needs to review and approve your registration before customers
-              can find or book with you. You can still set up your profile, services and menu in
-              the meantime — <Link to="/admin/profile">go to Profile</Link>.
+              {t('The Naqatar team needs to review and approve your registration before customers can find or book with you. You can still set up your profile and services in the meantime —')}{' '}
+              <Link to="/admin/profile">{t('go to Profile')}</Link>.
             </p>
           </div>
         </div>
@@ -175,11 +175,11 @@ export default function Dashboard() {
       <div className="container">
         <div className="dashboard-header">
           <div>
-            <h1>Dashboard</h1>
+            <h1>{t('Dashboard')}</h1>
             <p className="text-muted">{business?.name} · {format(new Date(), 'EEEE, d MMMM yyyy')}</p>
           </div>
           <Link to="/admin/services" className="btn btn-primary btn-sm">
-            <Plus size={16} /> {['hotel', 'nayasaa', 'beachhuts'].includes(business?.type) ? 'Add Room Type' : 'Add Service'}
+            <Plus size={16} /> {['hotel', 'nayasaa', 'beachhuts'].includes(business?.type) ? 'Add Room Type' : t('Add Service')}
           </Link>
         </div>
 
@@ -194,16 +194,16 @@ export default function Dashboard() {
                 <div>
                   <p className="needs-review-title">
                     {!subStatus.active
-                      ? 'Your account is suspended — new bookings are paused'
+                      ? t('Your account is suspended — new bookings are paused')
                       : subStatus.kind === 'trial'
-                        ? `Your free trial ends in ${Math.max(daysLeft, 0)} day${daysLeft === 1 ? '' : 's'}`
-                        : `Your subscription ends in ${Math.max(daysLeft, 0)} day${daysLeft === 1 ? '' : 's'}`}
+                        ? t(daysLeft === 1 ? 'Your free trial ends in {n} day' : 'Your free trial ends in {n} days', { n: Math.max(daysLeft, 0) })
+                        : t(daysLeft === 1 ? 'Your subscription ends in {n} day' : 'Your subscription ends in {n} days', { n: Math.max(daysLeft, 0) })}
                   </p>
                   <p className="text-muted needs-review-sub">
                     {!subStatus.active
-                      ? 'Existing bookings and your profile are unaffected — only new customer bookings are on hold.'
+                      ? t('Existing bookings and your profile are unaffected — only new customer bookings are on hold.')
                       // : 'Contact the Qunjee team to continue after this date.'}
-                      : 'Contact the Naqatar team to continue after this date.'}
+                      : t('Contact the Naqatar team to continue after this date.')}
                   </p>
                 </div>
               </div>
@@ -220,17 +220,17 @@ export default function Dashboard() {
                 <AlertCircle size={20} />
                 <div>
                   <p className="needs-review-title">
-                    {needsReviewCount} awaiting payment review
+                    {t('{n} awaiting payment review', { n: needsReviewCount })}
                   </p>
                   <p className="text-muted needs-review-sub">
-                    Customers uploaded a payment screenshot — verify it before confirming.
+                    {t('Customers uploaded a payment screenshot — verify it before confirming.')}
                   </p>
                 </div>
               </div>
               <div className="needs-review-actions">
                 {reviewAppts.length > 0 && (
                   <Link to="/admin/appointments" className="btn btn-primary btn-sm">
-                    Bookings ({reviewAppts.length})
+                    {t('Bookings ({n})', { n: reviewAppts.length })}
                   </Link>
                 )}
                 {reviewOrders.length > 0 && (
@@ -282,7 +282,7 @@ export default function Dashboard() {
               <div className="stat-icon">{s.icon}</div>
               <div>
                 <p className="stat-value">{s.value}</p>
-                <p className="stat-label">{s.label} Appointments</p>
+                <p className="stat-label">{t("{label} Appointments", { label: t(s.label) })}</p>
               </div>
             </div>
           ))}
@@ -291,26 +291,26 @@ export default function Dashboard() {
         {/* Recent appointments */}
         <div className="dashboard-section">
           <div className="dashboard-section-header">
-            <h2>Recent Appointments</h2>
+            <h2>{t('Recent Appointments')}</h2>
             <Link to="/admin/appointments" className="view-all-link">
-              View All <ArrowRight size={14} />
+              {t('View All')} <ArrowRight size={14} />
             </Link>
           </div>
 
           {appointments.length === 0 ? (
             <div className="empty-state">
               <CalendarCheck size={36} />
-              <p>No appointments yet.</p>
+              <p>{t('No appointments yet.')}</p>
             </div>
           ) : (
             <div className="appt-table card">
               <table>
                 <thead>
                   <tr>
-                    <th>Customer</th>
-                    <th>Service</th>
-                    <th>Date & Time</th>
-                    <th>Status</th>
+                    <th>{t('Customer')}</th>
+                    <th>{t('Service')}</th>
+                    <th>{t('Date & Time')}</th>
+                    <th>{t('Status')}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -326,11 +326,11 @@ export default function Dashboard() {
                         <p>{a.date}</p>
                         <p className="customer-contact">{formatTime12h(a.time)}</p>
                       </td>
-                      <td><span className={`badge badge-${a.status}`}>{a.status}</span></td>
+                      <td><span className={`badge badge-${a.status}`}>{statusLabel(a.status)}</span></td>
                       <td>
                         <div className="recent-appt-actions">
-                          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setViewAppt(a)}>View</button>
-                          <Link to="/admin/appointments" className="btn btn-ghost btn-sm">Manage</Link>
+                          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setViewAppt(a)}>{t('View')}</button>
+                          <Link to="/admin/appointments" className="btn btn-ghost btn-sm">{t('Manage')}</Link>
                         </div>
                       </td>
                     </tr>

@@ -9,6 +9,7 @@ import { useServices } from '../../hooks/useServices';
 import LogoCropModal from '../../components/shared/LogoCropModal';
 import Sk from '../../components/shared/Skeleton';
 import './ServicesPage.css';
+import { t } from '../../i18n';
 
 const EMPTY_FORM = { name: '', description: '', duration: 30, price: '', image: null, totalRooms: 1 };
 
@@ -102,30 +103,30 @@ export default function ServicesPage() {
         : { ...form, duration: Number(form.duration), price: form.price ? Number(form.price) : null };
       if (editId) await update(editId, data);
       else await create(data);
-      toast.success(editId ? 'Service updated.' : 'Service added.');
+      toast.success(editId ? t('Service updated.') : t('Service added.'));
       closeForm();
     } catch {
-      toast.error('Failed to save service.');
+      toast.error(t('Failed to save service.'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this service?')) return;
+    if (!confirm(t('Delete this service?'))) return;
     const svc = services.find(s => s.id === id);
     await remove(id);
     await tryDeleteImage(svc?.image);
-    toast.success('Service deleted.');
+    toast.success(t('Service deleted.'));
   };
 
   return (
     <div className="admin-layout page">
       <div className="container">
         <div className="services-header">
-          <h1>{POOL_TYPE_LABELS[businessType]?.heading || 'Services'}</h1>
+          <h1>{POOL_TYPE_LABELS[businessType]?.heading || t('Services')}</h1>
           <button className="btn btn-primary" onClick={openNew}>
-            <Plus size={16} /> {POOL_TYPE_LABELS[businessType]?.addLabel || 'Add Service'}
+            <Plus size={16} /> {POOL_TYPE_LABELS[businessType]?.addLabel || t('Add Service')}
           </button>
         </div>
 
@@ -134,33 +135,33 @@ export default function ServicesPage() {
           <div className="service-form card fade-up">
             <div className="card-header">
               <h3>{editId
-                ? (POOL_TYPE_LABELS[businessType]?.editLabel || 'Edit Service')
-                : (POOL_TYPE_LABELS[businessType]?.newLabel || 'New Service')}</h3>
+                ? (POOL_TYPE_LABELS[businessType]?.editLabel || t('Edit Service'))
+                : (POOL_TYPE_LABELS[businessType]?.newLabel || t('New Service'))}</h3>
               <button className="btn btn-ghost btn-sm" onClick={closeForm}><X size={16} /></button>
             </div>
             <form onSubmit={handleSave} className="card-body">
               <div className="form-group">
-                <label className="form-label">Photo</label>
+                <label className="form-label">{t('Photo')}</label>
                 <div className="logo-upload-row">
                   {form.image
                     ? <img src={form.image} alt="Service" className="service-thumb service-thumb-lg" />
                     : <div className="service-thumb service-thumb-lg service-thumb-placeholder"><User size={22} /></div>
                   }
                   <label className="btn btn-ghost btn-sm">
-                    <ImagePlus size={15} /> {form.image ? 'Change Photo' : 'Upload Photo'}
+                    <ImagePlus size={15} /> {form.image ? t('Change Photo') : t('Upload Photo')}
                     <input type="file" accept="image/*" hidden onChange={handleImageFileChange} />
                   </label>
                   {form.image && (
                     <button type="button" className="btn btn-ghost btn-sm" onClick={handleRemoveImage}>
-                      <X size={15} /> Remove
+                      <X size={15} /> {t('Remove')}
                     </button>
                   )}
                 </div>
               </div>
               <div className="form-row-2">
                 <div className="form-group">
-                  <label className="form-label">{POOL_TYPE_LABELS[businessType]?.nameLabel || 'Service Name *'}</label>
-                  <input className="form-control" placeholder={(SERVICE_HINTS[businessType] || SERVICE_HINTS.default).name}
+                  <label className="form-label">{POOL_TYPE_LABELS[businessType]?.nameLabel || t('Service Name *')}</label>
+                  <input className="form-control" placeholder={t((SERVICE_HINTS[businessType] || SERVICE_HINTS.default).name)}
                     value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
                 </div>
                 {POOL_BOOKING_TYPES.includes(businessType) ? (
@@ -171,7 +172,7 @@ export default function ServicesPage() {
                   </div>
                 ) : (
                   <div className="form-group">
-                    <label className="form-label">Duration (minutes) *</label>
+                    <label className="form-label">{t('Duration (minutes) *')}</label>
                     <div className="input-icon-wrap">
                       <Clock size={16} className="input-icon" />
                       <input className="form-control input-with-icon" type="number" min={5} max={480}
@@ -182,7 +183,7 @@ export default function ServicesPage() {
               </div>
               <div className="form-row-2">
                 <div className="form-group">
-                  <label className="form-label">{POOL_TYPE_LABELS[businessType]?.priceLabel || 'Price (PKR)'}</label>
+                  <label className="form-label">{POOL_TYPE_LABELS[businessType]?.priceLabel || t('Price (PKR)')}</label>
                   <div className="input-icon-wrap">
                     <DollarSign size={16} className="input-icon" />
                     <input className="form-control input-with-icon" type="number" min={0} placeholder="0"
@@ -190,16 +191,16 @@ export default function ServicesPage() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Description</label>
-                  <input className="form-control" maxLength={150} placeholder={(SERVICE_HINTS[businessType] || SERVICE_HINTS.default).desc}
+                  <label className="form-label">{t('Description')}</label>
+                  <input className="form-control" maxLength={150} placeholder={t((SERVICE_HINTS[businessType] || SERVICE_HINTS.default).desc)}
                     value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
                   <p className="form-hint" style={{ textAlign: 'right', margin: '0.25rem 0 0' }}>{form.description.length}/150</p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button type="button" className="btn btn-ghost" onClick={closeForm}>Cancel</button>
+                <button type="button" className="btn btn-ghost" onClick={closeForm}>{t('Cancel')}</button>
                 <button type="submit" className="btn btn-primary" disabled={saving}>
-                  <Save size={16} /> {saving ? 'Saving…' : (POOL_TYPE_LABELS[businessType]?.saveLabel || 'Save Service')}
+                  <Save size={16} /> {saving ? t('Saving…') : (POOL_TYPE_LABELS[businessType]?.saveLabel || t('Save Service'))}
                 </button>
               </div>
             </form>
@@ -230,7 +231,7 @@ export default function ServicesPage() {
           </div>
         ) : services.length === 0 ? (
           <div className="empty-state">
-            <p>{POOL_TYPE_LABELS[businessType]?.emptyLabel || 'No services yet. Add your first one!'}</p>
+            <p>{POOL_TYPE_LABELS[businessType]?.emptyLabel || t('No services yet. Add your first one!')}</p>
           </div>
         ) : (
           <div className="services-list">
@@ -247,14 +248,14 @@ export default function ServicesPage() {
                     <div className="service-item-meta">
                       {POOL_BOOKING_TYPES.includes(businessType)
                         ? <span>{s.totalRooms || 1} {POOL_TYPE_LABELS[businessType].unitSuffix}{(s.totalRooms || 1) > 1 ? 's' : ''}</span>
-                        : <span><Clock size={12} /> {s.duration} min</span>
+                        : <span><Clock size={12} /> {t('{n} min', { n: s.duration })}</span>
                       }
                       {s.price && <span>PKR {Number(s.price).toLocaleString()}{POOL_TYPE_LABELS[businessType]?.priceUnit || ''}</span>}
                     </div>
                   </div>
                   <div className="service-item-actions">
                     <button className="btn btn-ghost btn-sm" onClick={() => openEdit(s)}>
-                      <Edit2 size={14} /> Edit
+                      <Edit2 size={14} /> {t('Edit')}
                     </button>
                     <button className="btn btn-danger btn-sm" onClick={() => handleDelete(s.id)}>
                       <Trash2 size={14} />
@@ -270,8 +271,8 @@ export default function ServicesPage() {
       {cropSrc && (
         <LogoCropModal
           imageSrc={cropSrc}
-          title="Crop Photo"
-          saveLabel="Save Photo"
+          title={t('Crop Photo')}
+          saveLabel={t('Save Photo')}
           onCancel={() => setCropSrc(null)}
           onSave={handleImageCropSave}
         />

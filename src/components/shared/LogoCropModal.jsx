@@ -3,11 +3,12 @@ import Cropper from 'react-easy-crop';
 import { X, RotateCw, ZoomIn } from 'lucide-react';
 import { getCroppedImageBlob } from '../../utils/cropImage';
 import './LogoCropModal.css';
+import { t } from '../../i18n';
 
 // Default 1:1 output — reused for business logos and menu-item photos so both
 // render consistently wherever they're shown, regardless of what was uploaded.
 // `aspect` can be overridden (e.g. ad banners use a wide 1600:534 ratio).
-export default function LogoCropModal({ imageSrc, onCancel, onSave, title = 'Crop Logo', saveLabel = 'Save Logo', aspect = 1, mimeType = 'image/jpeg' }) {
+export default function LogoCropModal({ imageSrc, onCancel, onSave, title = t('Crop Logo'), saveLabel = t('Save Logo'), aspect = 1, mimeType = 'image/jpeg' }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -60,7 +61,7 @@ export default function LogoCropModal({ imageSrc, onCancel, onSave, title = 'Cro
         </div>
 
         <div className="logo-crop-actions">
-          <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={saving}>Cancel</button>
+          <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={saving}>{t('Cancel')}</button>
           <button type="button" className="btn btn-primary" onClick={handleSave} disabled={saving || !croppedAreaPixels}>
             {saving ? 'Saving…' : saveLabel}
           </button>

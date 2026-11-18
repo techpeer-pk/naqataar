@@ -123,7 +123,7 @@ export default function LoginPage() {
               {t('Continue with Google')}
             </button>
 
-            <div className="auth-divider"><span>or</span></div>
+            <div className="auth-divider"><span>{t('or')}</span></div>
           </>
         )}
 

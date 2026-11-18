@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import PWAInstallGuideModal from './PWAInstallGuideModal';
 import './InstallAppButton.css';
+import { t } from '../../i18n';
 
 export default function InstallAppButton({ className = '' }) {
   const { installPrompt, isIOS, isIOSNonSafari, isInstalled, promptInstall } = usePWAInstall();
@@ -30,7 +31,7 @@ export default function InstallAppButton({ className = '' }) {
   return (
     <>
       <button type="button" className={`install-app-btn ${className}`} onClick={handleClick}>
-        <Download size={14} /> Install App
+        <Download size={14} /> {t('Install App')}
       </button>
       {showGuide && <PWAInstallGuideModal onClose={() => setShowGuide(false)} />}
     </>

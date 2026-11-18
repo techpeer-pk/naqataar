@@ -6,6 +6,7 @@ import { invoiceRef } from '../../utils/format';
 import Sk from '../../components/shared/Skeleton';
 import InvoiceDetailModal from '../../components/shared/InvoiceDetailModal';
 import './AppointmentsPage.css';
+import { t } from '../../i18n';
 
 function toMillis(ts) {
   if (!ts) return 0;
@@ -44,17 +45,17 @@ export default function InvoicesPage() {
       <div className="container">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
           <Receipt size={24} color="var(--primary)" />
-          <h1>Invoices</h1>
+          <h1>{t('Invoices')}</h1>
         </div>
 
         {invoices.length === 0 ? (
           <div className="empty-state">
-            <p>No invoices yet.</p>
+            <p>{t('No invoices yet.')}</p>
           </div>
         ) : (
           <div className="appt-table card">
             <table>
-              <thead><tr><th>Invoice #</th><th>Amount</th><th>Period</th><th>Issued</th></tr></thead>
+              <thead><tr><th>{t('Invoice #')}</th><th>{t('Amount')}</th><th>{t('Period')}</th><th>{t('Issued')}</th></tr></thead>
               <tbody>
                 {invoices.map(inv => (
                   <tr key={inv.id} style={{ cursor: 'pointer' }} onClick={() => setDetailInvoice(inv)}>

@@ -77,3 +77,20 @@ The emulator starts empty each time it starts. Run `npm run seed` again after ev
 - Cloud Functions are not emulated: push notifications and auto-cancel don't run locally.
 - FCM push needs the real project, so it doesn't run against the emulator.
 - EmailJS sends real emails if its keys are set in `.env.local`. Leave them empty for local work.
+
+## UI language (Hinglish)
+
+All UI text goes through `t()` from `src/i18n`. The English source text is the key,
+and `src/i18n/hinglish.js` holds the Hinglish translation.
+
+```jsx
+import { t } from '../../i18n';
+<button>{t('Book Appointment')}</button>        // → "Appointment Book Karein"
+t('{n} min', { n: 30 })                          // → "30 min"
+```
+
+- A missing key renders in English, so the UI never breaks.
+- `npm run i18n:check` lists any literal `t('…')` key missing from the dictionary.
+- Never name a local variable `t`: it shadows the helper (e.g. `toast((t) => …)`).
+- English is kept for: day and month names (date-fns), export column headers,
+  the invoice document, and iPhone button names in the install guide.

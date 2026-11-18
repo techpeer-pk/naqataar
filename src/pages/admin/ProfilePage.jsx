@@ -21,10 +21,10 @@ const PRICE_MAX = 10000000; // PKR
 
 /** Basic-information checks — returns the first problem or ''. */
 function basicInfoError(form, isPoolType) {
-  if (!isValidBusinessName(form.name)) return `Business name must be 2–${BUSINESS_NAME_MAX} characters.`;
-  if ((form.address || '').trim().length > ADDRESS_MAX) return `Address can be at most ${ADDRESS_MAX} characters.`;
-  if ((form.description || '').length > DESCRIPTION_MAX) return `Description can be at most ${DESCRIPTION_MAX} characters.`;
-  if (!isValidLocalPhoneDigits(form.phone)) return `Enter a valid ${PH_LOCAL_PHONE_LEN}-digit phone number after +92 (e.g. 3001234567).`;
+  if (!isValidBusinessName(form.name)) return t('Clinic name must be 2–{max} characters.', { max: BUSINESS_NAME_MAX });
+  if ((form.address || '').trim().length > ADDRESS_MAX) return t('Address can be at most {max} characters.', { max: ADDRESS_MAX });
+  if ((form.description || '').length > DESCRIPTION_MAX) return t('Description can be at most {max} characters.', { max: DESCRIPTION_MAX });
+  if (!isValidLocalPhoneDigits(form.phone)) return t('Enter a valid {n}-digit phone number after +92 (e.g. 3001234567).', { n: PH_LOCAL_PHONE_LEN });
   if (isPoolType) {
     const rooms = Number(form.totalRooms);
     if (!Number.isInteger(rooms) || rooms < 1 || rooms > ROOMS_MAX) return `Total must be a whole number from 1 to ${ROOMS_MAX}.`;
@@ -44,6 +44,7 @@ function normaliseLocalPhone(raw) {
 }
 import './ProfilePage.css';
 import './Dashboard.css';
+import { t } from '../../i18n';
 
 const DAYS = [
   { key: 'mon', label: 'Monday' },
@@ -119,9 +120,9 @@ export default function ProfilePage() {
       await update(business.id, { logo: url });
       setLogoUrl(url);
       setCropSrc(null);
-      toast.success('Logo updated!');
+      toast.success(t('Logo updated!'));
     } catch {
-      toast.error('Could not upload logo. Try again.');
+      toast.error(t('Could not upload logo. Try again.'));
     } finally {
       setUploadingLogo(false);
     }
@@ -161,9 +162,9 @@ export default function ProfilePage() {
       if (trimmedName && trimmedName !== (userProfile?.displayName || user?.displayName || '')) {
         await updateUserProfile({ displayName: trimmedName });
       }
-      toast.success('Business profile updated!');
+      toast.success(t('Clinic profile updated!'));
     } catch {
-      toast.error('Save failed.');
+      toast.error(t('Save failed.'));
     } finally {
       setSaving(false);
     }
@@ -171,15 +172,15 @@ export default function ProfilePage() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (pwForm.next.length < 6) { toast.error('New password must be at least 6 characters.'); return; }
-    if (pwForm.next !== pwForm.confirm) { toast.error('Passwords do not match.'); return; }
+    if (pwForm.next.length < 6) { toast.error(t('New password must be at least 6 characters.')); return; }
+    if (pwForm.next !== pwForm.confirm) { toast.error(t('Passwords do not match.')); return; }
     setPwSaving(true);
     try {
       await changePassword(pwForm.current, pwForm.next);
-      toast.success('Password updated!');
+      toast.success(t('Password updated!'));
       setPwForm({ current: '', next: '', confirm: '' });
     } catch (err) {
-      toast.error(err.code === 'auth/wrong-password' ? 'Current password is incorrect.' : 'Could not update password.');
+      toast.error(err.code === 'auth/wrong-password' ? t('Current password is incorrect.') : t('Could not update password.'));
     } finally {
       setPwSaving(false);
     }
@@ -193,10 +194,10 @@ export default function ProfilePage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Building2 size={24} color="var(--primary)" />
-            <h1>Business Profile</h1>
+            <h1>{t('Clinic Profile')}</h1>
           </div>
           <button type="submit" form="profile-form" className="btn btn-primary" disabled={saving}>
-            <Save size={16} /> {saving ? 'Saving…' : 'Save Profile'}
+            <Save size={16} /> {saving ? t('Saving…') : t('Save Profile')}
           </button>
         </div>
 
@@ -208,17 +209,17 @@ export default function ProfilePage() {
             {/* 2026-11-17: EDITABLE again for the business owner (user request) —
             fields validated by basicInfoError(); phone uses the +92 scheme. */}
             <div className="card">
-              <div className="card-header"><h3>Basic Information</h3></div>
+              <div className="card-header"><h3>{t('Basic Information')}</h3></div>
               <div className="card-body">
                 {/* <p className="form-hint" style={{ marginTop: 0, marginBottom: '1rem' }}>
                   Contact the Naqatar team to update these details.
                 </p> */}
                 {/* 2026-11-17: editable by the business owner again (user request). */}
                 <p className="form-hint" style={{ marginTop: 0, marginBottom: '1rem' }}>
-                  Edit your details and press <strong>Save Profile</strong>. The logo saves as soon as you upload it.
+                  {t('Edit your details and press')} <strong>{t('Save Profile')}</strong>. {t('The logo saves as soon as you upload it.')}
                 </p>
                 <div className="form-group">
-                  <label className="form-label">Business Logo</label>
+                  <label className="form-label">{t('Clinic Logo')}</label>
                   <div className="logo-upload-row">
                     {logoUrl
                       ? <img src={logoUrl} alt="Business logo" className="logo-upload-preview" />
@@ -226,7 +227,7 @@ export default function ProfilePage() {
                     }
                     {/* 2026-11-17: upload button back (handleLogoFileChange → LogoCropModal → handleLogoSave) */}
                     <label className="btn btn-ghost btn-sm" style={{ cursor: uploadingLogo ? 'wait' : 'pointer' }}>
-                      <ImagePlus size={15} /> {uploadingLogo ? 'Uploading…' : (logoUrl ? 'Change Logo' : 'Upload Logo')}
+                      <ImagePlus size={15} /> {uploadingLogo ? t('Uploading…') : (logoUrl ? t('Change Logo') : t('Upload Logo'))}
                       <input type="file" accept="image/*" hidden onChange={handleLogoFileChange} disabled={uploadingLogo} />
                     </label>
                   </div>
@@ -238,16 +239,16 @@ export default function ProfilePage() {
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">{t('Description')}</label>
                   {/* <textarea className="form-control" rows={3} value={form.description || ''} disabled /> */}
                   <textarea className="form-control" rows={3} value={form.description || ''} maxLength={DESCRIPTION_MAX}
-                    placeholder="Brief description of your business…"
+                    placeholder={t('Brief description of your clinic…')}
                     onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
                   <p className="form-hint" style={{ textAlign: 'right', margin: '0.25rem 0 0' }}>{(form.description || '').length}/{DESCRIPTION_MAX}</p>
                 </div>
                 <div className="form-row-2">
                   <div className="form-group">
-                    <label className="form-label">Address</label>
+                    <label className="form-label">{t('Address')}</label>
                     {/* <input className="form-control" value={form.address || ''} disabled /> */}
                     <input className="form-control" value={form.address || ''} maxLength={ADDRESS_MAX} placeholder="Street, City"
                       onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
@@ -255,7 +256,7 @@ export default function ProfilePage() {
                   <div className="form-group">
                     {/* <label className="form-label">Phone</label>
                     <input className="form-control" type="tel" value={form.phone || ''} disabled /> */}
-                    <label className="form-label">Phone *</label>
+                    <label className="form-label">{t('Phone *')}</label>
                     <div className="phone-input-group">
                       <span className="phone-input-prefix">+92</span>
                       <input className="form-control" type="tel" inputMode="numeric" autoComplete="tel-national"
@@ -263,7 +264,7 @@ export default function ProfilePage() {
                         value={form.phone || ''}
                         onChange={e => setForm(f => ({ ...f, phone: normaliseLocalPhone(e.target.value) }))} />
                     </div>
-                    <p className="form-hint">Customers find you on Naqatar by this number.</p>
+                    <p className="form-hint">{t('Customers find you on Naqatar by this number.')}</p>
                   </div>
                 </div>
                 {['hotel', 'nayasaa', 'beachhuts'].includes(business?.type) ? (
@@ -285,19 +286,19 @@ export default function ProfilePage() {
                 ) : (
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label className="form-label">Slot Duration (minutes)</label>
+                      <label className="form-label">{t('Slot Duration (minutes)')}</label>
                       {/* <select className="form-control" value={form.slotDuration} disabled> */}
                       <select className="form-control" value={form.slotDuration}
                         onChange={e => setForm(f => ({ ...f, slotDuration: Number(e.target.value) }))}>
-                        {[15, 20, 30, 45, 60, 90, 120].map(v => <option key={v} value={v}>{v} min</option>)}
+                        {[15, 20, 30, 45, 60, 90, 120].map(v => <option key={v} value={v}>{t('{n} min', { n: v })}</option>)}
                       </select>
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Capacity per Slot</label>
+                      <label className="form-label">{t('Capacity per Slot')}</label>
                       {/* <select className="form-control" value={form.slotCapacity} disabled> */}
                       <select className="form-control" value={form.slotCapacity}
                         onChange={e => setForm(f => ({ ...f, slotCapacity: Number(e.target.value) }))}>
-                        {[1, 2, 3, 4, 5, 6, 8, 10].map(v => <option key={v} value={v}>{v} {v === 1 ? 'booking' : 'bookings'} at a time</option>)}
+                        {[1, 2, 3, 4, 5, 6, 8, 10].map(v => <option key={v} value={v}>{t(v === 1 ? '{n} booking at a time' : '{n} bookings at a time', { n: v })}</option>)}
                       </select>
                     </div>
                   </div>
@@ -328,24 +329,24 @@ export default function ProfilePage() {
             </div>
 
             <div className="card">
-              <div className="card-header"><h3>Account</h3></div>
+              <div className="card-header"><h3>{t('Account')}</h3></div>
               <div className="card-body">
                 <div className="form-group">
-                  <label className="form-label">Display Name</label>
-                  <input className="form-control" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder="Your name" />
-                  <p className="form-hint">Shown in the navbar and to Support.</p>
+                  <label className="form-label">{t('Display Name')}</label>
+                  <input className="form-control" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={t('Your name')} />
+                  <p className="form-hint">{t('Shown in the navbar and to Support.')}</p>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Email Address</label>
+                  <label className="form-label">{t('Email Address')}</label>
                   <input className="form-control" value={user?.email || ''} disabled />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Support ID</label>
+                  <label className="form-label">{t('Support ID')}</label>
                   <input className="form-control" value={accountRef(user?.uid)} disabled style={{ fontFamily: 'ui-monospace, monospace' }} />
-                  <p className="form-hint">Quote this when you call Support — it helps us confirm it's really you.</p>
+                  <p className="form-hint">{t("Quote this when you call Support — it helps us confirm it's really you.")}</p>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Date of Join</label>
+                  <label className="form-label">{t('Date of Join')}</label>
                   <input className="form-control" value={formatDate(userProfile?.createdAt) || '—'} disabled />
                 </div>
               </div>
@@ -353,14 +354,14 @@ export default function ProfilePage() {
 
             <div className="card">
               <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3>Working Hours</h3>
+                <h3>{t('Working Hours')}</h3>
                 <button
                   type="button"
                   role="switch"
                   aria-checked={form.showWorkingHours !== false}
                   className={`toggle-switch ${form.showWorkingHours !== false ? 'on' : ''}`}
                   onClick={() => setForm(f => ({ ...f, showWorkingHours: !f.showWorkingHours }))}
-                  title={form.showWorkingHours !== false ? 'Shown on your public page' : 'Hidden from your public page'}
+                  title={form.showWorkingHours !== false ? t('Shown on your public page') : t('Hidden from your public page')}
                 >
                   <span className="toggle-switch-knob" />
                 </button>
@@ -379,7 +380,7 @@ export default function ProfilePage() {
                         <input type="time" className="form-control time-input" value={hours[key]?.close || '18:00'} onChange={e => setDayHour(key, 'close', e.target.value)} />
                       </div>
                     ) : (
-                      <span className="closed-label">Closed</span>
+                      <span className="closed-label">{t('Closed')}</span>
                     )}
                   </div>
                 ))}
@@ -388,28 +389,27 @@ export default function ProfilePage() {
 
             {/* Advance payment (anti-spam) — on/off toggle lives on the Dashboard */}
             <div className="card">
-              <div className="card-header"><h3>Advance Payment</h3></div>
+              <div className="card-header"><h3>{t('Advance Payment')}</h3></div>
               <div className="card-body">
                 <p className="form-hint" style={{ marginBottom: '1rem' }}>
-                  Currently <strong>{form.requiresAdvancePayment ? 'ON' : 'OFF'}</strong> — toggle this from the{' '}
-                  <Link to="/admin/dashboard">Dashboard</Link>. When on, customers must upload a bank-transfer
-                  screenshot before their booking is created, using the bank details below.
+                  {t('Currently')} <strong>{form.requiresAdvancePayment ? t('ON') : t('OFF')}</strong>.{' '}
+                  {t('When on, customers must upload a bank-transfer screenshot before their booking is created, using the bank details below.')}
                 </p>
                 {form.requiresAdvancePayment && (
                   <>
                     <div className="form-group">
-                      <label className="form-label">Bank Name</label>
+                      <label className="form-label">{t('Bank Name')}</label>
                       <input className="form-control" value={form.bankName || ''} onChange={e => setForm(f => ({ ...f, bankName: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Account Title</label>
+                      <label className="form-label">{t('Account Title')}</label>
                       <input className="form-control" value={form.accountTitle || ''} onChange={e => setForm(f => ({ ...f, accountTitle: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Account Number</label>
+                      <label className="form-label">{t('Account Number')}</label>
                       <input className="form-control" value={form.accountNumber || ''} onChange={e => setForm(f => ({ ...f, accountNumber: e.target.value }))} />
                     </div>
-                    <p className="form-hint">The amount shown to customers is each service's listed price.</p>
+                    <p className="form-hint">{t("The amount shown to customers is each service's listed price.")}</p>
                   </>
                 )}
               </div>
@@ -423,25 +423,25 @@ export default function ProfilePage() {
         {!isGoogleUser() && (
           <div className="profile-grid" style={{ marginTop: '1.5rem' }}>
             <div className="card">
-              <div className="card-header"><h3><KeyRound size={16} /> Change Password</h3></div>
+              <div className="card-header"><h3><KeyRound size={16} /> {t('Change Password')}</h3></div>
               <form onSubmit={handleChangePassword} className="card-body">
                 <div className="form-group">
-                  <label className="form-label">Current Password</label>
+                  <label className="form-label">{t('Current Password')}</label>
                   <input className="form-control" type="password" value={pwForm.current}
                     onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))} required />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">New Password</label>
+                  <label className="form-label">{t('New Password')}</label>
                   <input className="form-control" type="password" minLength={6} value={pwForm.next}
                     onChange={e => setPwForm(f => ({ ...f, next: e.target.value }))} required />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Confirm New Password</label>
+                  <label className="form-label">{t('Confirm New Password')}</label>
                   <input className="form-control" type="password" minLength={6} value={pwForm.confirm}
                     onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))} required />
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={pwSaving}>
-                  {pwSaving ? 'Updating…' : 'Update Password'}
+                  {pwSaving ? t('Updating…') : t('Update Password')}
                 </button>
               </form>
             </div>

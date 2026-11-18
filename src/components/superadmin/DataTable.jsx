@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react';
 import { downloadCsv } from '../../utils/exportCsv';
 import './DataTable.css';
+import { t } from '../../i18n';
 
 /**
  * Generic list table for the SuperAdmin console. Reuses the app's existing
@@ -17,7 +18,7 @@ import './DataTable.css';
  * every sorted row regardless of page, only the on-screen table is sliced.
  */
 export default function DataTable({
-  columns, rows, rowKey = 'id', onRowClick, emptyMessage = 'No records found.',
+  columns, rows, rowKey = 'id', onRowClick, emptyMessage = t('No records found.'),
   getRowId, highlightRowId, exportable = false, exportFilename = 'export.csv',
   paginated = false, pageSizeOptions = [10, 20, 30, 50, 100], defaultPageSize = 10,
   defaultSortKey = null, defaultSortDir = 'asc',
@@ -71,13 +72,13 @@ export default function DataTable({
         <div className="sa-table-toolbar">
           {paginated && (
             <label className="sa-page-size">
-              Rows per page
+              {t('Rows per page')}
               <select
                 value={pageSize}
                 onChange={e => setPageSize(e.target.value === 'All' ? 'All' : Number(e.target.value))}
               >
                 {pageSizeOptions.map(n => <option key={n} value={n}>{n}</option>)}
-                <option value="All">All</option>
+                <option value="All">{t('All')}</option>
               </select>
             </label>
           )}
@@ -139,11 +140,11 @@ export default function DataTable({
       </div>
       {paginated && (
         <div className="sa-table-pagination">
-          <span className="sa-page-info">Showing {rangeStart} to {rangeEnd} of {sortedRows.length} entries</span>
+          <span className="sa-page-info">{t('Showing {from} to {to} of {total} entries', { from: rangeStart, to: rangeEnd, total: sortedRows.length })}</span>
           <div className="sa-page-nav">
-            <button type="button" className="btn btn-ghost btn-sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Prev</button>
-            <span>Page {page} of {totalPages}</span>
-            <button type="button" className="btn btn-ghost btn-sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
+            <button type="button" className="btn btn-ghost btn-sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>{t('Prev')}</button>
+            <span>{t('Page {page} of {total}', { page, total: totalPages })}</span>
+            <button type="button" className="btn btn-ghost btn-sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>{t('Next')}</button>
           </div>
         </div>
       )}

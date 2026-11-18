@@ -22,10 +22,10 @@ const PRICE_MAX = 10000000; // PKR
 
 /** Step-2 checks, in screen order — returns the first problem or ''. */
 function businessStepError(biz) {
-  if (!biz.type) return 'Please choose your business type.';
-  if (!isValidBusinessName(biz.name)) return `Business name must be 2–${BUSINESS_NAME_MAX} characters.`;
-  if (biz.address.trim().length > ADDRESS_MAX) return `Address can be at most ${ADDRESS_MAX} characters.`;
-  if (!isValidLocalPhoneDigits(biz.phone)) return `Enter a valid ${PH_LOCAL_PHONE_LEN}-digit phone number after +92 (e.g. 3001234567).`;
+  if (!biz.type) return t('Please choose your clinic type.');
+  if (!isValidBusinessName(biz.name)) return t('Clinic name must be 2–{max} characters.', { max: BUSINESS_NAME_MAX });
+  if (biz.address.trim().length > ADDRESS_MAX) return t('Address can be at most {max} characters.', { max: ADDRESS_MAX });
+  if (!isValidLocalPhoneDigits(biz.phone)) return t('Enter a valid {n}-digit phone number after +92 (e.g. 3001234567).', { n: PH_LOCAL_PHONE_LEN });
   if (POOL_BOOKING_TYPES.includes(biz.type)) {
     const rooms = Number(biz.totalRooms);
     if (biz.totalRooms !== '' && (!Number.isInteger(rooms) || rooms < 1 || rooms > ROOMS_MAX)) return `Total must be a whole number from 1 to ${ROOMS_MAX}.`;
@@ -36,6 +36,7 @@ function businessStepError(biz) {
 }
 import './AdminAuth.css';
 import './AdminRegister.css';
+import { t } from '../../i18n';
 
 // Same icon set as BusinessCard.jsx's TYPE_ICONS, so a type reads
 // consistently everywhere it appears — not just at registration.
@@ -172,20 +173,20 @@ export default function AdminRegister() {
   const handleAccountStep = (e) => {
     e.preventDefault();
     if (!isValidName(account.name)) {
-      toast.error('Please enter your real name (letters only, at least 2).');
+      toast.error(t('Please enter your real name (letters only, at least 2).'));
       return;
     }
     const email = account.email.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > EMAIL_MAX) {
-      toast.error('Please enter a valid email address.');
+      toast.error(t('Please enter a valid email address.'));
       return;
     }
     if (account.password.length < 6 || account.password.length > PASSWORD_MAX) {
-      toast.error(`Password must be 6–${PASSWORD_MAX} characters.`);
+      toast.error(t('Password must be 6–{max} characters.', { max: PASSWORD_MAX }));
       return;
     }
     if (account.password.trim() !== account.password) {
-      toast.error('Password cannot start or end with a space.');
+      toast.error(t('Password cannot start or end with a space.'));
       return;
     }
     setAccount(a => ({ ...a, name: a.name.trim().replace(/\s+/g, ' '), email }));
@@ -277,11 +278,11 @@ export default function AdminRegister() {
       // we already have instead.
       // await updateBusinessId(businessId);
       await updateUser(firebaseUser.uid, { businessId });
-      toast.success('Business registered! Waiting for approval.');
+      toast.success(t('Clinic registered! Waiting for approval.'));
       navigate('/admin/dashboard');
     } catch (err) {
-      if (err.code === 'auth/email-already-in-use') toast.error('Email already registered. Please sign in.');
-      else toast.error('Registration failed. Try again.');
+      if (err.code === 'auth/email-already-in-use') toast.error(t('Email already registered. Please sign in.'));
+      else toast.error(t('Registration failed. Try again.'));
     } finally {
       setLoading(false);
     }
@@ -296,12 +297,12 @@ export default function AdminRegister() {
         <div className="notice-modal-overlay" onClick={() => setShowNotice(false)}>
           <div className="notice-modal-card" onClick={e => e.stopPropagation()}>
             <AlertTriangle size={36} className="notice-modal-icon" />
-            <h2 className="notice-modal-title">Please Read Before You Continue</h2>
+            <h2 className="notice-modal-title">{t('Please Read Before You Continue')}</h2>
             <p className="notice-modal-text">
-              Kindly pay full attention before creating your business account — your <strong>business type cannot be changed later</strong>, and these details are what customers will see when they book with you.
+              {t('Please read carefully before creating your clinic account.')} <strong>{t('Your clinic type (Medical/Aesthetic) cannot be changed later')}</strong>{t(', and these details are what customers will see when they book with you.')}
             </p>
             <button type="button" className="btn btn-primary btn-full" onClick={() => setShowNotice(false)}>
-              Got It, Continue
+              {t('Got It, Continue')}
             </button>
           </div>
         </div>
@@ -311,11 +312,11 @@ export default function AdminRegister() {
           {/* <img src="/qunjee-logo.png" alt="Qunjee" className="auth-logo-img" /> */}
           {/* <img src="/qufree-logo.png" alt="Qufree" className="auth-logo-img" /> */}
           <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="auth-logo-img" width={522} height={160} />
-          <span className="auth-brand-tag">Business</span>
+          <span className="auth-brand-tag">{t('Business')}</span>
         </div>
 
-        <h1 className="auth-title">Register Your Business</h1>
-        <p className="auth-sub">{step === 0 ? 'Step 1 of 2 — Create your account' : 'Step 2 of 2 — Business details'}</p>
+        <h1 className="auth-title">{t('Register Your Clinic')}</h1>
+        <p className="auth-sub">{step === 0 ? t('Step 1 of 2 — Create your account') : t('Step 2 of 2 — Clinic details')}</p>
 
         {/*
         <div className="register-notice">
@@ -327,30 +328,30 @@ export default function AdminRegister() {
         {step === 0 && (
           <form onSubmit={handleAccountStep} className="fade-up">
             <div className="form-group">
-              <label className="form-label">Your Name</label>
+              <label className="form-label">{t('Your Name')}</label>
               {/* <input className="form-control" placeholder="Muhammad Ali"
                 value={account.name} onChange={e => setAccount(a => ({ ...a, name: e.target.value }))} required /> */}
               <input className="form-control" placeholder="Muhammad Ali" autoComplete="name" maxLength={NAME_MAX}
                 value={account.name} onChange={e => setAccount(a => ({ ...a, name: e.target.value }))} required />
             </div>
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t('Email')}</label>
               <div className="input-icon-wrap">
                 <Mail size={16} className="input-icon" />
                 {/* <input className="form-control input-with-icon" type="email" placeholder="business@email.com"
                   value={account.email} onChange={e => setAccount(a => ({ ...a, email: e.target.value }))} required /> */}
-                <input className="form-control input-with-icon" type="email" placeholder="business@email.com" autoComplete="email" maxLength={EMAIL_MAX}
+                <input className="form-control input-with-icon" type="email" placeholder={t('clinic@email.com')} autoComplete="email" maxLength={EMAIL_MAX}
                   value={account.email} onChange={e => setAccount(a => ({ ...a, email: e.target.value }))} required />
               </div>
               <EmailTypoHint email={account.email} onFix={email => setAccount(a => ({ ...a, email }))} />
             </div>
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <label className="form-label">{t('Password')}</label>
               <div className="input-icon-wrap">
                 <Lock size={16} className="input-icon" />
                 {/* <input className="form-control input-with-icon" type="password" placeholder="Min 6 characters"
                   value={account.password} onChange={e => setAccount(a => ({ ...a, password: e.target.value }))} required minLength={6} /> */}
-                <input className="form-control input-with-icon" type="password" placeholder="Min 6 characters" autoComplete="new-password" maxLength={PASSWORD_MAX}
+                <input className="form-control input-with-icon" type="password" placeholder={t('Min 6 characters')} autoComplete="new-password" maxLength={PASSWORD_MAX}
                   value={account.password} onChange={e => setAccount(a => ({ ...a, password: e.target.value }))} required minLength={6} />
               </div>
             </div>
@@ -359,17 +360,17 @@ export default function AdminRegister() {
                 <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                   style={{ marginTop: '0.2rem' }} required />
                 <span>
-                  I agree to the{' '}
+                  {t('I agree to the')}{' '}
                   {/* <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</Link> */}
-                  <a href="/terms" onClick={e => { e.preventDefault(); setLegalDoc('terms'); }}>Terms of Service</a>{' '}
-                  and{' '}
+                  <a href="/terms" onClick={e => { e.preventDefault(); setLegalDoc('terms'); }}>{t('Terms of Service')}</a>{' '}
+                  {t('and')}{' '}
                   {/* <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link> */}
-                  <a href="/privacy" onClick={e => { e.preventDefault(); setLegalDoc('privacy'); }}>Privacy Policy</a>.
+                  <a href="/privacy" onClick={e => { e.preventDefault(); setLegalDoc('privacy'); }}>{t('Privacy Policy')}</a>.
                 </span>
               </label>
             </div>
 
-            <button className="btn btn-primary btn-full" type="submit" disabled={!agreed}>Next</button>
+            <button className="btn btn-primary btn-full" type="submit" disabled={!agreed}>{t('Next')}</button>
           </form>
         )}
 
@@ -450,18 +451,18 @@ export default function AdminRegister() {
 
             {biz.type === 'clinic' && (
               <div className="form-group">
-                <label className="form-label">Clinic Type *</label>
+                <label className="form-label">{t('Clinic Type *')}</label>
                 <div className="type-selector">
                   <button type="button" className={`type-btn ${biz.clinicType === 'aesthetic' ? 'active' : ''}`}
                     onClick={() => setBiz(b => ({ ...b, clinicType: 'aesthetic' }))}>
-                    Aesthetic / Cosmetic
+                    {t('Aesthetic / Cosmetic')}
                   </button>
                   <button type="button" className={`type-btn ${biz.clinicType === 'medical' ? 'active' : ''}`}
                     onClick={() => setBiz(b => ({ ...b, clinicType: 'medical' }))}>
-                    Medical / General
+                    {t('Medical / General')}
                   </button>
                 </div>
-                <p className="form-hint">Customers find you under the Medical or Aesthetic tab on the home page.</p>
+                <p className="form-hint">{t('Customers find you under the Medical or Aesthetic tab on the home page.')}</p>
               </div>
             )}
 
@@ -514,27 +515,27 @@ export default function AdminRegister() {
             )}
 
             <div className="form-group">
-              <label className="form-label">Business Name *</label>
+              <label className="form-label">{t('Clinic Name *')}</label>
               <div className="input-icon-wrap">
                 <Building2 size={16} className="input-icon" />
                 {/* <input className="form-control input-with-icon" placeholder="e.g. Café Milano"
                   value={biz.name} onChange={e => setBiz(b => ({ ...b, name: e.target.value }))} required /> */}
-                <input className="form-control input-with-icon" placeholder="e.g. Café Milano" maxLength={BUSINESS_NAME_MAX}
+                <input className="form-control input-with-icon" placeholder={t('e.g. CareFirst Clinic')} maxLength={BUSINESS_NAME_MAX}
                   value={biz.name} onChange={e => setBiz(b => ({ ...b, name: e.target.value }))} required />
               </div>
             </div>
             <div className="form-group">
-              <label className="form-label">Address</label>
+              <label className="form-label">{t('Address')}</label>
               <div className="input-icon-wrap">
                 <MapPin size={16} className="input-icon" />
                 {/* <input className="form-control input-with-icon" placeholder="Street, City"
                   value={biz.address} onChange={e => setBiz(b => ({ ...b, address: e.target.value }))} /> */}
-                <input className="form-control input-with-icon" placeholder="Street, City" maxLength={ADDRESS_MAX} autoComplete="street-address"
+                <input className="form-control input-with-icon" placeholder={t('Street, City')} maxLength={ADDRESS_MAX} autoComplete="street-address"
                   value={biz.address} onChange={e => setBiz(b => ({ ...b, address: e.target.value }))} />
               </div>
             </div>
             <div className="form-group">
-              <label className="form-label">Phone *</label>
+              <label className="form-label">{t('Phone *')}</label>
               {/* <div className="input-icon-wrap">
                 <Phone size={16} className="input-icon" />
                 <input className="form-control input-with-icon" type="tel" placeholder="03XX-XXXXXXX"
@@ -556,11 +557,11 @@ export default function AdminRegister() {
                   }}
                   required />
               </div>
-              <p className="form-hint">Customers will find your clinic on Naqatar by this number.</p>
+              <p className="form-hint">{t('Customers will find your clinic on Naqatar by this number.')}</p>
             </div>
             <div className="form-group">
-              <label className="form-label">Description</label>
-              <textarea className="form-control" placeholder="Brief description of your business…" rows={2} maxLength={300}
+              <label className="form-label">{t('Description')}</label>
+              <textarea className="form-control" placeholder={t('Brief description of your clinic…')} rows={2} maxLength={300}
                 value={biz.description} onChange={e => setBiz(b => ({ ...b, description: e.target.value }))} />
               <p className="form-hint" style={{ textAlign: 'right', margin: '0.25rem 0 0' }}>{biz.description.length}/300</p>
             </div>
@@ -590,17 +591,17 @@ export default function AdminRegister() {
             ) : (
               <>
                 <div className="form-group">
-                  <label className="form-label">Appointment Slot Duration (minutes)</label>
+                  <label className="form-label">{t('Appointment Slot Duration (minutes)')}</label>
                   <select className="form-control" value={biz.slotDuration} onChange={e => setBiz(b => ({ ...b, slotDuration: Number(e.target.value) }))}>
-                    {[15, 20, 30, 45, 60, 90, 120].map(v => <option key={v} value={v}>{v} min</option>)}
+                    {[15, 20, 30, 45, 60, 90, 120].map(v => <option key={v} value={v}>{t('{n} min', { n: v })}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Capacity per Slot</label>
+                  <label className="form-label">{t('Capacity per Slot')}</label>
                   <select className="form-control" value={biz.slotCapacity} onChange={e => setBiz(b => ({ ...b, slotCapacity: Number(e.target.value) }))}>
-                    {[1, 2, 3, 4, 5, 6, 8, 10].map(v => <option key={v} value={v}>{v} {v === 1 ? 'booking' : 'bookings'} at a time</option>)}
+                    {[1, 2, 3, 4, 5, 6, 8, 10].map(v => <option key={v} value={v}>{t(v === 1 ? '{n} booking at a time' : '{n} bookings at a time', { n: v })}</option>)}
                   </select>
-                  <p className="form-hint">How many bookings the same time slot can hold (e.g. tables, chairs, doctors).</p>
+                  <p className="form-hint">{t('How many bookings the same time slot can hold (e.g. doctors, rooms).')}</p>
                 </div>
               </>
             )}
@@ -608,7 +609,7 @@ export default function AdminRegister() {
             )}
 
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button type="button" className="btn btn-ghost" onClick={() => setStep(0)}>Back</button>
+              <button type="button" className="btn btn-ghost" onClick={() => setStep(0)}>{t('Back')}</button>
               <button type="submit" className="btn btn-primary" style={{ flex: 1 }}
                 // disabled={loading || !biz.type || !biz.name || !biz.phone
                 disabled={loading || !biz.type || !biz.name.trim() || !isValidLocalPhoneDigits(biz.phone)
@@ -616,14 +617,14 @@ export default function AdminRegister() {
                   || (biz.type === 'salon' && !biz.salonGender)
                   || (biz.type === 'clinic' && !biz.clinicType)
                   || (['nayasaa', 'rasoomat'].includes(biz.type) && biz.categories.length === 0)}>
-                {loading ? 'Registering…' : 'Register Business'}
+                {loading ? t('Registering…') : t('Register Clinic')}
               </button>
             </div>
           </form>
         )}
 
         <p className="auth-footer">
-          Already registered? <Link to="/admin/login">Sign In</Link>
+          {t('Already registered?')} <Link to="/admin/login">{t('Sign In')}</Link>
         </p>
 
         {/* Outside every <form> on purpose — keeps the popup's buttons from ever

@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { t } from '../../i18n';
 
 export function ProtectedRoute({ children }) {
   const { user, userProfile, loading } = useAuth();
@@ -8,7 +9,7 @@ export function ProtectedRoute({ children }) {
     return (
       <div className="loading-screen">
         <div className="spinner" />
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Loading…</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('Loading…')}</p>
       </div>
     );
   }

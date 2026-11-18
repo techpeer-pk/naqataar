@@ -6,6 +6,7 @@ import { CancelReasonFields } from './CancelReasonDialog';
 import { BUSINESS_BOOKING_CANCEL_REASONS } from '../../utils/cancelReasons';
 import { bookingRef, formatTime12h, formatDateTime } from '../../utils/format';
 import './AppointmentDetailModal.css';
+import { t, statusLabel } from '../../i18n';
 
 // Appointments table trims down to just enough to scan/search a list —
 // service/date/time/notes/payment-proof/actions live here, click a row to
@@ -47,11 +48,11 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={`Booking ${a.bookingRef || bookingRef(a.id)}`}
+    <Modal open={open} onClose={onClose} title={t('Booking {ref}', { ref: a.bookingRef || bookingRef(a.id) })}
       className={a.priceFlag ? 'sa-modal-price-flag' : ''}>
       <div className="appt-detail">
         <div className="appt-detail-badges">
-          <span className={`badge badge-${a.status}`}>{a.status}</span>
+          <span className={`badge badge-${a.status}`}>{statusLabel(a.status)}</span>
           {overdue && (
             <span className="badge badge-overdue" title="Reserved time already passed with no response from the business">
               <AlertTriangle size={11} /> Overdue
@@ -60,7 +61,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
           {a.priceFlag && (
             <span
               className={`badge badge-price-flag ${a.status !== 'cancelled' ? 'badge-price-flag-blink' : ''}`}
-              title={a.priceFlagReason || 'Price mismatch detected'}
+              title={a.priceFlagReason || t('Price mismatch detected')}
             >
               <AlertTriangle size={11} /> Price
             </span>
@@ -78,7 +79,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
         {cancelling && (
           <div className="appt-detail-cancel-confirm">
             <CancelReasonFields presets={BUSINESS_BOOKING_CANCEL_REASONS} required onChange={setCancelReason} resetKey={`${a.id}-${cancelling}`} />
-            <p>Type <strong>cancel</strong> to confirm. This action is recorded against your account and can't be undone.</p>
+            <p>{t('Type')} <strong>cancel</strong> {t("to confirm. This action is recorded against your account and can't be undone.")}</p>
             <div className="appt-detail-cancel-confirm-row">
               <input
                 type="text"
@@ -90,7 +91,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
                 placeholder="cancel"
               />
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setCancelling(false); setCancelText(''); }}>
-                Never mind
+                {t('Never mind')}
               </button>
               <button
                 type="button"
@@ -99,32 +100,32 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
                 disabled={!cancelReady || actionLoading === a.id + 'cancelled'}
                 onClick={confirmCancel}
               >
-                {actionLoading === a.id + 'cancelled' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><X size={14} /> Confirm Cancel</>}
+                {actionLoading === a.id + 'cancelled' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><X size={14} /> {t('Confirm Cancel')}</>}
               </button>
             </div>
           </div>
         )}
 
         <div className="appt-detail-section">
-          <p className="appt-detail-label">Business</p>
+          <p className="appt-detail-label">{t('Clinic')}</p>
           <p className="appt-detail-name"><Building2 size={13} /> {a.businessName}</p>
           {a.businessAddress && <p className="text-muted">{a.businessAddress}</p>}
         </div>
 
         <div className="appt-detail-section">
-          <p className="appt-detail-label">Customer</p>
+          <p className="appt-detail-label">{t('Customer')}</p>
           <p className="appt-detail-name">{a.customerName}</p>
           <p className="text-muted"><Phone size={12} /> {a.customerPhone} · <Mail size={12} /> {a.customerEmail}</p>
         </div>
 
         <div className="appt-detail-section">
-          <p className="appt-detail-label">Booking Date &amp; Time</p>
+          <p className="appt-detail-label">{t('Booking Date & Time')}</p>
           <p>{a.date} · {formatTime12h(a.time)}</p>
         </div>
 
         {a.status === 'cancelled' && a.cancelledByName && (
           <div className="appt-detail-section">
-            <p className="appt-detail-label">Cancelled By</p>
+            <p className="appt-detail-label">{t('Cancelled By')}</p>
             <p>{a.cancelledByName} <span className="text-muted">({a.cancelledByRole})</span></p>
             {a.updatedAt && <p className="text-muted">{formatDateTime(a.updatedAt)}</p>}
           </div>
@@ -132,7 +133,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
 
         {a.status === 'cancelled' && a.cancelReason && (
           <div className="appt-detail-section">
-            <p className="appt-detail-label">Cancellation Reason</p>
+            <p className="appt-detail-label">{t('Cancellation Reason')}</p>
             <p>{a.cancelReason}</p>
           </div>
         )}
@@ -151,7 +152,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
           </table>
           {a.servicePrice != null && (
             <div className="appt-detail-total">
-              <span>Total</span>
+              <span>{t('Total')}</span>
               <strong>PKR {Number(a.servicePrice).toLocaleString()}</strong>
             </div>
           )}
@@ -159,14 +160,14 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
 
         {a.notes && (
           <div className="appt-detail-section">
-            <p className="appt-detail-label">Notes</p>
+            <p className="appt-detail-label">{t('Notes')}</p>
             <p><StickyNote size={12} /> {a.notes}</p>
           </div>
         )}
 
         {a.paymentProofUrl && (
           <div className="appt-detail-section">
-            <p className="appt-detail-label">Payment Proof</p>
+            <p className="appt-detail-label">{t('Payment Proof')}</p>
             <PaymentProofLink url={a.paymentProofUrl} />
           </div>
         )}
@@ -176,7 +177,7 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
             {canAct && a.status === 'pending' && (
               <button className="btn btn-sm action-confirm" disabled={actionLoading === a.id + 'confirmed'}
                 onClick={() => onAction(a, 'confirmed')}>
-                {actionLoading === a.id + 'confirmed' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><Check size={14} /> Confirm</>}
+                {actionLoading === a.id + 'confirmed' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><Check size={14} /> {t('Confirm')}</>}
               </button>
             )}
             {/* Cancel used to live here as a plain button next to Confirm/Mark
@@ -185,26 +186,26 @@ export default function AppointmentDetailModal({ appointment: a, open, onClose, 
             {canAct && (a.status === 'pending' || a.status === 'confirmed') && (
               <button className="btn btn-danger btn-sm" disabled={actionLoading === a.id + 'cancelled'}
                 onClick={() => onAction(a, 'cancelled')}>
-                {actionLoading === a.id + 'cancelled' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><X size={14} /> Cancel</>}
+                {actionLoading === a.id + 'cancelled' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><X size={14} /> {t('Cancel')}</>}
               </button>
             )}
             */}
             {canAct && a.status === 'confirmed' && (
               <button className="btn btn-sm action-complete" disabled={actionLoading === a.id + 'completed'}
                 onClick={() => onAction(a, 'completed')}>
-                {actionLoading === a.id + 'completed' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><CheckCircle size={14} /> Mark Done</>}
+                {actionLoading === a.id + 'completed' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><CheckCircle size={14} /> {t('Mark Done')}</>}
               </button>
             )}
             {canAct && canNoShow && a.status === 'confirmed' && (
               <button className="btn btn-danger btn-sm" disabled={actionLoading === a.id + 'no_show'}
                 onClick={() => onNoShow(a)} title={noShowHint}>
-                {actionLoading === a.id + 'no_show' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><UserX size={14} /> No-Show</>}
+                {actionLoading === a.id + 'no_show' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><UserX size={14} /> {t('No-Show')}</>}
               </button>
             )}
             {canDelete && (
               <button className="btn btn-ghost btn-sm" disabled={actionLoading === a.id + 'delete'}
                 onClick={() => onDelete(a)}>
-                {actionLoading === a.id + 'delete' ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><Trash2 size={14} /> Delete</>}
+                {actionLoading === a.id + 'delete' ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><Trash2 size={14} /> {t('Delete')}</>}
               </button>
             )}
           </div>

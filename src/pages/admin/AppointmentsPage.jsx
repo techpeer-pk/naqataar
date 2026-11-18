@@ -16,6 +16,7 @@ import PaymentProofLink from '../../components/shared/PaymentProofLink';
 import DataTable from '../../components/superadmin/DataTable';
 import AppointmentDetailModal from '../../components/shared/AppointmentDetailModal';
 import './AppointmentsPage.css';
+import { t } from '../../i18n';
 
 const STATUSES = [null, 'pending', 'confirmed', 'completed', 'no_show', 'cancelled'];
 const STATUS_LABELS = { null: 'All', pending: 'Pending', confirmed: 'Confirmed', completed: 'Completed', no_show: 'No-Show', cancelled: 'Cancelled' };
@@ -57,7 +58,7 @@ export default function AppointmentsPage() {
   // window shows up live, same spirit as useCountdown's setInterval.
   const [, forceTick] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => forceTick(t => t + 1), 30_000);
+    const id = setInterval(() => forceTick(n => n + 1), 30_000);
     return () => clearInterval(id);
   }, []);
 
@@ -127,9 +128,9 @@ export default function AppointmentsPage() {
       // separate snapshot the popup holds — without this it'd keep showing
       // the old status and re-offer already-actioned buttons until closed.
       setDetailAppt(prev => prev && prev.id === appt.id ? { ...prev, status } : prev);
-      toast.success(`Appointment ${STATUS_LABELS[status] || status}.`);
+      toast.success(t('Appointment {status}.', { status: t(STATUS_LABELS[status] || status) }));
     } catch {
-      toast.error('Action failed.');
+      toast.error(t('Action failed.'));
     } finally {
       setActionLoading(null);
     }
@@ -171,7 +172,7 @@ export default function AppointmentsPage() {
         'Request Date': a.createdAt?.toDate?.() || null,
       }));
     if (!rows.length) {
-      toast.error('No appointments in that range.');
+      toast.error(t('No appointments in that range.'));
       return;
     }
     const range = `${exportFrom || 'all'}_to_${exportTo || 'all'}`;
@@ -188,7 +189,7 @@ export default function AppointmentsPage() {
 
   const columns = [
     {
-      key: 'bookingRef', header: 'Booking ID', sortable: true, stopRowClick: true,
+      key: 'bookingRef', header: t('Booking ID'), sortable: true, stopRowClick: true,
       sortValue: a => a.bookingRef || bookingRef(a.id),
       render: a => {
         const linkedOrder = orders.find(o => o.appointmentId === a.id);
@@ -205,21 +206,21 @@ export default function AppointmentsPage() {
       },
     },
     {
-      key: 'createdAt', header: 'Request Date', sortable: true,
+      key: 'createdAt', header: t('Request Date'), sortable: true,
       sortValue: a => a.createdAt?.toMillis?.() || 0,
       render: a => formatDate(a.createdAt) || '—',
     },
-    { key: 'date', header: 'Booking Date', sortable: true },
-    { key: 'time', header: 'Booking Time', sortable: true, render: a => formatTime12h(a.time) },
-    { key: 'paymentProofUrl', header: 'Payment Proof', stopRowClick: true, render: a => <PaymentProofLink url={a.paymentProofUrl} /> },
+    { key: 'date', header: t('Booking Date'), sortable: true },
+    { key: 'time', header: t('Booking Time'), sortable: true, render: a => formatTime12h(a.time) },
+    { key: 'paymentProofUrl', header: t('Payment Proof'), stopRowClick: true, render: a => <PaymentProofLink url={a.paymentProofUrl} /> },
     {
-      key: 'status', header: 'Status', sortable: true,
+      key: 'status', header: t('Status'), sortable: true,
       render: a => (
         <>
-          <span className={`badge badge-${a.status}`}>{STATUS_LABELS[a.status] || a.status}</span>
+          <span className={`badge badge-${a.status}`}>{t(STATUS_LABELS[a.status] || a.status)}</span>
           {a.priceFlag && (
             <span className={`badge badge-price-flag ${a.status !== 'cancelled' ? 'badge-price-flag-blink' : ''}`} style={{ marginLeft: '0.4rem' }} title={a.priceFlagReason || 'Price mismatch detected'}>
-              <AlertTriangle size={12} /> Price
+              <AlertTriangle size={12} /> {t('Price')}
             </span>
           )}
         </>
@@ -230,7 +231,7 @@ export default function AppointmentsPage() {
   return (
     <div className="admin-layout page">
       <div className="container">
-        <h1 style={{ marginBottom: '1.5rem' }}>Appointments</h1>
+        <h1 style={{ marginBottom: '1.5rem' }}>{t('Appointments')}</h1>
 
         {/* Filters */}
         <div className="appt-filters card">
@@ -238,7 +239,7 @@ export default function AppointmentsPage() {
             <div className="status-filter-tabs">
               {STATUSES.map(s => (
                 <button key={String(s)} className={`status-tab ${filter === s ? 'active' : ''}`} onClick={() => setFilter(s)}>
-                  {STATUS_LABELS[s]}
+                  {t(STATUS_LABELS[s])}
                   {s !== null && (
                     <span className="status-count">
                       {appointments.filter(a => a.status === s).length}
@@ -251,7 +252,7 @@ export default function AppointmentsPage() {
               <Filter size={16} style={{ color: 'var(--text-muted)' }} />
               <input type="date" className="form-control" style={{ width: 'auto' }}
                 value={dateFilter} onChange={e => setDateFilter(e.target.value)} />
-              {dateFilter && <button className="btn btn-ghost btn-sm" onClick={() => setDateFilter('')}>Clear</button>}
+              {dateFilter && <button className="btn btn-ghost btn-sm" onClick={() => setDateFilter('')}>{t('Clear')}</button>}
             </div>
           </div>
         </div>
@@ -261,11 +262,11 @@ export default function AppointmentsPage() {
           <div className="card-body appt-filters-inner">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <Download size={16} style={{ color: 'var(--text-muted)' }} />
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>By Request Date:</span>
-              <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>From</label>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('By Request Date:')}</span>
+              <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t('From')}</label>
               <input type="date" className="form-control" style={{ width: 'auto' }}
                 value={exportFrom} onChange={e => setExportFrom(e.target.value)} />
-              <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>To</label>
+              <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t('To')}</label>
               <input type="date" className="form-control" style={{ width: 'auto' }}
                 value={exportTo} onChange={e => setExportTo(e.target.value)} />
               <select className="form-control" style={{ width: 'auto' }}
@@ -275,7 +276,7 @@ export default function AppointmentsPage() {
                 <option value="json">JSON</option>
               </select>
               <button className="btn btn-sm" disabled={exporting} onClick={handleExport}>
-                {exporting ? <><Loader2 size={14} className="icon-spin" /> Exporting…</> : <><Download size={14} /> Export</>}
+                {exporting ? <><Loader2 size={14} className="icon-spin" /> {t('Exporting…')}</> : <><Download size={14} /> {t('Export')}</>}
               </button>
             </div>
           </div>
@@ -310,7 +311,7 @@ export default function AppointmentsPage() {
             <DataTable
               columns={columns}
               rows={displayed}
-              emptyMessage="No appointments found."
+              emptyMessage={t('No appointments found.')}
               getRowId={a => `appt-row-${a.id}`}
               highlightRowId={targetApptId ? `appt-row-${targetApptId}` : null}
               onRowClick={setDetailAppt}
