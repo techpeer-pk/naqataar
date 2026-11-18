@@ -35,6 +35,17 @@
 }
 
 .navbar-auth { display: flex; align-items: center; gap: 0.75rem; }
+
+/* "?" tour-replay button, next to Login / avatar */
+.nav-help-btn {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 36px; height: 36px; padding: 0;
+  border: 1.5px solid var(--border); border-radius: 50%;
+  background: var(--surface); color: var(--primary);
+  cursor: pointer; transition: var(--transition);
+}
+.nav-help-btn:hover { border-color: var(--gold); color: var(--gold-dark); background: var(--gold-pale); }
+.nav-help-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .auth-buttons { display: flex; gap: 0.5rem; }
 
 .user-menu {
@@ -180,8 +191,15 @@
 }
 /* Tiny phones: "Sign In" wrapped onto two lines here even before the share
    button existed — show its icon only. */
-@media (max-width: 370px) {
+@media (max-width: 420px) {
   .nav-signin-label { display: none; }
+}
+/* Phones: Login + "?" must fit the right 1fr column so the logo stays
+   centred (grid 1fr auto 1fr). */
+@media (max-width: 480px) {
+  .navbar-auth { gap: 0.4rem; }
+  .nav-help-btn { width: 34px; height: 34px; }
+  .navbar-logo-img { height: 34px; }
 }
 .navbar-share .share-menu-trigger {
   width: 40px;

@@ -551,4 +551,7 @@ export default {
   'Finish': 'Khatam',
   'Close tour': 'Tour band karein',
   'App Tour': 'App ka Tour',
+  'Show app tour': 'App ka tour dekhein',
+  'Replay this tour': 'Tour dobara dekhein',
+  'Tap this ? anytime to see this tour again.': 'Yeh tour dobara dekhne ke liye kabhi bhi yeh ? dabayein.',
 };

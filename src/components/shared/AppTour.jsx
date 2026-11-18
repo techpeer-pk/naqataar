@@ -54,6 +54,11 @@ const STEPS = [
     text: 'Send the app link to family and friends on WhatsApp.',
   },
   {
+    target: ['.nav-help-btn'],
+    title: 'Replay this tour',
+    text: 'Tap this ? anytime to see this tour again.',
+  },
+  {
     title: "You're all set!",
     text: "Tip: install Naqatar on your phone's home screen for quick access. Clinic owner? Register your clinic from the bottom of the page.",
     primary: 'Finish',

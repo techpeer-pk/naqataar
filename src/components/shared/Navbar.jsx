@@ -5,7 +5,7 @@ import { useUnreadNotificationCount } from '../../hooks/useNotifications';
 import {
   CalendarCheck, Menu, X, User, LogOut,
   LayoutDashboard, BookOpen, Settings, ChevronDown, UserCircle,
-  Receipt, Home, Bell,
+  Receipt, Home, Bell, HelpCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ShareMenu from './ShareMenu';
@@ -147,6 +147,20 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+          )}
+          {/* "?" — right of Login / avatar. Replays the first-visit tour
+              (AppTour). The tour lives on "/", so from any other page this
+              goes home and starts it there. */}
+          {isPublicRoute && (
+            <button
+              type="button"
+              className="nav-help-btn"
+              onClick={() => navigate('/?tour=1')}
+              aria-label={t('Show app tour')}
+              title={t('Show app tour')}
+            >
+              <HelpCircle size={18} />
+            </button>
           )}
 
           {isAdminRoute && user && (
