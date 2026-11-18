@@ -4,6 +4,7 @@ import { usePWAInstall } from '../../hooks/usePWAInstall';
 import PWAInstallGuideModal from './PWAInstallGuideModal';
 import './PWAInstallPrompt.css';
 import { t } from '../../i18n';
+import { useTourActive } from '../../utils/tour';
 
 const DISMISS_KEY = 'pwa-install-dismissed';
 
@@ -11,11 +12,13 @@ export default function PWAInstallPrompt() {
   const { installPrompt, isIOS, isIOSNonSafari, isInstalled, promptInstall } = usePWAInstall();
   const [showPrompt, setShowPrompt] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  // Hold back while the first-visit tour is open.
+  const tourActive = useTourActive();
 
   useEffect(() => {
     // sessionStorage, not localStorage — dismissing should only silence the
     // banner for the rest of this browser session, not forever.
-    if (isInstalled || showPrompt || sessionStorage.getItem(DISMISS_KEY)) return;
+    if (isInstalled || showPrompt || tourActive || sessionStorage.getItem(DISMISS_KEY)) return;
 
     if (installPrompt) {
       const timer = setTimeout(() => setShowPrompt(true), 3000);
@@ -25,7 +28,7 @@ export default function PWAInstallPrompt() {
       const timer = setTimeout(() => setShowPrompt(true), 5000);
       return () => clearTimeout(timer);
     }
-  }, [installPrompt, isIOS, isInstalled, showPrompt]);
+  }, [installPrompt, isIOS, isInstalled, showPrompt, tourActive]);
 
   const handleInstall = async () => {
     const choice = await promptInstall();
@@ -39,7 +42,7 @@ export default function PWAInstallPrompt() {
     sessionStorage.setItem(DISMISS_KEY, 'true');
   };
 
-  if (!showPrompt || isInstalled) return null;
+  if (!showPrompt || isInstalled || tourActive) return null;
 
   return (
     <div className="pwa-prompt">

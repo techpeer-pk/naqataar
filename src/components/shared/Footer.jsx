@@ -84,6 +84,7 @@ export default function Footer({ hasBottomNav = false }) {
             {/* 2026-11-17: hidden — /documentation still describes Qunjee (categories, QunjeeEats).
                 Re-enable once it's rewritten for Qufree. */}
             {/* <Link to="/documentation" className="footer-link">Documentation</Link> */}
+            <Link to="/?tour=1" className="footer-link">{t('App Tour')}</Link>
             <Link to="/terms" className="footer-link">{t('Terms of Service')}</Link>
             <Link to="/privacy" className="footer-link">{t('Privacy Policy')}</Link>
           </div>

@@ -11,6 +11,7 @@ import PWAInstallPrompt from './components/shared/PWAInstallPrompt';
 import NotificationPermissionPrompt from './components/shared/NotificationPermissionPrompt';
 import ScrollToTop from './components/shared/ScrollToTop';
 import ShutdownScreen from './components/shared/ShutdownScreen';
+import AppTour from './components/shared/AppTour';
 import { useForegroundMessages } from './hooks/useForegroundMessages';
 import { usePwaUpdateNotice } from './hooks/usePwaUpdateNotice';
 import { usePwaPushRegistration } from './hooks/usePwaPushRegistration';
@@ -147,6 +148,7 @@ function AppLayout() {
 
       {!hideFooter && <Footer hasBottomNav={showBottomNav} />}
       <BottomNav showChatTab={chatDocked} visible={showBottomNav} />
+      <AppTour />
       <NotificationPermissionPrompt />
       <div className={showBottomNav ? 'shell-has-bottom-nav' : ''}>
         <PWAInstallPrompt />

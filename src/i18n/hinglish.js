@@ -528,4 +528,27 @@ export default {
   'Customers find you on Naqatar by this number.': 'Customers isi number se Naqatar par aap ko dhoondte hain.',
   // ── Install button ──
   'Install App': 'App Install Karein',
+
+  // ── First-visit app tour ──
+  'Welcome to Naqatar!': 'Naqatar mein khush aamdeed!',
+  'Book a clinic appointment in a minute. Take a quick 30-second tour?': 'Ek minute mein clinic ki appointment book karein. 30 second ka chhota sa tour dekhein?',
+  'Start tour': 'Tour shuru karein',
+  'Skip': 'Rehne dein',
+  'Find a clinic by its number': 'Number se clinic dhoondein',
+  "Type the clinic's phone number in any format: 0300…, 92300… or +92 300…": 'Clinic ka phone number kisi bhi tarah likhein: 0300…, 92300… ya +92 300…',
+  "Open the clinic's page": 'Clinic ka page kholein',
+  "Tap here. We'll take you straight to the clinic's page, where you pick a service, a day and a free time.": 'Yahan dabayein. Hum aap ko seedha clinic ke page par le jayenge, jahan aap service, din aur khaali waqt chunenge.',
+  'Your bookings': 'Aap ki bookings',
+  'All your appointments in one place. You can also cancel from here.': 'Aap ki saari appointments ek jagah. Cancel bhi yahin se kar sakte hain.',
+  'Login & Account': 'Login aur Account',
+  "Log in with Google or email. It's needed to book, so there are no fake bookings.": 'Google ya email se login karein. Booking ke liye zaroori hai, taa ke koi jaali booking na ho.',
+  'Need help?': 'Madad chahiye?',
+  'Chat with Naqatar Support right here.': 'Yahin Naqatar Support se chat karein.',
+  'Share Naqatar': 'Naqatar share karein',
+  'Send the app link to family and friends on WhatsApp.': 'Ghar walon aur doston ko WhatsApp par app ka link bhejein.',
+  "You're all set!": 'Bas, aap tayyar hain!',
+  "Tip: install Naqatar on your phone's home screen for quick access. Clinic owner? Register your clinic from the bottom of the page.": 'Tip: jaldi kholne ke liye Naqatar ko phone ki home screen par install kar lein. Clinic ke maalik hain? Page ke neeche se apna clinic register karein.',
+  'Finish': 'Khatam',
+  'Close tour': 'Tour band karein',
+  'App Tour': 'App ka Tour',
 };

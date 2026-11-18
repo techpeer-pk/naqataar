@@ -4,12 +4,15 @@ import { useAuth } from '../../context/AuthContext';
 import { enableNotifications } from '../../hooks/usePwaPushRegistration';
 import './NotificationPermissionPrompt.css';
 import { t } from '../../i18n';
+import { useTourActive } from '../../utils/tour';
 
 const DISMISS_KEY = 'notif-prompt-dismissed';
 
 export default function NotificationPermissionPrompt() {
   const { user, loading } = useAuth();
   const [showPrompt, setShowPrompt] = useState(false);
+  // Hold back while the first-visit tour is open; the 4s timer restarts after it.
+  const tourActive = useTourActive();
 
   useEffect(() => {
     if (typeof Notification === 'undefined' || Notification.permission !== 'default') return;
@@ -18,10 +21,10 @@ export default function NotificationPermissionPrompt() {
     // where Firebase Auth's persisted-session restore can outlast 4s — firing
     // early meant handleEnable's `user?.uid` snapshot was still null even for
     // a tester who really was logged in, so their token saved with no uid.
-    if (loading) return;
+    if (loading || tourActive) return;
     const timer = setTimeout(() => setShowPrompt(true), 4000);
     return () => clearTimeout(timer);
-  }, [loading]);
+  }, [loading, tourActive]);
 
   const handleEnable = async () => {
     setShowPrompt(false);
@@ -33,7 +36,7 @@ export default function NotificationPermissionPrompt() {
     sessionStorage.setItem(DISMISS_KEY, 'true');
   };
 
-  if (!showPrompt) return null;
+  if (!showPrompt || tourActive) return null;
 
   return (
     <div className="notif-prompt">
