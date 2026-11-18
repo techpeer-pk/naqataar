@@ -68,6 +68,8 @@ The emulator starts empty each time it starts. Run `npm run seed` again after ev
 | `npm run emulator` | Firebase emulators (project `demo-naqatar`) |
 | `npm run seed` | Clinic-only demo data; refuses to run on a non-`demo-` project |
 | `npm run test:smoke` | Starts the emulator, seeds it, and checks reads under the real rules (public, customer, owner), then stops |
+| `npm run test:smoke:live` | Same checks against an emulator that is **already running and seeded** (`test:smoke` can't start while ports 8080/9099 are taken) |
+| `npm run brand:assets` | Regenerates logos and icons from `brand/source/` |
 | `npm run sync:rules` | Refreshes `emulator/` from `K:\QuFree\app_OLD` after its rules change |
 
 ## Known limits

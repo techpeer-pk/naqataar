@@ -1,0 +1,56 @@
+/* Naqatar clinic home — additions on top of LandingPage.css */
+
+.clinic-home-sub {
+  color: rgba(255, 255, 255, 0.85);
+  margin: -0.25rem 0 1.25rem;
+  font-size: 0.95rem;
+}
+
+.clinic-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.clinic-tabs::-webkit-scrollbar { display: none; }
+
+.clinic-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-mid);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.clinic-tab:hover { border-color: var(--primary); color: var(--primary); }
+.clinic-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+.clinic-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.clinic-tab-count {
+  min-width: 1.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--primary-pale);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4rem;
+}
+.clinic-tab.active .clinic-tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+}

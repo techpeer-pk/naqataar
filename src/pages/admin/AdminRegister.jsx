@@ -154,7 +154,8 @@ export default function AdminRegister() {
 
   const [account, setAccount] = useState({ email: '', password: '', name: '' });
   const [biz, setBiz] = useState({
-    name: '', type: '', description: '', address: '', phone: '', slotDuration: 30, slotCapacity: 1,
+    // Naqatar: clinic-only — the type is fixed, the owner picks Medical/Aesthetic below.
+    name: '', type: 'clinic', description: '', address: '', phone: '', slotDuration: 30, slotCapacity: 1,
     offersOrdering: false,   // restaurants only — also take QunjeeEats food orders (F2)
     totalRooms: 5, pricePerNight: '',   // hotels & nayasaa — room/outfit-pool booking
     category: '',   // sehatkamla only — which of the 6 HealthCare categories this vendor serves
@@ -398,20 +399,8 @@ export default function AdminRegister() {
               </div>
             </div>
             */}
-            <div className="form-group">
-              <label className="form-label">Business Type *</label>
-              <select className="form-control" value={biz.type}
-                onChange={e => setBiz(b => ({ ...b, type: e.target.value }))} required>
-                <option value="" disabled>Select your business type</option>
-                {BUSINESS_TYPE_GROUPS.map(group => (
-                  <optgroup key={group.category} label={group.category}>
-                    {group.types.map(t => (
-                      <option key={t.value} value={t.value}>{t.label}</option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </div>
+            {/* Naqatar: no business-type picker — every registration is a
+                clinic (biz.type is fixed to 'clinic' in state above). */}
 
             {/* Rest of the form stays hidden until a type is picked — most
                 fields below (slot vs. pool, category pickers) depend on it,
@@ -472,7 +461,7 @@ export default function AdminRegister() {
                     Medical / General
                   </button>
                 </div>
-                <p className="form-hint">Aesthetic clinics are found under Salon & Personal Care; medical clinics under HealthCare's Clinic Appointment.</p>
+                <p className="form-hint">Customers find you under the Medical or Aesthetic tab on the home page.</p>
               </div>
             )}
 

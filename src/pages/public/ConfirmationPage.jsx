@@ -193,7 +193,7 @@ export default function ConfirmationPage() {
               <Link to="/index/my-appointments" className="btn btn-ghost">
                 <CalendarCheck size={16} /> View My Bookings
               </Link>
-              <Link to="/index/browse" className="btn btn-ghost">
+              <Link to="/" className="btn btn-ghost">
                 <Home size={16} /> Browse More
               </Link>
             </div>

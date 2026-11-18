@@ -55,7 +55,7 @@ export default function LoginPage() {
     try {
       const { isSuperAdmin } = await login(form.email, form.password, mode.googleRole);
       toast.success('Welcome back!');
-      navigate(isSuperAdmin ? '/superadmin' : mode.homeRedirect);
+      navigate(mode.homeRedirect); // Naqatar: no /superadmin (stays on QuFree)
     } catch (err) {
       if (err.code === 'auth/invalid-credential') toast.error('Invalid email or password.');
       else if (err.code === 'auth/role-mismatch') toast.error(err.message);
@@ -70,7 +70,7 @@ export default function LoginPage() {
     try {
       const { isSuperAdmin } = await loginWithGoogle(mode.googleRole);
       toast.success('Welcome!');
-      navigate(isSuperAdmin ? '/superadmin' : mode.homeRedirect);
+      navigate(mode.homeRedirect); // Naqatar: no /superadmin (stays on QuFree)
     } catch (err) {
       toast.error(err.message || 'Google sign-in failed.');
     } finally {

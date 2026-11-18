@@ -121,7 +121,7 @@ export default function CustomerProfilePage() {
     try {
       await deleteAccount(delPassword);
       toast.success('Account deleted.');
-      navigate('/index/browse', { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
       toast.error(err.code === 'auth/wrong-password' ? 'Password is incorrect.' : 'Could not delete account. Try signing in again first.');
     } finally {

@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 import CancelReasonDialog from '../../components/shared/CancelReasonDialog';
 import { CUSTOMER_CANCEL_REASONS } from '../../utils/cancelReasons';
 import { useAppointments } from '../../hooks/useAppointments';
-import { useReservations } from '../../hooks/useReservations';
 import { useOrders } from '../../hooks/useOrders';
 import { useAuth } from '../../context/AuthContext';
 import { useBooking } from '../../hooks/useBooking';
@@ -26,8 +25,12 @@ function sortAppointments(list) {
 
 export default function MyAppointmentsPage() {
   const { user, isCustomer } = useAuth();
-  const { appointments, loading, subscribeByEmail: subscribeAppointmentsByEmail } = useAppointments();
-  const { reservations, subscribeByEmail: subscribeReservationsByEmail } = useReservations();
+  const { appointments: allAppointments, loading, subscribeByEmail: subscribeAppointmentsByEmail } = useAppointments();
+  // Naqatar is clinic-only, but the backend is shared with QuFree: the same
+  // customer account may also have salon/restaurant appointments and hotel
+  // reservations there. Show clinic bookings only; don't load reservations.
+  const appointments = allAppointments.filter(a => a.businessType === 'clinic');
+  const reservations = [];
   const { orders, subscribeByEmail } = useOrders();
   const { cancelAppointment } = useBooking();
   const { cancelReservation } = useRoomBooking();
@@ -46,10 +49,9 @@ export default function MyAppointmentsPage() {
       // Live — a business admin/superAdmin action (confirm, no-show, cancel)
       // shows up here without a manual reload, same as orders already do.
       const unsubAppointments = subscribeAppointmentsByEmail(user.email);
-      const unsubReservations = subscribeReservationsByEmail(user.email);
       // So each booking card can point to its linked dine-in pre-order.
       const unsubOrders = subscribeByEmail(user.email);
-      return () => { unsubAppointments(); unsubReservations(); unsubOrders(); };
+      return () => { unsubAppointments(); unsubOrders(); };
     }
   }, [user, isCustomer]);
 

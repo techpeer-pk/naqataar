@@ -1,6 +1,0 @@
-.sa-danger-card { border-color: #FCA5A5; }
-.sa-danger-row {
-  display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.sa-danger-row--hard { padding-top: 1.25rem; border-top: 1px solid var(--border); align-items: flex-start; }
