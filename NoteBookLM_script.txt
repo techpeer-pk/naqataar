@@ -1,0 +1,167 @@
+NAQATAR: CLINIC APPOINTMENT, AB AASAAN
+NotebookLM source script (Hinglish / Roman Urdu)
+Website: https://naqatar.web.app
+
+======================================================================
+HISSA 1: KYA HAI "NAQATAR"?
+======================================================================
+
+Naqatar ek online clinic appointment app hai. Is ke zariye log apne
+shehar ke clinics mein ghar baithe appointment book kar sakte hain:
+line mein lagne ki zaroorat nahi, baar baar phone karne ki zaroorat
+nahi, aur intezar ka koi andaza lagane ki zaroorat bhi nahi.
+
+Naqatar do qisam ke clinics ke liye bana hai:
+
+1. Medical clinics: general doctor, dentist, bachon ke doctor,
+   physiotherapy, eye clinic, lab tests waghera.
+2. Aesthetic clinics: skin aur laser treatment, HydraFacial,
+   hair loss treatment, cosmetic procedures waghera.
+
+Naqatar ki zubaan Hinglish hai, yani Roman Urdu aur aam English ke
+lafz, bilkul waise jaise hum roz WhatsApp par likhte hain. Is liye
+har koi isay asaani se samajh aur chala sakta hai.
+
+Naqatar ek website hai jo mobile app ki tarah bhi chalti hai.
+Android ya iPhone par isay "Install" ya "Add to Home Screen" karke
+phone ki home screen par rakha ja sakta hai. Phir yeh ek aam app ki
+tarah apne icon se khulti hai. Play Store ya App Store se download
+karne ki zaroorat nahi.
+
+Naam ke baare mein: Naqatar ka logo ek dhaal (shield) hai, jis ke
+andar ek aath-konon wala sitara aur "نقطار" likha hai. Dhaal hifazat
+aur bharose ki nishani hai, aur sitara rehnumai ki. Brand ke rang
+gehra teal (sabz-neela) aur sunehri (gold) hain.
+
+======================================================================
+HISSA 2: KAAM KAISE KARTA HAI?
+======================================================================
+
+--- Customer ke liye: 5 aasaan qadam ---
+
+Qadam 1: Clinic dhoondein
+Naqatar ki home screen par sirf clinic ka phone number likhein, kisi
+bhi tarah: 0300..., 92300..., ya +92 300... Naqatar us number se
+registered clinic dhoond kar seedha us ke page par le jata hai.
+Agar number yaad nahi, to "Clinics" list mein Medical aur Aesthetic
+tabs, aur clinic ke naam ya area se search bhi hai.
+
+Qadam 2: Clinic ka page dekhein
+Har clinic ke page par us ki services hoti hain, har service ki
+qeemat aur waqt (maslan "General Consultation: 20 min, Rs 1500"),
+clinic ki timings (kis din kab khulta hai), aur pata.
+
+Qadam 3: Service, din aur waqt chunein
+Customer ek ya zyada services chunta hai, phir calendar se din, aur
+phir sirf khaali waqt (slots) mein se apna waqt. Jo waqt pehle se
+bhar chuka ho, ya jo guzar chuka ho, woh nazar hi nahi aata. Waqt
+Din, Shaam aur Raat ke hisson mein dikhte hain taa ke chunna aasaan
+ho.
+
+Qadam 4: Login aur tasdeeq
+Booking se pehle ek chhota sa login hota hai, Google se ya email se.
+Is ka maqsad yeh hai ke koi jaali ya mazaq wali booking na ho.
+Kuch clinics advance payment maangte hain. Aisi soorat mein customer
+bank transfer ka screenshot upload karta hai, ya chahe to clinic par
+pahunch kar cash dene ka option chun sakta hai.
+
+Qadam 5: Booking mil gayi
+Booking hote hi customer ko ek Booking ID milti hai, aur email par
+tafseel bhi aa jati hai. Booking pehle "Pending" hoti hai, aur jab
+clinic usay confirm karta hai to customer ko notification milti hai.
+Naqatar appointment se 24 ghante, 1 ghanta aur 15 minute pehle yaad
+dihani bhi karata hai.
+
+"Meri Bookings" mein customer apni aane wali aur guzri hui saari
+appointments dekh sakta hai, aur zaroorat ho to wajah bata kar
+appointment cancel bhi kar sakta hai.
+
+--- Clinic ke liye: setup aur rozana ka kaam ---
+
+Register karna:
+Clinic owner "Apna Clinic Register Karein" se account banata hai,
+clinic ka naam, pata, phone number aur qisam (Medical ya Aesthetic)
+batata hai. Naqatar team har naye clinic ko check karke approve
+karti hai, taa ke platform par sirf asli clinics hon. Is dauran
+owner apni profile aur services tayyar kar sakta hai.
+
+Clinic setup:
+- Services add karna: naam, qeemat, kitna waqt lagti hai, aur photo.
+- Timings: har din ke khulne aur band hone ka waqt.
+- Har appointment kitne minute ki hai, aur ek waqt mein kitni
+  bookings ho sakti hain (maslan 2 dental chairs ho to 2).
+- Logo aur clinic ki tafseel.
+
+Rozana ka kaam (Clinic Dashboard):
+- Aaj ki, pending, confirmed aur mukammal appointments ki ginti.
+- Har appointment par ek click: Confirm, Cancel, "Nahi aaye"
+  (No-Show), ya Mukammal.
+- Advance payment wale customers ke screenshot dekh kar confirm karna.
+- Appointments ki list ko tareekh se filter karna aur CSV/Excel mein
+  download karna.
+
+Double booking ka masla khatam:
+Jab do log ek hi waqt par aakhri khaali jagah book karne ki koshish
+karein, to Naqatar sirf ek ki booking hone deta hai. Doosre ko foran
+bataya jata hai ke yeh waqt abhi abhi le liya gaya, koi aur waqt
+chunein. Is tarah clinic ke paas kabhi ek hi waqt par zaroorat se
+zyada log nahi aate.
+
+======================================================================
+HISSA 3: KYA FAIDA HAI?
+======================================================================
+
+--- Customer ke liye faide ---
+
+1. Waqt ki bachat: clinic jaa kar line mein lagne ya ghanton intezar
+   karne ki zaroorat nahi. Pehle se pata hota hai ke kab jana hai.
+2. 24 ghante booking: clinic band ho tab bhi, raat ko bhi, booking ki
+   ja sakti hai. Phone uthne ka intezar nahi.
+3. Sab kuch saaf: services ki qeemat aur waqt pehle se nazar aate
+   hain, koi andaza nahi lagana padta.
+4. Yaad dihani: appointment bhoolne ka darr nahi. Email, notification
+   aur reminders khud aate hain.
+5. Sirf number se clinic: clinic ka number pata ho to bas likhein,
+   seedha clinic ka page khul jata hai.
+6. Apni zubaan: Hinglish mein, saada aur aasaan.
+7. Ek jagah saari bookings: "Meri Bookings" mein poora record.
+8. Customer ke liye Naqatar istemal karna muft hai. Ilaj ki fees
+   wahi hai jo clinic leta hai.
+
+--- Clinic / Business ke liye faide ---
+
+1. Kam phone calls: receptionist ka bara waqt booking ke phone sunne
+   mein jata hai. Naqatar par customer khud booking karta hai.
+2. Munazzam din: har appointment ka waqt, service aur customer ki
+   maloomat pehle se maloom. Rush aur khaali waqt dono kam hote hain.
+3. Double booking nahi: system khud har slot ki gintee rakhta hai.
+4. Jaali bookings mein kami: login zaroori hai, aur chahein to advance
+   payment ka option on kar sakte hain.
+5. "Nahi aaye" ka hisaab: No-Show mark karne se slot dobara khul jata
+   hai aur record bhi rehta hai.
+6. Online pehchaan: har clinic ka apna page, services, qeematein,
+   timings aur logo ke saath, jo WhatsApp par share bhi ho sakta hai.
+7. Naye customers: log Medical aur Aesthetic tabs mein clinics
+   dhoondte hain, aur wahan aap ka clinic nazar aata hai.
+8. Record aur report: appointments ki list Excel/CSV mein download
+   karke hisaab kitaab aasaan.
+9. Shuru karna aasaan: koi software install nahi, koi machine nahi.
+   Phone ya computer ke browser se poora clinic chalaya ja sakta hai.
+   Naye clinics ke liye free trial bhi hai.
+
+======================================================================
+KHULASA (Summary)
+======================================================================
+
+Naqatar Medical aur Aesthetic clinics ke liye ek aasaan Hinglish
+appointment app hai. Customer clinic ka number likhta hai, service,
+din aur khaali waqt chunta hai, aur booking ho jati hai. Saath mein
+Booking ID, email aur reminders bhi milte hain. Clinic ek dashboard
+se apni saari appointments, services aur timings sambhalta hai, aur
+double booking ya jaali booking ki fikr nahi karta.
+
+Customer ke liye: kam intezar, saaf qeematein, aur yaad dihani.
+Clinic ke liye: kam phone calls, munazzam din, aur naye customers.
+
+Naqatar: Clinic appointment, ab aasaan.
+https://naqatar.web.app
