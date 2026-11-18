@@ -32,6 +32,7 @@ import { useAppShutdown } from './hooks/useAppShutdown';
 const SupportChatWidget = lazy(() => import('./components/shared/SupportChatWidget'));
 
 // Customer pages
+import FindBusinessPage    from './pages/public/FindBusinessPage';
 import ClinicHomePage      from './pages/public/ClinicHomePage';
 import BusinessPage        from './pages/public/BusinessPage';
 import BookingPage         from './pages/public/BookingPage';
@@ -108,7 +109,10 @@ function AppLayout() {
       <main className={showBottomNav ? 'has-bottom-nav' : ''}>
       <Routes>
         {/* Customer */}
-        <Route path="/"                             element={<ClinicHomePage />} />
+        {/* "/" = QuFree's find-a-business-by-number page (as-is). */}
+        <Route path="/"                             element={<FindBusinessPage />} />
+        {/* Clinic list with Medical/Aesthetic tabs (was "/" in P2). */}
+        <Route path="/clinics"                      element={<ClinicHomePage />} />
         <Route path="/index/business/:id"           element={<BusinessPage />} />
         <Route path="/index/login"                  element={<LoginPage />} />
         <Route path="/index/register"               element={<CustomerRegister />} />
@@ -120,7 +124,7 @@ function AppLayout() {
         <Route path="/terms"   element={<Suspense fallback={<Loading />}><TermsPage /></Suspense>} />
         <Route path="/privacy" element={<Suspense fallback={<Loading />}><PrivacyPage /></Suspense>} />
 
-        {/* QuFree home URLs → clinic home */}
+        {/* QuFree home URLs → find-business home */}
         <Route path="/index"         element={<Navigate to="/" replace />} />
         <Route path="/find-business" element={<Navigate to="/" replace />} />
 
