@@ -39,7 +39,7 @@
 | # | Phase | Dates | Kaam | Status |
 |---|---|---|---|---|
 | **P0** | Bootstrap | 18 Nov | QuFree copy, emulator config (`demo-naqatar`), deploy-block, clinic seed (6+1 clinics, customer, 4 appointments), smoke test (6 checks), README, Git | ✅ Done (`7ebd745`) |
-| **P1** | Brand assets | 18 – 19 Nov | Logo se favicon, PWA icons (any + maskable), Apple touch icon, notification badge, OG image (1200×628), transparent logo/wordmark (dark aur light) | 🔄 Jari |
+| **P1** | Brand assets | 18 – 19 Nov | Logo se favicon, PWA icons (any + maskable), Apple touch icon, notification badge, OG image (1200×628), transparent logo/wordmark (dark aur light). `npm run brand:assets`. *App mein lagana P3 mein* | ✅ Done (`c637942`) |
 | **P2** | Clinic-only | 19 – 20 Nov | `App.jsx`: sirf clinic ke customer + admin routes, baaqi redirect. Home par **Medical / Aesthetic** tabs. Navbar, BottomNav, Footer mein sirf clinic links. AdminRegister mein sirf `clinic` type. Ghair-zaroori pages, assets aur dependencies hatana | ⏳ |
 | **P3** | Branding wire-up | 20 Nov | PWA manifest (naam, icons, theme), `index.html` meta/OG/title, ~20 jagah QuFree logos ki jagah Naqatar, gold accent. **QuFree ke Google Analytics tags hatana**. `qufree.web.app` links, sitemap, robots | ⏳ |
 | **P4** | Hinglish UI | 23 – 25 Nov | ~400 strings, 22 files. Ek dictionary file (`src/i18n/hinglish.js`) taa ke baad mein English add ho sake. Pehle customer screens, phir clinic admin | ⏳ |
