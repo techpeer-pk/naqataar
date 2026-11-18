@@ -10,6 +10,7 @@ import {
 import toast from 'react-hot-toast';
 import ShareMenu from './ShareMenu';
 import './Navbar.css';
+import { t } from '../../i18n';
 
 // Naqatar (clinic-only): two shells — customer (public) and clinic admin.
 // QuFree's Eats / HealthCare / Nayasaa / Rasoomat / hotel-rooms / menu-orders
@@ -45,7 +46,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout();
-    toast.success('Logged out');
+    toast.success(t('Logged out'));
     navigate('/');
   };
 
@@ -57,14 +58,14 @@ export default function Navbar() {
         <button
           className="menu-toggle"
           onClick={() => setMenuOpen(o => !o)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={menuOpen ? t('Close menu') : t('Open menu')}
         >
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
         <Link to={isAdminRoute ? '/admin/dashboard' : '/'} className="navbar-brand">
           <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="navbar-logo-img" width={522} height={160} />
-          {isAdminRoute && <span className="brand-tag">Admin</span>}
+          {isAdminRoute && <span className="brand-tag">{t('Admin')}</span>}
         </Link>
 
         {/* Desktop links */}
@@ -72,26 +73,26 @@ export default function Navbar() {
           {isPublicRoute && (
             <>
               <Link to="/" className={`nav-link ${isHome ? 'active' : ''}`}>
-                <Home size={15} /> Home
+                <Home size={15} /> {t('Home')}
               </Link>
               <Link to="/index/my-appointments" className={`nav-link ${pathname.includes('my-appointments') ? 'active' : ''}`}>
-                <CalendarCheck size={15} /> My Bookings
+                <CalendarCheck size={15} /> {t('My Bookings')}
               </Link>
             </>
           )}
           {isAdminRoute && user && (
             <>
               <Link to="/admin/dashboard"    className={`nav-link ${pathname === '/admin/dashboard' ? 'active' : ''}`}>
-                <LayoutDashboard size={15} /> Dashboard
+                <LayoutDashboard size={15} /> {t('Dashboard')}
               </Link>
               <Link to="/admin/appointments" className={`nav-link ${pathname === '/admin/appointments' ? 'active' : ''}`}>
-                <BookOpen size={15} /> Appointments
+                <BookOpen size={15} /> {t('Appointments')}
               </Link>
               <Link to="/admin/services"     className={`nav-link ${pathname === '/admin/services' ? 'active' : ''}`}>
-                Services
+                {t('Services')}
               </Link>
               <Link to="/admin/invoices"     className={`nav-link ${pathname === '/admin/invoices' ? 'active' : ''}`}>
-                <Receipt size={15} /> Invoices
+                <Receipt size={15} /> {t('Invoices')}
               </Link>
             </>
           )}
@@ -102,8 +103,8 @@ export default function Navbar() {
           <ShareMenu
             className="navbar-share"
             url={APP_SHARE_URL}
-            title="Naqatar: Clinic appointments made easy"
-            text="Find any clinic by its number and book an appointment instantly on Naqatar."
+            title={t('Naqatar: Clinic appointments made easy')}
+            text={t('Find any clinic by its number and book an appointment instantly on Naqatar.')}
           />
         )}
 
@@ -111,7 +112,7 @@ export default function Navbar() {
         <div className="navbar-auth">
           {isPublicRoute && !isCustomer && (
             <Link to="/index/login" className="btn btn-ghost btn-sm">
-              <User size={15} /> <span className="nav-signin-label">Sign In</span>
+              <User size={15} /> <span className="nav-signin-label">{t('Sign In')}</span>
             </Link>
           )}
           {isPublicRoute && user && isCustomer && (
@@ -130,18 +131,18 @@ export default function Navbar() {
               {dropdownOpen && (
                 <div className="dropdown">
                   <Link to="/index/profile" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    <UserCircle size={15} /> My Profile
+                    <UserCircle size={15} /> {t('My Profile')}
                   </Link>
                   <Link to="/index/notifications" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
                     <span className="icon-wrap">
                       <Bell size={15} />
                       {unreadCount > 0 && <span className="navbar-badge-dot" />}
                     </span>
-                    My Notifications
+                    {t('My Notifications')}
                   </Link>
                   <hr />
                   <button className="dropdown-item text-danger" onClick={handleLogout}>
-                    <LogOut size={15} /> Sign Out
+                    <LogOut size={15} /> {t('Sign Out')}
                   </button>
                 </div>
               )}
@@ -166,11 +167,11 @@ export default function Navbar() {
               {dropdownOpen && (
                 <div className="dropdown">
                   <Link to="/admin/profile" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    <Settings size={15} /> Business Profile
+                    <Settings size={15} /> {t('Clinic Profile')}
                   </Link>
                   <hr />
                   <button className="dropdown-item text-danger" onClick={handleLogout}>
-                    <LogOut size={15} /> Sign Out
+                    <LogOut size={15} /> {t('Sign Out')}
                   </button>
                 </div>
               )}
@@ -185,43 +186,43 @@ export default function Navbar() {
           {isPublicRoute && (
             <>
               <Link to="/" className="mobile-link" onClick={() => setMenuOpen(false)}>
-                <Home size={16} /> Home
+                <Home size={16} /> {t('Home')}
               </Link>
               <Link to="/index/my-appointments" className="mobile-link" onClick={() => setMenuOpen(false)}>
-                <CalendarCheck size={16} /> My Bookings
+                <CalendarCheck size={16} /> {t('My Bookings')}
               </Link>
               {user && isCustomer ? (
                 <>
                   <Link to="/index/profile" className="mobile-link" onClick={() => setMenuOpen(false)}>
-                    <UserCircle size={16} /> My Profile
+                    <UserCircle size={16} /> {t('My Profile')}
                   </Link>
                   <Link to="/index/notifications" className="mobile-link" onClick={() => setMenuOpen(false)}>
                     <span className="icon-wrap">
                       <Bell size={16} />
                       {unreadCount > 0 && <span className="navbar-badge-dot" />}
                     </span>
-                    My Notifications
+                    {t('My Notifications')}
                   </Link>
                   <button className="mobile-link text-danger" onClick={handleLogout}>
-                    <LogOut size={16} /> Sign Out
+                    <LogOut size={16} /> {t('Sign Out')}
                   </button>
                 </>
               ) : (
                 <Link to="/index/login" className="mobile-link" onClick={() => setMenuOpen(false)}>
-                  <User size={16} /> Sign In
+                  <User size={16} /> {t('Sign In')}
                 </Link>
               )}
             </>
           )}
           {isAdminRoute && user && (
             <>
-              <Link to="/admin/dashboard"    className="mobile-link" onClick={() => setMenuOpen(false)}>Dashboard</Link>
-              <Link to="/admin/appointments" className="mobile-link" onClick={() => setMenuOpen(false)}>Appointments</Link>
-              <Link to="/admin/services"     className="mobile-link" onClick={() => setMenuOpen(false)}>Services</Link>
-              <Link to="/admin/invoices"     className="mobile-link" onClick={() => setMenuOpen(false)}>Invoices</Link>
-              <Link to="/admin/profile"      className="mobile-link" onClick={() => setMenuOpen(false)}>Business Profile</Link>
+              <Link to="/admin/dashboard"    className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Dashboard')}</Link>
+              <Link to="/admin/appointments" className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Appointments')}</Link>
+              <Link to="/admin/services"     className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Services')}</Link>
+              <Link to="/admin/invoices"     className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Invoices')}</Link>
+              <Link to="/admin/profile"      className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Clinic Profile')}</Link>
               <button className="mobile-link text-danger" onClick={handleLogout}>
-                <LogOut size={16} /> Sign Out
+                <LogOut size={16} /> {t('Sign Out')}
               </button>
             </>
           )}

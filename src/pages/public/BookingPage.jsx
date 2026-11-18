@@ -16,6 +16,7 @@ import { useReminders }  from '../../hooks/useReminders';
 import SlotPicker from '../../components/public/SlotPicker';
 import BankDetailsCard from '../../components/shared/BankDetailsCard';
 import './BookingPage.css';
+import { t } from '../../i18n';
 
 const STEPS = ['Service', 'Date & Time', 'Confirm'];
 
@@ -128,9 +129,9 @@ export default function BookingPage() {
     setLoginLoading(true);
     try {
       await loginWithGoogle('customer');
-      toast.success('Signed in!');
+      toast.success(t('Signed in!'));
     } catch (err) {
-      toast.error(err.message || 'Google sign-in failed.');
+      toast.error(err.message || t('Google sign-in failed.'));
     } finally {
       setLoginLoading(false);
     }
@@ -141,9 +142,9 @@ export default function BookingPage() {
     setLoginLoading(true);
     try {
       await login(loginForm.email, loginForm.password);
-      toast.success('Signed in!');
+      toast.success(t('Signed in!'));
     } catch {
-      toast.error('Invalid email or password.');
+      toast.error(t('Invalid email or password.'));
     } finally {
       setLoginLoading(false);
     }
@@ -151,7 +152,7 @@ export default function BookingPage() {
 
   const handleSubmit = async () => {
     if (!isValidLocalPhoneDigits(form.phone)) {
-      toast.error(`Please enter a valid ${PH_LOCAL_PHONE_LEN}-digit phone number.`);
+      toast.error(t('Please enter a valid {n}-digit phone number.', { n: PH_LOCAL_PHONE_LEN }));
       return;
     }
     setSubmitting(true);
@@ -224,7 +225,7 @@ export default function BookingPage() {
         setSelectedTime(null);
         setStep(1);
       } else {
-        toast.error('Booking failed. Please try again.');
+        toast.error(t('Booking failed. Please try again.'));
       }
     } finally {
       setSubmitting(false);
@@ -232,12 +233,12 @@ export default function BookingPage() {
   };
 
   if (loading) return <div className="loading-screen"><div className="spinner" /></div>;
-  if (!business) return <div className="container page"><p>Business not found.</p></div>;
+  if (!business) return <div className="container page"><p>{t('Clinic not found.')}</p></div>;
 
   return (
     <div className="booking-page page">
       <div className="container booking-container">
-        <h1 className="booking-title">Book at {business.name}</h1>
+        <h1 className="booking-title">{t('Book at {name}', { name: business.name })}</h1>
 
         {/* Stepper */}
         <div className="stepper">
@@ -247,7 +248,7 @@ export default function BookingPage() {
                 <div className="step-dot">
                   {i < step ? <Check size={13} /> : i + 1}
                 </div>
-                <span className="step-label">{label}</span>
+                <span className="step-label">{t(label)}</span>
               </div>
               {i < STEPS.length - 1 && <div key={`line-${i}`} className={`step-line ${i < step ? 'done' : ''}`} />}
             </>
@@ -262,9 +263,9 @@ export default function BookingPage() {
                 this same appointment. */}
             {step === 0 && (
               <div className="fade-up">
-                <h2 className="step-heading">Select Service(s)</h2>
+                <h2 className="step-heading">{t('Select Service(s)')}</h2>
                 {services.length === 0
-                  ? <p className="text-muted">No services available.</p>
+                  ? <p className="text-muted">{t('No services available.')}</p>
                   : (
                     <div className="service-select-list">
                       {services.map(s => {
@@ -281,11 +282,11 @@ export default function BookingPage() {
                             {s.image && <img src={s.image} alt={s.name} className="service-select-thumb" />}
                             <div className="service-select-info">
                               <span className="service-select-name">{s.name}</span>
-                              {s.onTop && <span className="badge badge-promo">Promo</span>}
+                              {s.onTop && <span className="badge badge-promo">{t('Promo')}</span>}
                               {s.description && <span className="service-select-desc">{s.description}</span>}
                             </div>
                             <div className="service-select-meta">
-                              {s.duration && <span>{s.duration} min</span>}
+                              {s.duration && <span>{t('{n} min', { n: s.duration })}</span>}
                               {s.price     && <span className="service-select-price">PKR {s.price.toLocaleString()}</span>}
                             </div>
                           </button>
@@ -295,13 +296,13 @@ export default function BookingPage() {
                   )
                 }
                 {selectedServices.length === 0 && services.length > 1 && (
-                  <p className="service-select-hint">Tap one or more services above to continue.</p>
+                  <p className="service-select-hint">{t('Tap one or more services above to continue.')}</p>
                 )}
                 {selectedServices.length > 0 && (
                   <p className="service-select-total">
-                    {selectedServices.length} service{selectedServices.length > 1 ? 's' : ''} selected
-                    {totalDuration ? ` — ${totalDuration} min total` : ''}
-                    {totalPrice != null ? ` — PKR ${totalPrice.toLocaleString()} total` : ''}
+                    {t(selectedServices.length > 1 ? '{n} services selected' : '{n} service selected', { n: selectedServices.length })}
+                    {totalDuration ? ` — ${t('{n} min total', { n: totalDuration })}` : ''}
+                    {totalPrice != null ? ` — ${t('PKR {amount} total', { amount: totalPrice.toLocaleString() })}` : ''}
                   </p>
                 )}
               </div>
@@ -310,7 +311,7 @@ export default function BookingPage() {
             {/* Step 1 — Date & Time */}
             {step === 1 && (
               <div className="fade-up">
-                <h2 className="step-heading">Choose Date & Time</h2>
+                <h2 className="step-heading">{t('Choose Date & Time')}</h2>
                 <SlotPicker
                   business={business}
                   service={{ duration: totalDuration }}
@@ -328,8 +329,8 @@ export default function BookingPage() {
                 {!user ? (
                   <div className="booking-auth-gate">
                     <div className="auth-gate-icon"><LogIn size={30} /></div>
-                    <h2 className="step-heading">Sign In to Continue</h2>
-                    <p className="auth-gate-sub">A quick sign-in confirms it's really you — no fake or prank bookings. Your date & time are held while you do this.</p>
+                    <h2 className="step-heading">{t('Sign In to Continue')}</h2>
+                    <p className="auth-gate-sub">{t("A quick sign-in confirms it's really you — no fake or prank bookings. Your date & time are held while you do this.")}</p>
 
                     <button
                       className="btn btn-ghost btn-full google-btn"
@@ -337,17 +338,17 @@ export default function BookingPage() {
                       disabled={loginLoading}
                     >
                       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width={18} />
-                      Continue with Google
+                      {t('Continue with Google')}
                     </button>
 
-                    <div className="auth-divider"><span>or</span></div>
+                    <div className="auth-divider"><span>{t('or')}</span></div>
 
                     <form onSubmit={handleEmailSignIn}>
                       <div className="form-group">
                         <input
                           className="form-control"
                           type="email"
-                          placeholder="Email address"
+                          placeholder={t('Email address')}
                           value={loginForm.email}
                           onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
                           required
@@ -357,30 +358,30 @@ export default function BookingPage() {
                         <input
                           className="form-control"
                           type="password"
-                          placeholder="Password"
+                          placeholder={t('Password')}
                           value={loginForm.password}
                           onChange={e => setLoginForm(f => ({ ...f, password: e.target.value }))}
                           required
                         />
                       </div>
                       <button className="btn btn-primary btn-full" type="submit" disabled={loginLoading}>
-                        {loginLoading ? 'Signing in…' : 'Sign In & Continue'}
+                        {loginLoading ? t('Signing in…') : t('Sign In & Continue')}
                       </button>
                     </form>
 
                     <p className="auth-gate-footer">
-                      New here? <Link to="/index/register">Create a free account</Link>
+                      {t('New here?')} <Link to="/index/register">{t('Create a free account')}</Link>
                     </p>
                   </div>
                 ) : (
                   <>
-                    <h2 className="section-heading">Your Details</h2>
+                    <h2 className="section-heading">{t('Your Details')}</h2>
                     <div className="form-group">
-                      <label className="form-label">Full Name *</label>
+                      <label className="form-label">{t('Full Name *')}</label>
                       <input className="form-control" placeholder="Muhammad Ali" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Phone Number *</label>
+                      <label className="form-label">{t('Phone Number *')}</label>
                       <div className="phone-input-group">
                         <span className="phone-input-prefix">+92</span>
                         <input
@@ -396,9 +397,9 @@ export default function BookingPage() {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Email Address *</label>
+                      <label className="form-label">{t('Email Address *')}</label>
                       <input className="form-control" type="email" value={form.email} disabled />
-                      <p className="form-hint">Your account email is used so this booking stays linked to your account.</p>
+                      <p className="form-hint">{t('Your account email is used so this booking stays linked to your account.')}</p>
                     </div>
                     {business?.type === 'studyabroad' && (
                       <div className="form-group">
@@ -409,17 +410,17 @@ export default function BookingPage() {
                       </div>
                     )}
                     <div className="form-group">
-                      <label className="form-label">Notes (optional)</label>
-                      <textarea className="form-control" placeholder={business?.type === 'catering' ? 'e.g. guest count, dietary requirements, event details…' : business?.type === 'carvalet' ? 'e.g. pickup/drop location, number of vehicles…' : 'Any special requests…'} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
+                      <label className="form-label">{t('Notes (optional)')}</label>
+                      <textarea className="form-control" placeholder={business?.type === 'catering' ? 'e.g. guest count, dietary requirements, event details…' : business?.type === 'carvalet' ? 'e.g. pickup/drop location, number of vehicles…' : t('Any special requests…')} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
                     </div>
 
                     {business.requiresAdvancePayment && (
                       <div className="payment-proof-block">
-                        <h3 className="payment-proof-title">Advance Payment Required</h3>
+                        <h3 className="payment-proof-title">{t('Advance Payment Required')}</h3>
                         {!payAtCounter ? (
                           <>
                             <p className="payment-proof-amount">
-                              PKR {(totalPrice ?? 0).toLocaleString()} — transfer to:
+                              {t('PKR {amount} — transfer to:', { amount: (totalPrice ?? 0).toLocaleString() })}
                             </p>
                             {/* Per-business bank details hibernated (2026-09-11) — advance
                             payments now go to Qunjee's own account (BankDetailsCard) instead
@@ -432,11 +433,11 @@ export default function BookingPage() {
                             */}
                             <BankDetailsCard />
                             <div className="form-group">
-                              <label className="form-label">Upload Payment Screenshot *</label>
+                              <label className="form-label">{t('Upload Payment Screenshot *')}</label>
                               <label className="proof-upload-input">
                                 <Upload size={16} />
                                 <span className="proof-upload-input-label">
-                                  {paymentProofFile ? paymentProofFile.name : 'Choose screenshot…'}
+                                  {paymentProofFile ? paymentProofFile.name : t('Choose screenshot…')}
                                 </span>
                                 <input
                                   type="file"
@@ -445,29 +446,29 @@ export default function BookingPage() {
                                   onChange={e => setPaymentProofFile(e.target.files?.[0] || null)}
                                 />
                               </label>
-                              <p className="form-hint">The business will verify this before confirming your booking.</p>
+                              <p className="form-hint">{t('The clinic will verify this before confirming your booking.')}</p>
                             </div>
                             <button type="button" className="payment-proof-coc-toggle" onClick={() => setPayAtCounter(true)}>
-                              Prefer to pay cash over the counter instead?
+                              {t('Prefer to pay cash over the counter instead?')}
                             </button>
                           </>
                         ) : (
                           <>
                             <p className="form-hint" style={{ marginBottom: '0.75rem' }}>
-                              You'll pay PKR {(totalPrice ?? 0).toLocaleString()} in cash at the business when you arrive.
+                              {t("You'll pay PKR {amount} in cash at the clinic when you arrive.", { amount: (totalPrice ?? 0).toLocaleString() })}
                             </p>
                             <button type="button" className="payment-proof-coc-toggle" onClick={() => setPayAtCounter(false)}>
-                              ← Pay online instead
+                              {t('← Pay online instead')}
                             </button>
                           </>
                         )}
                       </div>
                     )}
 
-                    <h2 className="section-heading section-heading-divided">Confirm Booking</h2>
+                    <h2 className="section-heading section-heading-divided">{t('Confirm Booking')}</h2>
                     <div className="confirm-summary">
                       {[
-                        { label: 'Business', value: business.name },
+                        { label: 'Clinic', value: business.name },
                         { label: selectedServices.length > 1 ? 'Services' : 'Service',
                           value: selectedServices.map(s => s.name).join(', ') + (totalPrice != null ? ` — PKR ${totalPrice.toLocaleString()}` : '') },
                         { label: 'Date',     value: selectedDate ? format(selectedDate, 'EEEE, d MMMM yyyy') : '' },
@@ -475,14 +476,14 @@ export default function BookingPage() {
                         ...(form.notes ? [{ label: 'Notes', value: form.notes }] : []),
                       ].map(row => (
                         <div key={row.label} className="confirm-row">
-                          <span className="confirm-label">{row.label}</span>
+                          <span className="confirm-label">{t(row.label)}</span>
                           <span className="confirm-value">{row.value}</span>
                         </div>
                       ))}
                     </div>
                     <p className="confirm-note">
-                      A confirmation email will be sent to <strong>{form.email}</strong>.
-                      We'll also send you reminders before your appointment! (Check your Spam folder if it doesn't arrive.)
+                      {t('A confirmation email will be sent to')} <strong>{form.email}</strong>.{' '}
+                      {t("We'll also send you reminders before your appointment! (Check your Spam folder if it doesn't arrive.)")}
                     </p>
                   </>
                 )}
@@ -497,15 +498,15 @@ export default function BookingPage() {
               className="btn btn-ghost btn-nav-back"
               onClick={() => step === 0 ? navigate(-1) : setStep(s => s - 1)}
             >
-              <ChevronLeft size={16} /> {step === 0 ? 'Back' : 'Previous'}
+              <ChevronLeft size={16} /> {step === 0 ? t('Back') : t('Previous')}
             </button>
             {step < 2 ? (
               <button className="btn btn-primary btn-nav-primary" disabled={!canNext()} onClick={() => setStep(s => s + 1)}>
-                Continue
+                {t('Continue')}
               </button>
             ) : user ? (
               <button className="btn btn-primary btn-nav-primary" disabled={submitting || !canSubmit()} onClick={handleSubmit}>
-                {submitting ? 'Booking…' : 'Confirm Booking'}
+                {submitting ? t('Booking…') : t('Confirm Booking')}
               </button>
             ) : null}
           </div>

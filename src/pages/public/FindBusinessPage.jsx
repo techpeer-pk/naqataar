@@ -7,10 +7,11 @@ import { useBusinesses } from '../../hooks/useBusinesses';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { stripCountryCode } from '../../utils/validation';
 import './FindBusinessPage.css';
+import { t } from '../../i18n';
 
 // 2026-11-17 upgrade: hero + search card + "how it works", Qufree teal.
 const STEPS = [
-  { icon: Hash,          title: 'Enter the number', text: "Type the business's phone number in any format." },
+  { icon: Hash,          title: 'Enter the number', text: "Type the clinic's phone number in any format." },
   { icon: Search,        title: 'We find it',       text: 'Naqatar matches it to the registered clinic.' },
   { icon: CalendarCheck, title: 'Book instantly',   text: 'Open its page, pick a service and a time.' },
 ];
@@ -26,14 +27,14 @@ export default function FindBusinessPage() {
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState([]); // >1 business on the same number
   const inputRef = useRef(null);
-  usePageTitle('Find a business');
+  usePageTitle(t('Find a clinic'));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setMatches([]);
     if (!stripCountryCode(number)) {
-      setError('Enter a valid number, e.g. 03001234567');
+      setError(t('Enter a valid number, e.g. 03001234567'));
       return;
     }
     setLoading(true);
@@ -44,9 +45,9 @@ export default function FindBusinessPage() {
       const found = (await fetchByPhone(number)).filter(b => b.type === 'clinic');
       if (found.length === 1) navigate(`/index/business/${found[0].id}`);
       else if (found.length > 1) setMatches(found);
-      else setError('No clinic found with this number.');
+      else setError(t('No clinic found with this number.'));
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError(t('Something went wrong. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -103,11 +104,11 @@ export default function FindBusinessPage() {
         <AdBannerStrip placement="findbusiness" />
 
         <section className="fb-hero">
-          <h1 className="fb-title">Find any business <span>by its number</span></h1>
-          <p className="fb-sub">Enter the business's phone number. We'll take you straight to its page to book.</p>
+          <h1 className="fb-title">{t('Find any clinic')} <span>{t('by its number')}</span></h1>
+          <p className="fb-sub">{t("Enter the clinic's phone number. We'll take you straight to its page to book.")}</p>
 
           <form className="fb-card" onSubmit={handleSubmit} noValidate>
-            <label className="fb-label" htmlFor="find-biz-number">Business number</label>
+            <label className="fb-label" htmlFor="find-biz-number">{t('Clinic number')}</label>
             <div className={`fb-input-wrap ${error ? 'has-error' : ''}`}>
               <Phone size={18} className="fb-input-icon" aria-hidden="true" />
               <input
@@ -117,7 +118,7 @@ export default function FindBusinessPage() {
                 type="tel"
                 inputMode="tel"
                 autoComplete="off"
-                placeholder="e.g. 0300 1234567"
+                placeholder={t('e.g. 0300 1234567')}
                 value={number}
                 onChange={e => { setNumber(e.target.value); setError(''); }}
                 aria-invalid={!!error}
@@ -125,7 +126,7 @@ export default function FindBusinessPage() {
                 autoFocus
               />
               {number && !loading && (
-                <button type="button" className="fb-clear" onClick={clear} aria-label="Clear number">
+                <button type="button" className="fb-clear" onClick={clear} aria-label={t('Clear number')}>
                   <X size={16} />
                 </button>
               )}
@@ -133,18 +134,18 @@ export default function FindBusinessPage() {
             {error
               ? <p id="fb-error" className="fb-error" role="alert"><AlertCircle size={15} /> {error}</p>
               /* : <p id="fb-hint" className="fb-hint">Any format works: 0300 1234567, 92300…, +92 300…</p>} */
-              : <p id="fb-hint" className="fb-hint">Any format works: 0300…, 92300…, +92 300…</p>}
+              : <p id="fb-hint" className="fb-hint">{t('Any format works: 0300…, 92300…, +92 300…')}</p>}
 
             <button type="submit" className="fb-submit" disabled={loading || !number.trim()}>
               {loading
-                ? <><span className="fb-spinner" aria-hidden="true" /> Searching…</>
-                : <><Search size={18} /> Find business</>}
+                ? <><span className="fb-spinner" aria-hidden="true" /> {t('Searching…')}</>
+                : <><Search size={18} /> {t('Find clinic')}</>}
             </button>
           </form>
 
           {matches.length > 1 && (
             <div className="fb-matches">
-              <p className="fb-matches-title">{matches.length} businesses use this number. Pick one:</p>
+              <p className="fb-matches-title">{t('{count} clinics use this number. Pick one:', { count: matches.length })}</p>
               {matches.map(b => (
                 <Link key={b.id} to={`/index/business/${b.id}`} className="fb-match">
                   <span className="fb-match-icon"><Building2 size={18} /></span>
@@ -159,13 +160,13 @@ export default function FindBusinessPage() {
           )}
         </section>
 
-        <section className="fb-steps" aria-label="How it works">
+        <section className="fb-steps" aria-label={t('How it works')}>
           {STEPS.map(({ icon: Icon, title, text }, i) => (
             <div className="fb-step" key={title}>
               <span className="fb-step-icon"><Icon size={20} /></span>
               <span className="fb-step-num">{i + 1}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>{t(title)}</h3>
+              <p>{t(text)}</p>
             </div>
           ))}
         </section>

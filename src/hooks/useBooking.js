@@ -7,10 +7,11 @@ import {
   DAY_KEYS, generateTimeSlots, coveredTimes, slotId, resolveDayBounds,
 } from '../utils/slots';
 import { bookingRef } from '../utils/format';
+import { t } from '../i18n';
 
 /** Thrown when a slot filled up between the customer viewing it and confirming. */
 export class SlotUnavailableError extends Error {
-  constructor(message = 'That time was just taken. Please pick another slot.') {
+  constructor(message = t('That time was just taken. Please pick another slot.')) {
     super(message);
     this.name = 'SlotUnavailableError';
   }
@@ -40,20 +41,20 @@ export function useBooking() {
     const dayKey = DAY_KEYS[day.getDay()];
     const hours  = business.workingHours?.[dayKey];
     if (!hours?.open || !hours?.close) {
-      throw new SlotUnavailableError('The business is closed on this day.');
+      throw new SlotUnavailableError(t('The clinic is closed on this day.'));
     }
     const grid      = generateTimeSlots(hours.open, hours.close, slotDuration);
     const dayBounds = resolveDayBounds(hours.open, hours.close);
     const covered   = coveredTimes(time, totalDuration, slotDuration, grid, dayBounds);
     if (!covered) {
-      throw new SlotUnavailableError('These services don\'t fit in the selected time.');
+      throw new SlotUnavailableError(t("These services don't fit in the selected time."));
     }
 
     // Reject bookings in the past (business-local clock).
     const [h, mi] = time.split(':').map(Number);
     const dt = new Date(y, mo - 1, d, h, mi, 0);
     if (dt.getTime() <= Date.now()) {
-      throw new SlotUnavailableError('That time has already passed. Please pick a future slot.');
+      throw new SlotUnavailableError(t('That time has already passed. Please pick a future slot.'));
     }
 
     const apptRef  = doc(collection(db, 'appointments'));

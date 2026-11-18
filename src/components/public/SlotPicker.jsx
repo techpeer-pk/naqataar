@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Sun, CloudSun, Moon } from 'lucide-react';
 import { useSlots } from '../../hooks/useSlots';
 import { formatTime12h, dayPart } from '../../utils/format';
 import './SlotPicker.css';
+import { t } from '../../i18n';
 
 const MAX_DAYS = 31;
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -60,11 +61,11 @@ export default function SlotPicker({ business, service, selectedDate, selectedTi
     <div className="slot-picker">
       <div className="cal-wrap">
         <div className="cal-header">
-          <button className="strip-nav" onClick={() => setViewMonth(m => addMonths(m, -1))} disabled={!canPrevMonth} aria-label="Previous month">
+          <button className="strip-nav" onClick={() => setViewMonth(m => addMonths(m, -1))} disabled={!canPrevMonth} aria-label={t('Previous month')}>
             <ChevronLeft size={18} />
           </button>
           <span className="cal-month-label">{format(viewMonth, 'MMMM yyyy')}</span>
-          <button className="strip-nav" onClick={() => setViewMonth(m => addMonths(m, 1))} disabled={!canNextMonth} aria-label="Next month">
+          <button className="strip-nav" onClick={() => setViewMonth(m => addMonths(m, 1))} disabled={!canNextMonth} aria-label={t('Next month')}>
             <ChevronRight size={18} />
           </button>
         </div>
@@ -103,13 +104,13 @@ export default function SlotPicker({ business, service, selectedDate, selectedTi
               <div className="spinner" style={{ margin: '0 auto' }} />
             </div>
           ) : slots.length === 0 ? (
-            <p className="no-slots">No slots available for this date.</p>
+            <p className="no-slots">{t('No slots available for this date.')}</p>
           ) : (
             groupSlots(slots).map(group => (
               <div className="time-slot-group" key={group.key}>
                 <div className="time-slot-group-header">
                   <group.Icon size={14} />
-                  <span>{group.label}</span>
+                  <span>{t(group.label)}</span>
                 </div>
                 <div className="time-slots">
                   {group.items.map(time => (

@@ -9,6 +9,7 @@ import { formatTime12h } from '../../utils/format';
 import Sk from '../../components/shared/Skeleton';
 import './BusinessPage.css';
 import './eats/EatsBusinessPage.css';
+import { t } from '../../i18n';
 
 function BusinessPageSkeleton() {
   return (
@@ -109,12 +110,12 @@ export default function BusinessPage() {
   }, [id]);
 
   if (loading) return <BusinessPageSkeleton />;
-  if (!business) return <div className="container page"><p>Business not found.</p></div>;
+  if (!business) return <div className="container page"><p>{t('Clinic not found.')}</p></div>;
 
   return (
     <div className={`biz-page page${showCartBar ? ' has-cart-bar' : ''}`}>
       <div className="container">
-        <button type="button" onClick={() => navigate(-1)} className="back-link"><ChevronLeft size={16} /> Back</button>
+        <button type="button" onClick={() => navigate(-1)} className="back-link"><ChevronLeft size={16} /> {t('Back')}</button>
 
         {/* Header */}
         <div className="biz-header card">
@@ -145,7 +146,7 @@ export default function BusinessPage() {
                         className="biz-desc-toggle"
                         onClick={() => setDescExpanded(v => !v)}
                       >
-                        {descExpanded ? 'Show less' : 'Read more'}
+                        {descExpanded ? t('Show less') : t('Read more')}
                       </button>
                     )}
                   </>
@@ -159,7 +160,7 @@ export default function BusinessPage() {
                 booking flow with no room/outfit selected. */}
             {!(POOL_BOOKING_TYPES.includes(business.type) && services.length > 0) && (
               <Link to={POOL_TYPE_META[business.type] ? `${POOL_TYPE_META[business.type].bookingPath}/${id}` : `/index/booking/${id}`} className="btn btn-primary btn-book-now">
-                {TYPE_BOOK_CTA[business.type] || 'Book Appointment'}
+                {t(TYPE_BOOK_CTA[business.type] || 'Book Appointment')}
               </Link>
             )}
           </div>
@@ -187,9 +188,9 @@ export default function BusinessPage() {
           </div>
           ) : (
           <div>
-            <h2 className="section-sub-title">{TYPE_SERVICE_LABEL[business.type]}</h2>
+            <h2 className="section-sub-title">{t(TYPE_SERVICE_LABEL[business.type])}</h2>
             {services.length === 0
-              ? <p className="text-muted">No services listed yet.</p>
+              ? <p className="text-muted">{t('No services listed yet.')}</p>
               : (
                 <div className="services-list">
                   {services.map(s => (
@@ -204,12 +205,12 @@ export default function BusinessPage() {
                                   alt={s.name}
                                   className="service-photo"
                                 />
-                                <span className="zoom-badge"><ZoomIn size={11} /> Zoom</span>
+                                <span className="zoom-badge"><ZoomIn size={11} /> {t('Zoom')}</span>
                               </div>
                             )
                             : <div className="service-photo service-photo-placeholder"><User size={16} /></div>
                           }
-                          {s.onTop && <span className="badge badge-promo">Promo</span>}
+                          {s.onTop && <span className="badge badge-promo">{t('Promo')}</span>}
                         </div>
                         <div className="service-row-body">
                           <div className="service-row-info">
@@ -220,7 +221,7 @@ export default function BusinessPage() {
                             <span className="service-meta-left">
                               {POOL_BOOKING_TYPES.includes(business.type)
                                 ? <span className="service-duration">{s.totalRooms || 1} {POOL_TYPE_META[business.type].unitSuffix}{(s.totalRooms || 1) > 1 ? 's' : ''}</span>
-                                : (s.duration && <span className="service-duration"><Clock size={13} /> {s.duration} min</span>)
+                                : (s.duration && <span className="service-duration"><Clock size={13} /> {t('{n} min', { n: s.duration })}</span>)
                               }
                               {s.price && <span className="service-price">PKR {s.price.toLocaleString()}{POOL_TYPE_META[business.type]?.priceUnit || ''}</span>}
                             </span>
@@ -228,7 +229,7 @@ export default function BusinessPage() {
                               to={POOL_TYPE_META[business.type] ? `${POOL_TYPE_META[business.type].bookingPath}/${id}?${POOL_TYPE_META[business.type].bookingParam}=${s.id}` : `/index/booking/${id}?service=${s.id}`}
                               className="btn btn-primary btn-sm service-book-btn"
                             >
-                              {business.type === 'nayasaa' ? 'Rent' : 'Book'}
+                              {t(business.type === 'nayasaa' ? 'Rent' : 'Book')}
                             </Link>
                           </div>
                         </div>
@@ -261,15 +262,15 @@ export default function BusinessPage() {
           <div className="biz-info-panel">
             {business.workingHours && business.showWorkingHours !== false && (
               <div className="card">
-                <div className="card-header"><h3>Working Hours</h3></div>
+                <div className="card-header"><h3>{t('Working Hours')}</h3></div>
                 <div className="card-body">
                   {DAY_ORDER.map(day => {
                     const hours = business.workingHours[day];
                     return (
                       <div key={day} className="hours-row">
-                        <span className="hours-day">{DAY_FULL[day] || day}</span>
+                        <span className="hours-day">{t(DAY_FULL[day] || day)}</span>
                         <span className="hours-time">
-                          {hours?.open ? `${formatTime12h(hours.open)} – ${formatTime12h(hours.close)}` : 'Off/Closed'}
+                          {hours?.open ? `${formatTime12h(hours.open)} – ${formatTime12h(hours.close)}` : t('Closed')}
                         </span>
                       </div>
                     );

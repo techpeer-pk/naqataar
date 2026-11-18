@@ -3,6 +3,7 @@ import { Home, CalendarCheck, MessageCircle, UserCircle } from 'lucide-react';
 import { CHAT_TOGGLE_EVENT } from '../../utils/chatEvents';
 import { useAuth } from '../../context/AuthContext';
 import './BottomNav.css';
+import { t } from '../../i18n';
 
 export default function BottomNav({ showChatTab = false, visible = false }) {
   const { pathname } = useLocation();
@@ -19,22 +20,22 @@ export default function BottomNav({ showChatTab = false, visible = false }) {
   const isMyBookingActive = pathname.startsWith('/index/my-appointments');
 
   const tabs = [
-    { label: 'Home',       to: '/',                       icon: Home,          active: isHome },
-    { label: 'My Booking', to: '/index/my-appointments',  icon: CalendarCheck, active: isMyBookingActive },
+    { label: t('Home'),       to: '/',                       icon: Home,          active: isHome },
+    { label: t('My Booking'), to: '/index/my-appointments',  icon: CalendarCheck, active: isMyBookingActive },
     // Replaces the old broadcast-bell tab (that bell only ever showed one
     // global admin message, not a personal list — see BellNotification.jsx
     // — and users mistook it for their own notifications). Personal
     // notifications/account now live one tap away via Profile; the
     // broadcast bell is still reachable from the top Navbar dropdown.
-    { label: 'Account',    to: user ? '/index/profile' : '/index/login', icon: UserCircle, active: isAccountActive },
+    { label: t('Account'),    to: user ? '/index/profile' : '/index/login', icon: UserCircle, active: isAccountActive },
   ];
 
   return (
     <nav className="bottom-nav">
-      {tabs.map(t => (
-        <Link key={t.label} to={t.to} className={`bottom-nav-item ${t.active ? 'active' : ''}`}>
-          <t.icon size={20} />
-          <span>{t.label}</span>
+      {tabs.map(tab => (
+        <Link key={tab.label} to={tab.to} className={`bottom-nav-item ${tab.active ? 'active' : ''}`}>
+          <tab.icon size={20} />
+          <span>{tab.label}</span>
         </Link>
       ))}
       {showChatTab && (
@@ -44,7 +45,7 @@ export default function BottomNav({ showChatTab = false, visible = false }) {
           onClick={() => window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT))}
         >
           <MessageCircle size={20} />
-          <span>Help</span>
+          <span>{t('Help')}</span>
         </button>
       )}
     </nav>

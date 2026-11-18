@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useCart } from '../../context/CartContext';
 import { bookingRef, formatTime12h } from '../../utils/format';
 import './ConfirmationPage.css';
+import { t } from '../../i18n';
 
 export default function ConfirmationPage() {
   const { state } = useLocation();
@@ -33,7 +34,7 @@ export default function ConfirmationPage() {
       link.href = dataUrl;
       link.click();
     } catch {
-      toast.error('Could not save image. Try again.');
+      toast.error(t('Could not save image. Try again.'));
     } finally {
       setSaving(false);
     }
@@ -83,15 +84,15 @@ export default function ConfirmationPage() {
               We'll notify you with reminders before it's time.
             </p>
             */}
-            <h1 className="confirm-title">Booking Received</h1>
+            <h1 className="confirm-title">{t('Booking Received')}</h1>
             <p className="confirm-sub">
-              Your request has been sent to <strong>{appointment?.businessName}</strong> for confirmation.<br />
-              Please check your email (including Spam folder).
+              {t('Your request has been sent to')} <strong>{appointment?.businessName}</strong> {t('for confirmation.')}<br />
+              {t('Please check your email (including Spam folder).')}
             </p>
 
             {ref && (
               <div className="confirm-ref">
-                <span className="confirm-ref-label">Booking ID</span>
+                <span className="confirm-ref-label">{t('Booking ID')}</span>
                 <span className="confirm-ref-code">{ref}</span>
               </div>
             )}
@@ -100,33 +101,33 @@ export default function ConfirmationPage() {
               <div className="confirm-details">
                 {appointment.requestedAt && (
                   <div className="confirm-detail-row">
-                    <span className="detail-label">Requested</span>
+                    <span className="detail-label">{t('Requested')}</span>
                     <span>{new Date(appointment.requestedAt).toLocaleString('en-PK', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 )}
                 <div className="confirm-detail-row">
-                  <span className="detail-label">Business</span>
+                  <span className="detail-label">{t('Clinic')}</span>
                   <span>{appointment.businessName}</span>
                 </div>
                 <div className="confirm-detail-row">
-                  <span className="detail-label">Service</span>
+                  <span className="detail-label">{t('Service')}</span>
                   <span>{appointment.serviceName}</span>
                 </div>
                 <div className="confirm-detail-row">
-                  <span className="detail-label">Date</span>
+                  <span className="detail-label">{t('Date')}</span>
                   <span>{appointment.date}</span>
                 </div>
                 <div className="confirm-detail-row">
-                  <span className="detail-label">Time</span>
+                  <span className="detail-label">{t('Time')}</span>
                   <span>{formatTime12h(appointment.time)}</span>
                 </div>
                 <div className="confirm-detail-row">
-                  <span className="detail-label">Name</span>
+                  <span className="detail-label">{t('Name')}</span>
                   <span>{appointment.customerName}</span>
                 </div>
                 {appointment.servicePrice != null && (
                   <div className="confirm-detail-row">
-                    <span className="detail-label">Total</span>
+                    <span className="detail-label">{t('Total')}</span>
                     <span>PKR {Number(appointment.servicePrice).toLocaleString()}</span>
                   </div>
                 )}
@@ -147,16 +148,15 @@ export default function ConfirmationPage() {
             <div className="confirm-reminder-note">
               <Mail size={16} />
               <span>
-                Details sent to <strong>{appointment?.customerEmail}</strong>.
-                Check inbox (and Spam folder) for updates + reminders.
+                {t('Details sent to')} <strong>{appointment?.customerEmail}</strong>.{' '}
+                {t('Check inbox (and Spam folder) for updates + reminders.')}
               </span>
             </div>
 
             <div className="confirm-reminder-note confirm-reminder-note--info">
               <CalendarCheck size={16} />
               <span>
-                We'll remind you <strong>24 hours</strong>, <strong>1 hour</strong>, and
-                <strong> 15 minutes</strong> before your appointment.
+                {t("We'll remind you 24 hours, 1 hour and 15 minutes before your appointment.")}
               </span>
             </div>
 
@@ -180,7 +180,7 @@ export default function ConfirmationPage() {
             <div className="confirm-actions no-capture">
               {appointment && (
                 <button type="button" className="btn btn-primary" disabled={saving} onClick={handleSaveToDevice}>
-                  <Download size={16} /> {saving ? 'Saving…' : 'Save to Device'}
+                  <Download size={16} /> {saving ? t('Saving…') : t('Save to Device')}
                 </button>
               )}
               {/* Hibernated (2026-09-11) — same reasoning as the note above.
@@ -191,10 +191,10 @@ export default function ConfirmationPage() {
               )}
               */}
               <Link to="/index/my-appointments" className="btn btn-ghost">
-                <CalendarCheck size={16} /> View My Bookings
+                <CalendarCheck size={16} /> {t('View My Bookings')}
               </Link>
               <Link to="/" className="btn btn-ghost">
-                <Home size={16} /> Browse More
+                <Home size={16} /> {t('Find another clinic')}
               </Link>
             </div>
           </div>

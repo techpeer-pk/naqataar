@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Mail } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Footer.css';
+import { t } from '../../i18n';
 
 // Only the one link cluster the Navbar doesn't already cover — everything
 // else here (Browse, My Bookings, Sign In, type filters) duplicated primary
@@ -44,7 +45,7 @@ export default function Footer({ hasBottomNav = false }) {
           </p> */}
           {/* 2026-11-17 Qufree rebrand */}
           <p className="footer-tagline">
-            Find any clinic by its number and <em>book instantly</em>.
+            {t('Find any clinic by its number and')} <em>{t('book instantly')}</em>.
           </p>
           <div className="footer-contact">
             {/* <span><Mail size={14} /> hello@qunjee.com</span> */}
@@ -55,11 +56,11 @@ export default function Footer({ hasBottomNav = false }) {
         </div>
 
         <div className="footer-col">
-          <h4 className="footer-col-title">For Businesses</h4>
+          <h4 className="footer-col-title">{t('For Clinics')}</h4>
           <ul className="footer-inline-links">
             {businessLinks.map(item => (
               <li key={item.label}>
-                <Link to={item.to} className="footer-link">{item.label}</Link>
+                <Link to={item.to} className="footer-link">{t(item.label)}</Link>
               </li>
             ))}
           </ul>
@@ -83,8 +84,8 @@ export default function Footer({ hasBottomNav = false }) {
             {/* 2026-11-17: hidden — /documentation still describes Qunjee (categories, QunjeeEats).
                 Re-enable once it's rewritten for Qufree. */}
             {/* <Link to="/documentation" className="footer-link">Documentation</Link> */}
-            <Link to="/terms" className="footer-link">Terms of Service</Link>
-            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
+            <Link to="/terms" className="footer-link">{t('Terms of Service')}</Link>
+            <Link to="/privacy" className="footer-link">{t('Privacy Policy')}</Link>
           </div>
         </div>
       </div>

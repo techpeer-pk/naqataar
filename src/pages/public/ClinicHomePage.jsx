@@ -6,6 +6,7 @@ import BusinessCard from '../../components/public/BusinessCard';
 import Sk from '../../components/shared/Skeleton';
 import './LandingPage.css';
 import './ClinicHomePage.css';
+import { t } from '../../i18n';
 
 // Naqatar home: every active clinic, split by businesses.clinicType
 // ('medical' | 'aesthetic', set at registration — AdminRegister.jsx).
@@ -13,7 +14,7 @@ import './ClinicHomePage.css';
 // useBusinesses.fetchAll query), minus the other verticals.
 // The active tab lives in the URL (?type=medical) so it can be shared.
 const TABS = [
-  { key: 'all',       label: 'Sab Clinics', icon: LayoutGrid },
+  { key: 'all',       label: 'All Clinics', icon: LayoutGrid },
   { key: 'medical',   label: 'Medical',     icon: Stethoscope },
   { key: 'aesthetic', label: 'Aesthetic',   icon: Sparkles },
 ];
@@ -39,7 +40,7 @@ function BusinessCardSkeleton() {
 export default function ClinicHomePage() {
   const { businesses, loading, fetchAll } = useBusinesses();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = TABS.some(t => t.key === searchParams.get('type')) ? searchParams.get('type') : 'all';
+  const tab = TABS.some(x => x.key === searchParams.get('type')) ? searchParams.get('type') : 'all';
   const [search, setSearch] = useState('');
 
   useEffect(() => { fetchAll('clinic'); }, [fetchAll]);
@@ -66,22 +67,22 @@ export default function ClinicHomePage() {
     <div className="landing">
       <section className="browse-head">
         <div className="container">
-          <h1 className="browse-title">Clinic appointment, ab aasaan</h1>
-          <p className="clinic-home-sub">Medical aur aesthetic clinics. Online booking, line mein lagne ki zaroorat nahi.</p>
+          <h1 className="browse-title">{t('Clinic appointments, made easy')}</h1>
+          <p className="clinic-home-sub">{t('Medical and aesthetic clinics. Book online, no waiting in line.')}</p>
           <div className="hero-search">
             <Search size={18} className="search-icon" />
             <input
               className="search-input"
-              placeholder="Clinic ka naam ya area likhein…"
+              placeholder={t('Search by clinic name or area…')}
               value={search}
               onChange={e => setSearch(e.target.value)}
-              aria-label="Clinic search"
+              aria-label={t('Clinic search')}
             />
           </div>
         </div>
       </section>
 
-      <div className="container clinic-tabs" role="tablist" aria-label="Clinic type">
+      <div className="container clinic-tabs" role="tablist" aria-label={t('Clinic type')}>
         {TABS.map(({ key, label, icon: Icon }) => (
           <button
             key={key}
@@ -91,7 +92,7 @@ export default function ClinicHomePage() {
             className={`clinic-tab ${tab === key ? 'active' : ''}`}
             onClick={() => selectTab(key)}
           >
-            <Icon size={16} /> {label}
+            <Icon size={16} /> {t(label)}
             {!loading && <span className="clinic-tab-count">{counts[key]}</span>}
           </button>
         ))}
@@ -106,16 +107,16 @@ export default function ClinicHomePage() {
           ) : filtered.length === 0 ? (
             <div className="empty-state">
               <CalendarCheck size={40} />
-              <p>Koi clinic nahi mila.</p>
+              <p>{t('No clinics found.')}</p>
               {search && (
                 <button className="btn btn-ghost btn-sm" onClick={() => setSearch('')}>
-                  Search saaf karein
+                  {t('Clear search')}
                 </button>
               )}
             </div>
           ) : (
             <div className="grid-3 fade-up">
-              {filtered.map(b => <BusinessCard key={b.id} business={b} ctaLabel="Appointment book karein" />)}
+              {filtered.map(b => <BusinessCard key={b.id} business={b} ctaLabel={t('Book appointment')} />)}
             </div>
           )}
         </div>
