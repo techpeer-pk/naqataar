@@ -6,7 +6,7 @@
 **Backend (BaaS):** Wahi Firebase project (`qunjee-com`). **Backend ko haath nahi lagana.**
 **UI language:** Hinglish (Roman Urdu/Hindi + English)
 **Host:** `naqatar.web.app`
-**Version control:** GitHub (private repo `naqatar`)
+**Version control:** GitHub ([techpeer-pk/naqataar](https://github.com/techpeer-pk/naqataar))
 **Updated:** 18 Nov 2026
 
 ---
@@ -87,7 +87,7 @@
 
 Yeh **backend code** nahi, sirf console settings hain. Rules aur functions phir bhi nahi chhede jayenge.
 
-- [ ] GitHub par private repo `naqatar` banana, URL dena (`gh` CLI install nahi hai)
+- [x] GitHub repo: https://github.com/techpeer-pk/naqataar (18 Nov)
 - [ ] Firebase Hosting mein nayi site **`naqatar`** (`qunjee-com` project)
 - [ ] Firebase Console → Project settings → nayi **Web app "Naqatar"** register karna, aur us ka config `.env.local` mein
 - [ ] Firebase Auth → Authorized domains mein `naqatar.web.app` *(warna Google login nahi chalega)*
