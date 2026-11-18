@@ -37,3 +37,6 @@ Thumbs.db
 npm-debug.log*
 
 backups/
+
+# Local screenshot runs (not committed)
+screenshots/
