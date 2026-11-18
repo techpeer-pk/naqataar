@@ -13,7 +13,8 @@
     "i18n:check": "node scripts/check-i18n.mjs",
     "test:smoke": "firebase emulators:exec --only auth,firestore --project demo-naqatar \"node scripts/seed-emulator.mjs && node scripts/smoke-test.mjs\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && firebase deploy --only hosting:naqatar --project qunjee-com"
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",

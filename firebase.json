@@ -11,6 +11,21 @@
     "rules": "emulator/storage.rules",
     "predeploy": ["node scripts/block-deploy.mjs"]
   },
+  "hosting": {
+    "site": "naqatar",
+    "public": "dist",
+    "predeploy": ["node scripts/check-prod-build.mjs"],
+    "ignore": ["firebase.json", "**/.*", "!**/.well-known/**", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }],
+    "headers": [
+      { "source": "/assets/**", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+      { "source": "/brand/**", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
+      { "source": "/icons-naqatar/**", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
+      { "source": "/*.@(png|webp|ico)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
+      { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+      { "source": "/firebase-messaging-sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+    ]
+  },
   "emulators": {
     "auth": { "port": 9099 },
     "firestore": { "port": 8080 },

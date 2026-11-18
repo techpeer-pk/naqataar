@@ -94,3 +94,20 @@ t('{n} min', { n: 30 })                          // → "30 min"
 - Never name a local variable `t`: it shadows the helper (e.g. `toast((t) => …)`).
 - English is kept for: day and month names (date-fns), export column headers,
   the invoice document, and iPhone button names in the install guide.
+
+## Deploy (Hosting only)
+
+Naqatar deploys **only** the Hosting site `naqatar` (https://naqatar.web.app) in project
+`qunjee-com`. Rules and Cloud Functions are never deployed from here.
+
+1. Create `.env.production.local` (gitignored) with the real Firebase web config and
+   `VITE_USE_FIREBASE_EMULATOR=false`. It overrides `.env.local` for `npm run build` only,
+   so local dev stays on the emulator.
+2. Run `npm run deploy`. This builds and then runs `firebase deploy --only hosting:naqatar --project qunjee-com`.
+
+`scripts/check-prod-build.mjs` runs before every hosting deploy and blocks a build that
+points at the emulator or lacks the real project config.
+
+One-time Firebase Console setup:
+- Authentication → Settings → Authorized domains: add `naqatar.web.app` (needed for Google sign-in)
+- reCAPTCHA Enterprise key → allowed domains: add `naqatar.web.app` (needed for App Check)
