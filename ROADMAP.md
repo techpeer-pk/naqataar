@@ -1,206 +1,140 @@
 # Naqatar: Roadmap aur Development Timeline
 
-> **⚠️ 18 Nov 2026 se purana: approach badal gayi hai.** Yeh document React Native (Expo) wale
-> plan ke liye tha. Faisla ab yeh hai: **QuFree (React 18 + Vite PWA) ka sirf clinic module**,
-> Naqatar branding + Hinglish UI ke saath, `naqatar.web.app` par. Backend ko haath nahi lagana,
-> development emulator + seed par, aur code GitHub par. Neeche ke Security (Sec. 5) aur
-> Khatray (Sec. 9) ab bhi kaam ke hain; timeline (Sec. 8) ab lagu nahi. Naya plan jald.
-
-**Project:** Naqatar, Clinic Appointment App (Aesthetic + Medical)
-**Platforms:** Android, iOS, Web (browser), ek hi codebase (React Native + Expo)
-**Backend (BaaS):** Wahi Firebase project jo QuFree use karta hai (`qunjee-com`)
-**Reference project:** `K:\QuFree\app_OLD` (branch `feat/appobook`)
-**App language:** Hinglish (Roman Urdu/Hindi + English), i18n ke saath taa ke baad mein English/Urdu add ho sake
-**Tayyar kiya:** 18 Nov 2026
+**Project:** Naqatar, Clinic Appointment Web App (PWA), **Medical + Aesthetic**
+**Base:** QuFree ka frontend (`K:\QuFree\app_OLD`, branch `feat/appobook`, commit `4e1dbf2`), sirf clinic module
+**Stack:** React 18 + Vite + PWA (QuFree jaisa)
+**Backend (BaaS):** Wahi Firebase project (`qunjee-com`). **Backend ko haath nahi lagana.**
+**UI language:** Hinglish (Roman Urdu/Hindi + English)
+**Host:** `naqatar.web.app`
+**Version control:** GitHub (private repo `naqatar`)
+**Updated:** 18 Nov 2026
 
 ---
 
-## 1. Goal
+## 1. Faislon ka record
 
-QuFree ka clinic module ek **alag, native app** ki shakal mein:
-
-- **Customer:** clinic dhoondhna, booking karna, apni appointments dekhna aur cancel karna, push aur email notifications.
-- **Clinic owner (admin):** appointments confirm, cancel, no-show aur complete karna; services, timings aur profile manage karna.
-- Data aur security wahi rahegi jo QuFree mein hai. Ek clinic ki booking chahe web (`qufree.web.app`) se aaye ya Naqatar se, dono jagah nazar aayegi.
-
-**Scope se bahar** (QuFree web panels par hi rahenge): SuperAdmin, CSR, Ops console, billing approval, push campaigns, QunjeeEats, hotel aur baqi verticals.
-
----
-
-## 2. Bunyadi faislay
-
-| # | Faisla | Wajah |
+| Tareekh | Faisla | Wajah |
 |---|---|---|
-| D1 | **Expo** (latest SDK) + **Expo Router** + **TypeScript** | Ek code se Android, iOS aur Web; file-based routing; EAS build/submit |
-| D2 | Firestore, Auth aur Storage ke liye **Firebase JS SDK** | Web aur native dono par chalta hai. Reference ka `runTransaction` booking logic waisa hi port ho jayega |
-| D3 | **`@react-native-firebase/app-check` + `messaging`** sirf native par | App Check (Play Integrity / App Attest) aur asli FCM token. JS SDK ko App Check token `CustomProvider` ke zariye diya jayega |
-| D4 | **Development build** use hogi, Expo Go nahi | RNFirebase native modules Expo Go mein nahi chalte |
-| D5 | Backend ka **owner `K:\QuFree\app_OLD` hi rahega** | Rules aur Cloud Functions sirf wahin se deploy hon. Naqatar repo mein koi rules, functions ya `firebase deploy` nahi hoga (sirf web hosting, apni site par) |
-| D6 | Appointment ka **data shape bilkul reference jaisa** | `firestore.rules` fields ko allowlist karte hain. Naya field chahiye ho to pehle rules mein add karke `app_OLD` se deploy karna hoga |
-| D7 | Business types: `type == 'clinic'`, aur `clinicType` ki value `'aesthetic'` ya `'medical'` | Reference mein yahi model hai (`AdminRegister.jsx`) |
-| D8 | Web build ek **alag Hosting site** par (tajweez: `naqatar`) | `qufree` site ko nahi chhedna. `deploy-guard.mjs` mein site ki ijazat deni hogi |
-| D9 | UI strings **i18n file** mein (`hi-Latn` / Hinglish default) | Hard-coded text nahi hoga |
+| 18 Nov | ~~React Native (Expo), 14 hafte~~ | Pehla plan. UI dobara likhna padta |
+| 18 Nov | **QuFree PWA ki copy, sirf clinic module** | QuFree ka tested code reuse hota hai, launch dinon mein |
+| 18 Nov | **Backend nahi chherna** | Rules aur functions sirf `app_OLD` se. QuFree aur TWA par koi khatra nahi |
+| 18 Nov | **Development sirf emulator + seed par** | Production data ko test mein nahi chhoona |
+| 18 Nov | Brand colors: teal `#1D565D`, gold `#A9873F` | Logo se liye gaye. QuFree ka teal (`#1B5566`) taqreeban yahi hai |
 
 ---
 
-## 3. Reference se kya reuse hoga
+## 2. Hamesha ke usool
 
-| Reference file | Naqatar mein | Kaam |
-|---|---|---|
-| `src/utils/slots.js` | `src/core/slots.ts` | Waisa hi copy, TS types + unit tests |
-| `src/hooks/useBooking.js` | `src/hooks/useBooking.ts` | Logic same, sirf imports badlenge |
-| `useSlots`, `useServices`, `useAppointments`, `useAdminSlots`, `useBusinesses`, `useOwnBusiness` | `src/hooks/` | Port, sirf clinic queries |
-| `utils/format.js`, `validation.js`, `cancelReasons.js`, `subscription.js` | `src/core/` | Copy |
-| `useEmailNotifications.js` | `src/services/email.ts` | `@emailjs/browser` (web) aur `@emailjs/react-native` (native) |
-| `useReminders.js`, `useNotifications.js` | `src/hooks/` | Port |
-| `context/AuthContext.jsx` | `src/context/AuthContext.tsx` | Sirf customer + businessAdmin roles |
-| Pages + CSS | ❌ | Dobara banenge (`View`/`Text` + StyleSheet) |
-
-> **Rule (reference jaisa):** koi screen Firestore ko seedha call nahi karegi. Har read aur write `src/hooks/` ke zariye hoga.
+1. **Naqatar se sirf Hosting deploy hoga.** Firestore/RTDB/Storage rules aur Cloud Functions kabhi nahi. `scripts/block-deploy.mjs` har rules deploy ko rokta hai.
+2. `emulator/` mein QuFree ke rules ki **read-only copy** hai. Asal security wahi rules hain jo `app_OLD` se deploy hote hain. QuFree mein rules badlein to `npm run sync:rules` chalayein.
+3. **Data shape QuFree jaisa.** Appointment, business aur user docs ke fields wahi rahenge, warna rules reject karenge.
+4. Firestore tak har read/write `src/hooks/` ke zariye (QuFree ka usool).
+5. `.env*` aur service-account key kabhi commit nahi hongi.
+6. Har tabdeeli ke baad: `npm run build` + `npm run test:smoke`.
 
 ---
 
-## 4. Features ki list
+## 3. Phases aur timeline
 
-### Customer
-- Onboarding + login (Email/Password, Google). Guest booking agar rules ijazat dein (reference mein guest create allowed hai)
-- Home: **Aesthetic** | **Medical** tabs, search, area/city filter
-- Clinic detail: logo, services (price/duration), timings, address, map link, call/WhatsApp
-- Booking: multi-service select → date → available slots (`computeAvailable`) → details (phone validation) → payment proof upload (bank details card) → confirm
-- Confirmation screen (bookingRef) + **EmailJS** "booking received" email
-- My Appointments: upcoming/past, status, cancel with reason (`cancelAppointment`)
-- Reminders (24h / 1h / 15m) + **Push notifications** (confirmed / cancelled / completed)
-- Notifications inbox (`users/{uid}/notifications`)
-- Profile: naam, phone, notification settings, logout, **account delete request** (store policy ki zaroorat)
+| # | Phase | Dates | Kaam | Status |
+|---|---|---|---|---|
+| **P0** | Bootstrap | 18 Nov | QuFree copy, emulator config (`demo-naqatar`), deploy-block, clinic seed (6+1 clinics, customer, 4 appointments), smoke test (6 checks), README, Git | ✅ Done (`7ebd745`) |
+| **P1** | Brand assets | 18 – 19 Nov | Logo se favicon, PWA icons (any + maskable), Apple touch icon, notification badge, OG image (1200×628), transparent logo/wordmark (dark aur light) | 🔄 Jari |
+| **P2** | Clinic-only | 19 – 20 Nov | `App.jsx`: sirf clinic ke customer + admin routes, baaqi redirect. Home par **Medical / Aesthetic** tabs. Navbar, BottomNav, Footer mein sirf clinic links. AdminRegister mein sirf `clinic` type. Ghair-zaroori pages, assets aur dependencies hatana | ⏳ |
+| **P3** | Branding wire-up | 20 Nov | PWA manifest (naam, icons, theme), `index.html` meta/OG/title, ~20 jagah QuFree logos ki jagah Naqatar, gold accent. **QuFree ke Google Analytics tags hatana**. `qufree.web.app` links, sitemap, robots | ⏳ |
+| **P4** | Hinglish UI | 23 – 25 Nov | ~400 strings, 22 files. Ek dictionary file (`src/i18n/hinglish.js`) taa ke baad mein English add ho sake. Pehle customer screens, phir clinic admin | ⏳ |
+| **P5** | QA (emulator) | 26 – 27 Nov | Neeche di gayi checklist (Sec. 4), mobile/responsive check, PWA install (Android Chrome, iOS Safari), smoke test mein booking aur cancel ke checks add karna | ⏳ |
+| **P6** | Launch ki tayyari *(owner ke kaam, P2–P5 ke saath saath)* | 27 Nov tak | Sec. 5 ki checklist | ⏳ |
+| **P7** | 🌐 **Web launch** | **~30 Nov** | `npm run build`, phir sirf `hosting:naqatar` deploy. Production par 1 asli test booking (test clinic) | ⏳ |
+| **P8** | 🤖 Android (TWA) | 1 – 4 Dec build, phir review | Bubblewrap TWA, `assetlinks.json`, Play listing, privacy policy. *Agar Play account naya personal account hai: 12 testers ke saath 14 din ka closed test* | ⏳ |
+| **P9** | 🍎 iOS | Baad mein | Abhi: Safari "Add to Home Screen" guide. App Store chahiye ho to **Capacitor** wrapper (native push, Sign in with Apple) | 🔜 |
 
-### Clinic owner (admin)
-- Register clinic (`type: 'clinic'`, `clinicType` select), free trial (reference ka `trialEndsAt` logic)
-- Dashboard: aaj ki appointments, pending count, subscription banner (trial/expired)
-- Appointments: confirm / cancel / no-show / complete, filter, payment proof dekhna
-- Services CRUD (naam, price, duration)
-- Profile + working hours + slot duration/capacity + logo upload
-- Naye booking par push (admin ko) aur EmailJS confirmation/cancellation
-
-### Shared / Platform
-- Sentry error tracking
-- Idle logout (admin ke liye, reference ka `useIdleLogout`)
-- Offline/no-internet state, loading skeletons
-- Deep links (`naqatar://` + web URLs)
-- Dark mode
+**Milestones**
+- **M1 (20 Nov):** Naqatar-branded, clinic-only app emulator par chalti hai
+- **M2 (25 Nov):** Poori Hinglish UI
+- **M3 (~30 Nov):** `naqatar.web.app` live
+- **M4 (Dec):** Play Store par Android
 
 ---
 
-## 5. Security (reference ke mutabiq)
+## 4. QA checklist (P5, emulator)
+
+**Customer**
+- [ ] Home: Medical aur Aesthetic dono tabs mein sahi clinics, pending clinic nazar nahi aata
+- [ ] Clinic page: services, timings, address
+- [ ] Booking: ek aur kai services, slot picker, band din (Sunday), guzra hua waqt block
+- [ ] Do customers ek hi aakhri slot par: sirf ek ki booking ho (double-booking test)
+- [ ] Payment proof upload (Storage emulator)
+- [ ] Confirmation + bookingRef
+- [ ] My Appointments: list, cancel with reason, slot wapas free
+- [ ] Login, register, logout, Google login (web popup)
+
+**Clinic owner**
+- [ ] Register (Medical/Aesthetic), "approval pending" dashboard (`newlife@demo.com`)
+- [ ] Appointments: confirm, cancel, no-show, complete
+- [ ] Services: add, edit, delete
+- [ ] Profile, working hours, logo upload
+- [ ] Doosre clinic ka data nazar na aaye
+
+**Platform**
+- [ ] Mobile (360px), tablet, desktop
+- [ ] PWA install aur offline page
+- [ ] `npm run build` aur `npm run test:smoke` pass
+
+---
+
+## 5. Launch se pehle (owner ke kaam: Firebase Console aur doosri services)
+
+Yeh **backend code** nahi, sirf console settings hain. Rules aur functions phir bhi nahi chhede jayenge.
+
+- [ ] GitHub par private repo `naqatar` banana, URL dena (`gh` CLI install nahi hai)
+- [ ] Firebase Hosting mein nayi site **`naqatar`** (`qunjee-com` project)
+- [ ] Firebase Console → Project settings → nayi **Web app "Naqatar"** register karna, aur us ka config `.env.local` mein
+- [ ] Firebase Auth → Authorized domains mein `naqatar.web.app` *(warna Google login nahi chalega)*
+- [ ] reCAPTCHA Enterprise key ke allowed domains mein `naqatar.web.app` *(App Check)*
+- [ ] App Check mein Naqatar web app register karna (Unenforced hi rahe)
+- [ ] **EmailJS:** Naqatar ke liye naye templates (QuFree wale shared hain, unhein edit na karein)
+- [ ] Naya **Google Analytics** property (ya analytics ke baghair launch)
+- [ ] Privacy policy aur Terms (Naqatar ke naam se)
+- [ ] Sentry: naya project/DSN (ya khaali chhorna)
+
+---
+
+## 6. Security (QuFree ke mutabiq, kuch nahi badla)
 
 | # | Cheez | Naqatar mein |
 |---|---|---|
-| S1 | **Asal security `firestore.rules`, `storage.rules`, `database.rules.json` hain** | Inhi par bharosa. App mein buttons chhupana sirf UX hai |
-| S2 | Price aur capacity client par trusted nahi | Rules `get()` se re-derive karte hain. `flagAppointmentPriceMismatch` function bhi chalta rahega |
-| S3 | **App Check** | Pehle din se: Android par Play Integrity, iOS par App Attest, web par reCAPTCHA Enterprise. Enforce karne se pehle teeno apps ka traffic "verified" hona chahiye |
-| S4 | Allowlists (`config/superAdmins` waghera) | App mein inka koi write path nahi hoga |
-| S5 | Secrets | `.env` gitignored. `EXPO_PUBLIC_*` values **public** hoti hain (Firebase config, EmailJS public key theek hain). **Service account key kabhi is repo mein nahi** |
-| S6 | Session storage | Auth persistence AsyncStorage mein; koi bhi sensitive cheez `expo-secure-store` mein |
-| S7 | Subscription gate | `subscription.ts` client par, `isSubscriptionActive()` rules mein (reference jaisa) |
-| S8 | Data-shape lock | Appointment fields reference jaise. Tabdeeli sirf rules update ke baad |
-| S9 | Emulator-first testing | `demo-` project + Firebase emulators. Production data par test booking nahi |
-| S10 | Store compliance | Privacy policy, Play "Health apps" declaration, Data Safety form, Apple privacy labels, in-app account deletion |
+| S1 | Asal security `firestore.rules`, `storage.rules`, `database.rules.json` | QuFree wale, `app_OLD` se deploy. Naqatar mein sirf read-only copy |
+| S2 | Price aur capacity client par trusted nahi | Rules `get()` se re-derive karte hain. `flagAppointmentPriceMismatch` function chalta rehta hai |
+| S3 | Double-booking | `useBooking.js` ki transaction + rules ka capacity check (QuFree ka code, waisa hi) |
+| S4 | Business approval aur subscription | Owner khud approve ya extend nahi kar sakta (rules, 17 Nov hardening) |
+| S5 | Admin allowlists (`config/*`) | Naqatar mein koi write path nahi. SuperAdmin, CSR aur Ops QuFree par hi rehte hain |
+| S6 | App Check | Production mein reCAPTCHA Enterprise (QuFree jaisa). Sirf emulator par skip |
+| S7 | Secrets | `.env*` aur service key gitignored. Commit se pehle scan |
+| S8 | Testing | Sirf emulator (`demo-naqatar`). Seed `demo-` ke ilawa kisi project par nahi chalta |
 
 ---
 
-## 6. Backend mein zaroori tabdeeliyan (`app_OLD` mein)
-
-Yeh kaam reference repo mein honge aur wahin se deploy honge. Web app ko kuch nahi hona chahiye (backward compatible):
-
-1. **Push functions native ke liye:** abhi saare pushes **data-only** hain (web service worker ke liye). Native par data-only message app band hone par khud nazar nahi aata, aur iOS par aksar deliver hi nahi hota.
-   - Hal: token ke saath `platform` save karein (`web` / `android` / `ios`). Native tokens ke liye `notification` + `apns` block bhejein. Web ke liye data-only hi rakhein.
-   - `url` field web path hai (`/index/my-appointments`). App mein isay screen route par map karna hoga.
-2. **Admin ko naye booking ka push** (agar reference mein nahi hai to naya function).
-3. **Rules review:** agar Naqatar koi naya field bheje (maslan `source: 'naqatar'`), to use rules ki allowlist mein add karna.
-4. **Firestore composite index:** `type + clinicType (+ city)` wali query ke liye.
-5. **Firebase Console:** Android app (`com.naqatar.app`), iOS app aur web app register karna. App Check providers, Google Sign-In ke SHA-1/SHA-256, authorized domains.
-6. **`deploy-guard.mjs`:** `naqatar` hosting site ki ijazat.
-
----
-
-## 7. Folder structure (tajweez)
-
-```
-naqatur/
-  app/                    Expo Router screens
-    (auth)/               login, register
-    (customer)/           home, clinic/[id], book/[id], appointments, notifications, profile
-    (admin)/              dashboard, appointments, services, profile, register
-  src/
-    core/                 slots.ts, format.ts, validation.ts, subscription.ts  (pure, tested)
-    hooks/                saare Firestore reads/writes
-    services/             firebase.ts, appCheck.ts, push.ts, email.ts, sentry.ts
-    context/              AuthContext
-    components/           UI pieces
-    i18n/                 hinglish.json, en.json
-    theme/                colors, spacing, typography
-  __tests__/
-  app.config.ts  eas.json  .env.example  ROADMAP.md
-```
-
----
-
-## 8. Development timeline
-
-**Farz kiya gaya hai:** 1 full-time developer (AI assistance ke saath), shuru **Mon 23 Nov 2026**. Har phase ke aakhir mein demo hoga. Dec ke aakhir ki chhuttiyon ke liye buffer rakha gaya hai.
-
-| Phase | Hafta | Dates | Kaam | Deliverable / "Done" ka matlab |
-|---|---|---|---|---|
-| **0. Setup** | W1 | 23 – 29 Nov | Expo + TS + Expo Router, ESLint/Prettier, i18n, theme, Firebase apps register, emulator wiring, dev build (Android), Sentry | App Android emulator aur web par chalti hai, Firestore emulator se connected |
-| **1. Core port** | W2 | 30 Nov – 6 Dec | `slots`, `format`, `validation`, `subscription` port + **unit tests**; `useBooking` port | Tests pass; emulator par transaction se booking ban jati hai |
-| **2. Auth** | W3 | 7 – 13 Dec | Email + Google (native + web), AuthContext, role detection (customer / businessAdmin), persistence | Teeno platforms par login aur logout |
-| **3. Discovery** | W4 | 14 – 20 Dec | Home (Aesthetic/Medical tabs), search, clinic list, clinic detail, skeletons | Seed data se clinics nazar aate hain |
-| **4. Booking flow** | W5 – W6 | 21 Dec – 3 Jan | Service select, date, slots, details, payment proof upload, confirm, confirmation screen, EmailJS | Emulator par end-to-end booking + email. *(Chhuttiyon ka buffer isi mein)* |
-| **5. Customer post-booking** | W7 | 4 – 10 Jan | My Appointments, cancel with reason, reminders, notifications inbox, profile, account delete request | Customer ka poora flow mukammal |
-| **6. Push** | W8 | 11 – 17 Jan | RNFirebase messaging, permission flow, token save, foreground/background display, deep links; **backend function update (Sec. 6.1)** | Status badalne par Android, iOS aur web teeno par push aata hai |
-| **7. Clinic admin** | W9 – W10 | 18 – 31 Jan | Register (clinicType), dashboard, appointments actions, services CRUD, hours/profile/logo, subscription banner, idle logout, admin push | Clinic owner app se poora din chala sakta hai |
-| **8. Security hardening** | W11 | 1 – 7 Feb | App Check (teeno platforms), rules review + emulator rules tests, secrets audit, Sentry alerts | App Check metrics par Naqatar ka traffic "verified" |
-| **9. QA + Beta** | W12 | 8 – 14 Feb | Asli devices (low-end Android, iPhone) par testing, bug fixing, performance; EAS build → Play Internal Testing + TestFlight; web deploy (`naqatar` site) | Beta testers ke paas app |
-| **10. Store release** | W13 – W14 | 15 – 28 Feb | Store listing (Hinglish + English), screenshots, privacy policy, Health declaration, submit, review ke fixes | **Target launch: ~1 Mar 2027** |
-
-**Milestones**
-- **M1 (13 Dec):** Login + core booking logic tested
-- **M2 (10 Jan):** Customer app feature-complete (emulator par)
-- **M3 (31 Jan):** Admin app feature-complete
-- **M4 (14 Feb):** Beta (Play Internal + TestFlight + web)
-- **M5 (~1 Mar 2027):** Public launch
-
----
-
-## 9. Khatray aur unka hal
+## 7. Khatray aur unka hal
 
 | Khatra | Asar | Hal |
 |---|---|---|
-| Rules mein tabdeeli QuFree web ya TWA ko tod de | High | Har rules change emulator tests ke baad, pehle `backups/` mein copy, phir sirf `app_OLD` se deploy |
-| Data-only push native par na dikhe | High | Sec. 6.1 wala function update, Phase 6 mein |
-| App Check enforce hone par app block ho jaye | High | Phase 8 se pehle enforce nahi karna; metrics dekh kar |
-| Time zone: device clock se slot ka waqt ghalat | Medium | Slot ka waqt `Asia/Karachi` mein calculate karna (reference mein bhi yahi behtari ki zaroorat hai) |
-| Apple review (medical app) mein rejection | Medium | Clear privacy policy, account deletion, koi medical claim nahi, sirf booking |
-| EmailJS client se chalta hai (key public) | Low/Med | Reference jaisa rakhenge; baad mein Cloud Function par shift (Phase 2 ke baad) |
-| Google Sign-In native setup (SHA keys, iOS URL scheme) | Medium | Phase 2 mein pehle hi poora karna |
+| QuFree mein rules badlein aur Naqatar ki copy purani ho jaye | Medium | `npm run sync:rules` + smoke test. `emulator/README.md` mein snapshot ki tareekh |
+| Naqatar par bani booking ki email ya push mein "QuFree" naam aaye | Low | Naye EmailJS templates (P6). Push ke texts functions mein generic hain ("Booking Confirmed ✅") |
+| Naqatar par register hone wala clinic QuFree par bhi dikhe | Info | Backend ek hai, yeh by design hai |
+| QuFree mein bug fix ho aur Naqatar mein na pahunche | Medium | `useBooking`, `slots.js` aur rules ki tabdeeliyan har maah QuFree ki git log se check karna |
+| Hinglish strings seedha code mein | Low | P4 mein dictionary file |
+| `vite-plugin-pwa@0.21` aur `vite@7` ka peer conflict | Low | `.npmrc` mein `legacy-peer-deps`. Baad mein plugin 1.x par upgrade |
+| `xlsx@0.18.5` ke known vulnerabilities | Low | Agar clinic module mein export zaroori nahi to hata dena (P2) |
+| AI-generated logo: Kufic "نقطار" ke huroof aur JPEG quality | Low | Launch se pehle designer se SVG/vector version |
 
 ---
 
-## 10. Launch ke baad (v1.1+)
+## 8. Launch ke baad (v1.1+)
 
-- English/Urdu language toggle
+- English toggle (i18n dictionary tayyar hogi)
 - Doctor-wise slots (ek clinic, kai doctors)
-- In-app payment (JazzCash / Easypaisa / card)
+- Online payment (JazzCash / Easypaisa)
 - Reviews aur ratings
-- EmailJS ki jagah server-side email (Cloud Function)
-- Video consultation (medical)
-
----
-
-## 11. Shuru karne se pehle chahiye
-
-- [ ] Firebase Console access (`qunjee-com`): Android, iOS aur Web apps register karna
-- [ ] Apple Developer account ($99/saal) + Google Play Console
-- [ ] Package / Bundle ID final: `com.naqatar.app`?
-- [ ] Logo, brand colors, app icon
-- [ ] EmailJS templates (reference wale reuse ya naye "Naqatar" branding ke saath)
-- [ ] Privacy policy aur terms ka URL
+- iOS App Store (Capacitor)
+- Naqatar ke apne push texts (functions mein `source` ki buniyad par, `app_OLD` ke zariye)
