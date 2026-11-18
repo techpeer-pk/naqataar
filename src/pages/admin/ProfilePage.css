@@ -1,0 +1,45 @@
+.profile-container { max-width: 960px; }
+.profile-grid {
+  display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: start;
+}
+.profile-grid > .card { flex: 1 1 380px; min-width: 0; }
+
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 480px) { .form-row-2 { grid-template-columns: 1fr; } }
+
+.logo-upload-preview {
+  width: 64px; height: 64px; border-radius: 12px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.logo-upload-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--primary-pale); color: var(--primary);
+  font-weight: 700; font-size: 1.4rem;
+}
+
+.hours-editor { display: flex; flex-direction: column; gap: 0.75rem; }
+.hours-row-edit {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.75rem;
+}
+.hours-day-toggle {
+  display: flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; user-select: none; min-width: 90px;
+  font-size: 0.875rem;
+}
+.hours-day-toggle input { accent-color: var(--primary); }
+.hours-inputs { display: flex; align-items: center; gap: 0.4rem; }
+.time-input   { width: 100px; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+.closed-label { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+/* Day toggle (min-width 90px) + two fixed-width time inputs don't fit on
+   one line on a phone — .card clips overflow (global.css), so without
+   wrapping the close-time input was silently cut off instead of just
+   looking cramped. Stack the times onto their own right-aligned row. */
+@media (max-width: 480px) {
+  .hours-row-edit { flex-wrap: wrap; row-gap: 0.4rem; }
+  .hours-inputs { flex: 1 0 100%; justify-content: flex-end; }
+  .hours-row-edit .closed-label { flex: 1 0 100%; text-align: right; }
+  .time-input { width: 90px; }
+}

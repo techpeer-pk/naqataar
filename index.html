@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMJBMHJQJV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-KMJBMHJQJV');   
+    gtag('config', 'G-VZLKKP49CB');   
+  </script>
+
+  <!-- Performance: preconnect to external origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+  <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
+
+  <!-- Performance: preload the homepage's above-the-fold banner images (LCP
+       candidate) — a CSR app never has these in the raw HTML, so without this
+       hint the browser can't discover them until React mounts and renders
+       the <img> tags. Matches ABOVE_FOLD_IDS in HomePage.jsx. -->
+  <!-- <link rel="preload" as="image" href="/banners/qufree.webp" fetchpriority="high" /> -->
+  <!-- <link rel="preload" as="image" href="/banners/qunjeeats.webp" fetchpriority="high" /> -->
+
+  <!-- Fonts: non-render-blocking via <link> instead of CSS @import -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" /></noscript>
+
+  <!-- PWA Meta Tags -->
+  <!-- <meta name="theme-color" content="#1C223F" /> -->
+  <!-- <meta name="theme-color" content="#FCA206" /> -->
+  <meta name="theme-color" content="#1B5566" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <!-- <meta name="apple-mobile-web-app-title" content="Qunjee" /> -->
+  <meta name="apple-mobile-web-app-title" content="Qufree" />
+  <!-- <meta name="msapplication-TileColor" content="#1C223F" /> -->
+  <!-- <meta name="msapplication-TileColor" content="#FCA206" /> -->
+  <meta name="msapplication-TileColor" content="#1B5566" />
+  <meta name="msapplication-tap-highlight" content="no" />
+
+  <!-- SEO -->
+  <!-- <meta name="description" content="Restaurants | Travel | Salon | Wedding | Health | Education — powered by Qunjee." /> -->
+  <meta name="description" content="Find any business by its number on Qufree and book instantly." />
+  <!-- <meta name="keywords" content="appointment, booking, restaurant, salon, clinic, Pakistan, Qunjee" /> -->
+  <meta name="keywords" content="find business, business number, appointment, booking, Pakistan, Qufree" />
+  <meta name="robots" content="index, follow" />
+  <!-- <meta name="author" content="TechPeer / Qunjee" /> -->
+  <meta name="author" content="TechPeer / Qufree" />
+  <!-- <link rel="canonical" href="https://qunjee-com.web.app/" /> -->
+  <link rel="canonical" href="https://qufree.web.app/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <!-- <meta property="og:url" content="https://qunjee-com.web.app/" /> -->
+  <meta property="og:url" content="https://qufree.web.app/" />
+  <!-- <meta property="og:site_name" content="Qunjee" /> -->
+  <meta property="og:site_name" content="Qufree" />
+  <!-- <meta property="og:title" content="Qunjee — Super Lifestyle Platform" /> -->
+  <meta property="og:title" content="Qufree — Find any business by its number" />
+  <!-- <meta property="og:description" content="Restaurants | Travel | Salon | Wedding | Health | Education." /> -->
+  <meta property="og:description" content="Find any business by its number on Qufree and book instantly." />
+  <!-- <meta property="og:image" content="https://qunjee-com.web.app/og-image.png" /> -->
+  <!-- <meta property="og:image" content="https://qufree.web.app/og-image.png" /> -->
+  <!-- <meta property="og:image" content="https://qufree.web.app/og-image-qufree.png" /> -->
+  <meta property="og:image" content="https://qufree.web.app/og-image-qufree-teal.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="628" />
+  <!-- <meta property="og:image:alt" content="Qunjee — Super Lifestyle Platform" /> -->
+  <meta property="og:image:alt" content="Qufree — Find any business by its number" />
+  <!-- <meta property="og:logo" content="https://qunjee-com.web.app/icons/icon-512x512.png" /> -->
+  <!-- <meta property="og:logo" content="https://qufree.web.app/icons/icon-512x512.png" /> -->
+  <!-- <meta property="og:logo" content="https://qufree.web.app/icons-qufree/icon-512x512.png" /> -->
+  <meta property="og:logo" content="https://qufree.web.app/icons-qufree-teal/icon-512x512.png" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <!-- <meta name="twitter:title" content="Qunjee — Super Lifestyle Platform" /> -->
+  <meta name="twitter:title" content="Qufree — Find any business by its number" />
+  <!-- <meta name="twitter:description" content="Restaurants | Travel | Salon | Wedding | Health | Education." /> -->
+  <meta name="twitter:description" content="Find any business by its number on Qufree and book instantly." />
+  <!-- <meta name="twitter:image" content="https://qunjee-com.web.app/og-image.png" /> -->
+  <!-- <meta name="twitter:image" content="https://qufree.web.app/og-image.png" /> -->
+  <!-- <meta name="twitter:image" content="https://qufree.web.app/og-image-qufree.png" /> -->
+  <meta name="twitter:image" content="https://qufree.web.app/og-image-qufree-teal.png" />
+  <!-- <meta name="twitter:image:alt" content="Qunjee — Super Lifestyle Platform" /> -->
+  <meta name="twitter:image:alt" content="Qufree — Find any business by its number" />
+
+  <!-- Icons -->
+  <!-- <link rel="icon" type="image/png" href="/favicon.png" /> -->
+  <!-- <link rel="icon" type="image/png" href="/favicon-qufree.png" /> -->
+  <link rel="icon" type="image/png" href="/favicon-qufree-teal.png" />
+  <!-- <link rel="apple-touch-icon" href="/icons/icon-192x192.png" /> -->
+  <!-- <link rel="apple-touch-icon" href="/icons-qufree/apple-touch-icon.png" /> -->
+  <link rel="apple-touch-icon" href="/icons-qufree-teal/apple-touch-icon.png" />
+  <!-- <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" /> -->
+  <!-- <link rel="apple-touch-icon" sizes="152x152" href="/icons-qufree/icon-152x152.png" /> -->
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons-qufree-teal/icon-152x152.png" />
+  <!-- <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" /> -->
+  <!-- <link rel="apple-touch-icon" sizes="144x144" href="/icons-qufree/icon-144x144.png" /> -->
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons-qufree-teal/icon-144x144.png" />
+
+  <!-- <title>Qunjee — Super Lifestyle Platform</title> -->
+  <title>Qufree — Find any business by its number</title>
+
+  <!-- JSON-LD Structured Data -->
+  <!-- 2026-11-17: JSON-LD url/logo were https://qunjee-com.web.app/ and https://qunjee-com.web.app/icons/icon-512x512.png (qunjee-com now serves a static 404). -->
+  <!-- 2026-11-17 Qufree rebrand: JSON-LD was name "Qunjee", description "Restaurants | Travel | Salon | Wedding | Health | Education.", logo /icons/icon-512x512.png, sameAs ["https://www.qunjee.com"] (JSON allows no comments). -->
+  <!-- 2026-11-17 teal brand: JSON-LD logo was https://qufree.web.app/icons-qufree/icon-512x512.png (orange set). -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Qufree",
+    "description": "Find any business by its number on Qufree and book instantly.",
+    "url": "https://qufree.web.app/",
+    "logo": "https://qufree.web.app/icons-qufree-teal/icon-512x512.png",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, Android, iOS",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "PKR" },
+    "sameAs": []
+  }
+  </script>
+</head>
+
+<body>
+  <div id="root">
+    <!-- Inline loading shell — visible instantly, replaced by React the
+         moment createRoot(...).render() runs (it overwrites #root's
+         innerHTML), so this never needs to be removed manually. Branded
+         splash: qunjee-logo.png is dark-navy-on-transparent (see the file
+         itself), so it only reads on a light background — kept white to
+         match, not the app's dark #1C223F theme-color. -->
+    <style>
+      #app-shell{position:fixed;inset:0;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;z-index:9999}
+      #app-shell img{width:min(200px,55vw);height:auto}
+      /* #app-shell .spinner{width:32px;height:32px;border:3px solid #F7F7F7;border-top-color:#1C223F;border-radius:50%;animation:spin 0.7s linear infinite} */
+      /* #app-shell .spinner{width:32px;height:32px;border:3px solid #F7F7F7;border-top-color:#FCA206;border-radius:50%;animation:spin 0.7s linear infinite} */
+      #app-shell .spinner{width:32px;height:32px;border:3px solid #F7F7F7;border-top-color:#1B5566;border-radius:50%;animation:spin 0.7s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+    <div id="app-shell" aria-hidden="true">
+      <!-- <img src="/qunjee-logo.png" alt="" width="1000" height="337" /> -->
+      <!-- <img src="/qufree-logo.png" alt="" width="987" height="295" /> -->
+      <img src="/qufree-logo-full.png" alt="Qufree" width="637" height="565" />
+      <div class="spinner"></div>
+    </div>
+    <!-- Previous version of #app-shell (generic nav+content skeleton
+         shimmer, replaced 2026-09-18 by the branded logo+spinner splash
+         above):
+    <style>
+      #app-shell{position:fixed;inset:0;background:#FFFFFF;display:flex;flex-direction:column;z-index:9999}
+      #app-shell nav{height:64px;background:#FFFFFF;border-bottom:1px solid #EAEAEA;display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+      #app-shell .sk{background:linear-gradient(90deg,#F0F0F2 25%,#E4E4E8 50%,#F0F0F2 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:8px}
+      #app-shell .sk-logo{width:110px;height:28px}
+      #app-shell .sk-nav{width:80px;height:20px;margin-left:auto}
+      #app-shell .sk-nav2{width:60px;height:20px}
+      #app-shell main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:2rem}
+      #app-shell .sk-h{width:min(480px,80vw);height:44px}
+      #app-shell .sk-p{width:min(320px,60vw);height:20px}
+      #app-shell .sk-btn{width:140px;height:44px;border-radius:999px}
+      @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    </style>
+    <div id="app-shell" aria-hidden="true">
+      <nav>
+        <div class="sk sk-logo"></div>
+        <div class="sk sk-nav"></div>
+        <div class="sk sk-nav2"></div>
+      </nav>
+      <main>
+        <div class="sk sk-h"></div>
+        <div class="sk sk-p"></div>
+        <div class="sk sk-btn"></div>
+      </main>
+    </div>
+    -->
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
+<!-- qunjee | Developed By: techpeer.pk@gmail.com -->

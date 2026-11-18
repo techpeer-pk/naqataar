@@ -1,0 +1,9 @@
+.hotel-booking-page .stepper { margin-bottom: 1.5rem; }
+
+.room-stepper {
+  display: flex; align-items: center; gap: 0.85rem;
+}
+.room-stepper-count {
+  min-width: 1.5rem; text-align: center;
+  font-weight: 600; font-size: 1rem;
+}

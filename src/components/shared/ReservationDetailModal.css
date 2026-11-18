@@ -1,0 +1,68 @@
+.resv-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  font-size: 0.9rem;
+}
+.resv-detail-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.resv-detail-section {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border, #EAEAEA);
+}
+.resv-detail-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.resv-detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.resv-detail-name {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.resv-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.resv-detail-table td {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border, #F1F1F1);
+}
+.resv-detail-table td:first-child {
+  color: var(--text-muted);
+  width: 40%;
+}
+.resv-detail-table td:last-child {
+  text-align: right;
+  font-weight: 500;
+}
+.resv-detail-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.6rem;
+  font-size: 0.95rem;
+}
+.resv-detail-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Matches .sa-modal-price-flag .appt-detail-total in AppointmentDetailModal.css
+   — same flagged-booking treatment, this modal's total just has a different
+   class name. */
+.sa-modal-price-flag .resv-detail-total {
+  color: #DC2626;
+  font-weight: 700;
+}

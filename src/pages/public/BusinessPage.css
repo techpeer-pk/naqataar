@@ -1,0 +1,171 @@
+.biz-page { padding-top: 1.5rem; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  color: var(--text-mid); font-size: 0.875rem; margin-bottom: 1.25rem;
+  background: none; border: none; padding: 0; font-family: inherit; cursor: pointer;
+}
+.back-link:hover { color: var(--primary); }
+.mb-1 { margin-bottom: 0.5rem; }
+.mt-2 { margin-top: 1.25rem; }
+
+.biz-header    { margin-bottom: 2rem; }
+.biz-header-inner {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+}
+.biz-header-info { display: flex; align-items: flex-start; gap: 1.25rem; flex: 1; min-width: 0; }
+.biz-hero-logo {
+  width: 72px; height: 72px; border-radius: 16px;
+  object-fit: cover; border: 1px solid var(--border); flex-shrink: 0;
+}
+.biz-logo-fallback {
+  background: var(--primary-pale); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+}
+.biz-hero-name { font-size: 1.5rem; margin: 0.25rem 0; }
+.biz-hero-desc { color: var(--text-mid); font-size: 0.9rem; line-height: 1.6; max-width: 640px; margin-top: 0.35rem; }
+.biz-hero-desc.clamped {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.biz-desc-toggle {
+  background: none; border: none; padding: 0; margin-top: 0.4rem;
+  color: var(--primary); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.biz-desc-toggle:hover { text-decoration: underline; }
+@media (max-width: 480px) {
+  .biz-hero-desc { font-size: 0.85rem; line-height: 1.5; }
+}
+.btn-book-now  { align-self: flex-start; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .biz-header-inner { flex-direction: column; align-items: stretch; }
+  .biz-header-info  { flex: none; }
+  .btn-book-now     { align-self: stretch; justify-content: center; }
+}
+
+.biz-content-grid {
+  display: grid; grid-template-columns: 1fr 300px; gap: 2rem; align-items: start;
+}
+@media (max-width: 750px) { .biz-content-grid { grid-template-columns: 1fr; } }
+
+.section-sub-title { font-size: 1.2rem; margin-bottom: 1rem; }
+.hotel-price-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+.hotel-price-unit  { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); }
+.hotel-price-card .card-body p + p { margin-top: 0.4rem; }
+.services-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.service-row-inner { display: flex; align-items: flex-start; gap: 1rem; }
+.service-thumb-col { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+.service-row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.service-row-info { flex: 1; min-width: 0; }
+.service-photo-wrap { position: relative; flex-shrink: 0; cursor: zoom-in; }
+.service-photo {
+  width: 72px; height: 72px; border-radius: 10px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.service-photo-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-alt); color: var(--text-muted);
+}
+
+.service-lightbox-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(12, 14, 24, 0.85);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1rem; padding: 2rem;
+}
+.service-lightbox-close {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.service-lightbox-close:hover { background: rgba(255,255,255,0.22); }
+.service-lightbox-img {
+  max-width: min(90vw, 480px); max-height: 70vh;
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: 16px; box-shadow: var(--shadow-md);
+}
+.service-lightbox-caption {
+  color: #fff; font-weight: 600; font-size: 0.95rem;
+}
+.service-name  { font-weight: 600; margin-bottom: 0.2rem; }
+.service-desc  { font-size: 0.82rem; color: var(--text-muted); }
+.service-meta      { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.service-meta-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.service-duration  { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
+.service-price     { font-weight: 600; color: var(--primary); font-size: 0.95rem; }
+.service-book-btn  { white-space: nowrap; flex-shrink: 0; }
+
+.biz-info-panel { display: flex; flex-direction: column; gap: 1rem; }
+.biz-info-items { display: flex; flex-direction: column; gap: 0.75rem; }
+.info-row { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.875rem; }
+.info-row a { color: var(--primary); }
+.info-row a:hover { text-decoration: underline; }
+
+.hours-row { display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.hours-row:last-child { border-bottom: none; }
+.hours-day  { font-weight: 500; }
+.hours-time { color: var(--text-mid); }
+/* Room for the sticky cart bar (shown when this business has a live cart) */
+.biz-page.has-cart-bar { padding-bottom: 5.5rem; }
+
+/* ── 2026-11-17: faint Qufree watermark (calendar mark) in the business
+   header — bottom-right, 7% opacity, behind the content, no clicks. ── */
+.biz-header { position: relative; overflow: hidden; }
+.biz-header-inner { position: relative; }
+.biz-header-inner::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  bottom: -22px;
+  width: 230px;
+  height: 151px; /* qufree-mark.png is 512x336 */
+  background: url('/qufree-mark.png') no-repeat right bottom / contain;
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
+}
+.biz-header-inner > * { position: relative; z-index: 1; }
+@media (max-width: 600px) {
+  .biz-header-inner::after { width: 160px; height: 105px; right: -12px; bottom: -14px; }
+}
+
+/* ── 2026-11-17 (v2, user): when the business has a logo in Firestore, use
+   IT as the header background instead of the Qufree mark — right side,
+   full header height, 9% opacity, slightly blurred so text stays crisp. ── */
+/* v2 (right-side only) — superseded by v3 below:
+.biz-header-inner.has-logo-bg::after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  height: auto;
+  background: var(--biz-bg) no-repeat right center / contain;
+  opacity: 0.09;
+  filter: blur(0.5px) saturate(0.9);
+  -webkit-mask-image: linear-gradient(to left, #000 55%, transparent);
+          mask-image: linear-gradient(to left, #000 55%, transparent);
+}
+@media (max-width: 600px) {
+  .biz-header-inner.has-logo-bg::after { width: 70%; right: 0; bottom: 0; height: auto; }
+}
+*/
+
+/* ── v3 (user: "biz-hero-logo as the card-body bg"): the business logo
+   covers the WHOLE header card, 10% opacity, softly blurred (it's scaled
+   up a lot) and slightly over-scaled so the blur doesn't leave pale edges. ── */
+.biz-header-inner.has-logo-bg::after {
+  inset: 0;
+  width: auto;
+  height: auto;
+  background: var(--biz-bg) no-repeat center / cover;
+  opacity: 0.14;
+  filter: blur(3px) saturate(0.9);
+  transform: scale(1.08);
+}
+@media (max-width: 600px) {
+  .biz-header-inner.has-logo-bg::after { inset: 0; width: auto; height: auto; }
+}

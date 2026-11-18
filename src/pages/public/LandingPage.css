@@ -1,0 +1,75 @@
+/* Compact page head — the list is the page; this is just context + search */
+.browse-head {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: white;
+  padding: 1.75rem 0;
+  text-align: center;
+}
+/* Light-on-dark variant of the shared .back-link (CategoryVendorList.css) —
+   this header sits on a dark gradient, not a white page background. */
+.browse-head .back-link {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  color: rgba(255, 255, 255, 0.75); font-size: 0.875rem; margin-bottom: 1rem;
+  background: none; border: none; padding: 0; font-family: inherit; cursor: pointer;
+}
+.browse-head .back-link:hover { color: white; }
+.browse-title {
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  color: white;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero-search {
+  position: relative;
+  max-width: 480px; margin: 0 auto;
+}
+.search-icon {
+  position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.search-input {
+  width: 100%; padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border: none; border-radius: 999px;
+  font-family: var(--font-body); font-size: 1rem; color: var(--text);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  outline: none;
+}
+.search-input:focus { box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+
+/* A-Z name filter — sits between the search header and the grid */
+.az-filter {
+  display: flex; flex-wrap: wrap;
+  gap: 0.4rem; padding: 1rem 1.5rem 0.25rem;
+}
+/* .container's global "margin: 0 auto" shorthand would otherwise win the
+   cascade (same specificity) and zero this out — the extra class beats it. */
+.az-filter.container {
+  margin-top: 1.5rem;
+}
+.az-btn {
+  flex: 0 0 auto;
+  min-width: 2rem; height: 2rem; padding: 0 0.6rem;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: var(--white); color: var(--text-mid);
+  font-family: inherit; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+}
+.az-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.az-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.az-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* Business listing — top/bottom padding matches /sehatkamla's
+   .sehatkamla-grid-section for section-rhythm consistency across the app's
+   grid/listing pages. */
+.businesses-section { padding: 2rem 0 4rem; scroll-margin-top: 68px; }
+
+@media (max-width: 480px) {
+  .browse-head { padding: 1.25rem 0; }
+  .businesses-section { padding: 1.5rem 0 3rem; }
+}
+
+.empty-state {
+  text-align: center; padding: 3rem;
+  color: var(--text-muted);
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}

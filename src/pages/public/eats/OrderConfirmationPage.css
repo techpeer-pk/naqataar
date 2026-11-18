@@ -1,0 +1,71 @@
+.eats-confirm-container {
+  max-width: 560px;
+}
+.eats-confirm-icon {
+  color: #16A34A;
+  margin-bottom: 0.75rem;
+}
+.eats-confirm-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin-bottom: 0.35rem;
+}
+.eats-confirm-sub {
+  color: var(--text-mid);
+  margin-bottom: 1.25rem;
+}
+.eats-confirm-ref {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  background: #F5F5F7;
+  margin-bottom: 1.25rem;
+}
+.eats-confirm-ref-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.eats-confirm-ref-code {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+.eats-confirm-details {
+  text-align: left;
+  border: 1px solid var(--border, #EAEAEA);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+.eats-confirm-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+}
+.eats-confirm-total {
+  border-top: 1px solid var(--border, #EAEAEA);
+  margin-top: 0.4rem;
+  padding-top: 0.6rem;
+}
+.eats-confirm-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.86rem;
+  color: var(--text-mid);
+  margin-bottom: 0.5rem;
+}
+.eats-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}

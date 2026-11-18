@@ -1,0 +1,34 @@
+.services-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.5rem;
+}
+.service-form { margin-bottom: 1.5rem; }
+.service-form .card-header { display: flex; justify-content: space-between; align-items: center; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 480px) { .form-row-2 { grid-template-columns: 1fr; } }
+/* reuse .input-icon-wrap from AdminAuth.css */
+.input-icon-wrap { position: relative; }
+.input-icon      { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.input-with-icon { padding-left: 2.5rem; }
+
+.services-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.service-item-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.service-item-info { flex: 1; min-width: 0; }
+.service-item-name { font-weight: 600; margin-bottom: 0.15rem; }
+.service-item-desc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.service-item-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--text-mid); }
+.service-item-meta span { display: flex; align-items: center; gap: 0.25rem; }
+.service-item-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+.service-thumb {
+  width: 44px; height: 44px; border-radius: 10px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.service-thumb-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-alt); color: var(--text-muted);
+}
+.service-thumb-lg { width: 64px; height: 64px; border-radius: 12px; }

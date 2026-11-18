@@ -1,0 +1,46 @@
+.bottom-nav {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: -1px;
+  z-index: 500;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding: 7px;
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0 0.4rem;
+  /* Darker than --text-muted: at this font size, --text-muted fails WCAG AA
+     (3.29:1) against the white nav background. This shade clears 4.5:1. */
+  color: #5F6373;
+  font-size: 0.68rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: color var(--transition);
+  /* Reset for the <button> variant (chat tab) — <Link> tabs don't need this */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Darker than --accent for the same reason (2.93:1 against white) — this
+   pair only exists here, --accent itself is untouched everywhere else. */
+.bottom-nav-item.active { color: #B34700; }
+
+@media (max-width: 990px) {
+  .bottom-nav { display: flex; }
+}
+
+/* 2026-11-17 Qufree theme: active tab was Qunjee orange (#B34700, above). */
+.bottom-nav-item.active { color: var(--primary); }
+/* 2026-11-17 Qufree theme: inactive tabs were the navy-tinted #5F6373 (above). */
+.bottom-nav-item { color: var(--text-mid); }
+.bottom-nav-item.active { color: var(--primary); }

@@ -1,0 +1,650 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── SuperAdmin allowlist ──
+    // A tiny, never-client-writable doc listing authorized superAdmin uids.
+    // Only ever edited by hand in the Firebase Console — this is deliberately
+    // NOT reachable through any client write path, so a compromised session
+    // (even a superAdmin's own) can never grant itself or anyone else access.
+    // The self-check read rule below lets a listed uid confirm membership;
+    // everyone else is denied, which the client treats as "not superadmin."
+    // `get()` calls from OTHER rules below bypass this doc's own read rule,
+    // so isSuperAdmin() keeps working regardless of the caller.
+    function isSuperAdmin() {
+      return request.auth != null &&
+        request.auth.uid in get(/databases/$(database)/documents/config/superAdmins).data.uids;
+    }
+    match /config/superAdmins {
+      allow read: if request.auth != null && request.auth.uid in resource.data.uids;
+      allow write: if false;
+    }
+
+    // ── QunjeeEats Ops allowlist ──
+    // Same protection model as superAdmins, but a separate, lower-privilege
+    // tier: Ops staff manage FoodVends/menus/orders on vendors' behalf (vendors
+    // have no accounts at all) and nothing else — no users, no appointments,
+    // no audit-log reads. Directors stay on the superAdmins list; the two
+    // lists never need to overlap since isSuperAdmin() is OR'd in everywhere
+    // isEatsAdmin() appears.
+    function isEatsAdmin() {
+      return request.auth != null &&
+        request.auth.uid in get(/databases/$(database)/documents/config/eatsAdmins).data.uids;
+    }
+    match /config/eatsAdmins {
+      allow read: if request.auth != null && request.auth.uid in resource.data.uids;
+      allow write: if false;
+    }
+
+    // ── CSR (Customer Support) allowlist ──
+    // Same protection model as eatsAdmins. CSR staff READ across users,
+    // businesses, appointments and orders (they need to look up whoever just
+    // called in) but their only WRITE surface is supportTickets — they never
+    // touch booking/order data directly. See docs/CRM-Support.md.
+    function isCsr() {
+      return request.auth != null &&
+        request.auth.uid in get(/databases/$(database)/documents/config/csrAgents).data.uids;
+    }
+    match /config/csrAgents {
+      allow read: if request.auth != null && request.auth.uid in resource.data.uids;
+      allow write: if false;
+    }
+
+    // ── Operations allowlist ──
+    // Same protection model as the allowlists above, but shaped as a uid→tier
+    // map instead of a flat uids array — this is the first internal role with
+    // a hierarchy. Tiers: 'teamLead' (read-only everywhere), 'managerBD'
+    // (read all + edit businesses), 'managerOps' (read all + edit businesses
+    // AND appointments/reservations/orders). No tier may hard-delete anything
+    // — that stays superAdmin-only, same as every other collection below.
+    // See docs/Operations-Console.md.
+    function opsRole() {
+      return request.auth != null
+        ? get(/databases/$(database)/documents/config/opsTeam).data.members[request.auth.uid]
+        : null;
+    }
+    function isOps()            { return opsRole() != null; }
+    function isOpsManager()     { return opsRole() in ['managerBD', 'managerOps']; }
+    function isOpsOperational() { return opsRole() == 'managerOps'; }
+
+    // 2026-11-17 — what a self-registering business owner may create:
+    // hidden (isActive false/absent), no paid period (activeUntil absent or
+    // null), and a trialEndsAt that EXISTS (absent = the "always active"
+    // grandfather clause in isSubscriptionActive) and is at most ~30 days
+    // out (32 allows for client clock skew; useBusinesses.create sets 30).
+    function isSelfServeBusinessCreate() {
+      let d = request.resource.data;
+      return d.get('isActive', false) == false
+        && d.get('activeUntil', null) == null
+        && d.trialEndsAt is timestamp
+        && d.trialEndsAt <= request.time + duration.value(32, 'd');
+    }
+
+    // Customer-side cancel may carry an optional reason — string, max 300
+    // chars (CANCEL_REASON_MAX in src/utils/cancelReasons.js). Absent is fine.
+    function isValidCancelReason() {
+      return !('cancelReason' in request.resource.data)
+        || (request.resource.data.cancelReason is string
+            && request.resource.data.cancelReason.size() <= 300);
+    }
+    match /config/opsTeam {
+      allow read: if request.auth != null && request.auth.uid in resource.data.members;
+      allow write: if false;
+    }
+
+    // ── Emergency shutdown switch ──
+    // Same protection model as the allowlists above — hand-edited in the
+    // Firebase Console only, never client-writable, so a compromised session
+    // can never disable it. Public read: even signed-out visitors need to
+    // see the shutdown screen before they'd ever be able to authenticate.
+    match /config/appStatus {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── Billing settings ──
+    // Unlike the allowlists above, this is a business setting, not a
+    // security boundary — SuperAdmin edits it live from the Subscription
+    // tab (BusinessDetailPage.jsx) instead of it being hardcoded and
+    // requiring a code deploy every time the price changes.
+    match /config/billingSettings {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ── Home-page category order/visibility ──
+    // Same reasoning as billingSettings, not the appStatus lockdown above:
+    // this is a content/layout setting SuperAdmin edits live from
+    // /superadmin/ads, not a security boundary. Public read — every
+    // visitor's home page needs it to decide what to render.
+    match /config/categoryVisibility {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ── Gamify ("3 doors, 1 key" prototype) ──
+    // Same content-setting reasoning as categoryVisibility above — SuperAdmin
+    // toggles it on/off and edits the placeholder surprise text from
+    // /superadmin/gamify. Public read so /gamify can render.
+    match /config/gamify {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ── Subscription (manual, WhatsApp-based) ──
+    // A business gets a free trial at creation (`trialEndsAt`, set in
+    // useBusinesses.create) and can be kept active beyond that by SuperAdmin
+    // setting `activeUntil` after an off-app payment is confirmed — see
+    // docs/Billing-Subscription.md. Neither field existing at all (any
+    // business registered before this shipped) means always-active — a
+    // deliberate grandfather clause, not an oversight. Mirrored in
+    // src/utils/subscription.js; rules can't call JS, so keep the two in
+    // sync by hand if this logic ever changes.
+    function isSubscriptionActive(businessId) {
+      let biz = get(/databases/$(database)/documents/businesses/$(businessId)).data;
+      let trialEnd = biz.get('trialEndsAt', null);
+      let activeUntil = biz.get('activeUntil', null);
+      return (trialEnd == null && activeUntil == null)
+        || (trialEnd != null && request.time <= trialEnd)
+        || (activeUntil != null && request.time <= activeUntil);
+    }
+
+    // ── Customer active-status gate ──
+    // A SuperAdmin-deactivated customer can't create NEW appointments/
+    // reservations/orders — existing bookings/history untouched, same
+    // soft-block philosophy as isSubscriptionActive above. Guest (signed-out)
+    // checkout has no uid to check at all, so this can only gate signed-in
+    // customers — an unavoidable gap given guest checkout exists by design.
+    function isUserActive() {
+      return request.auth == null
+        || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isActive', true) != false;
+    }
+
+    // ── Dine-in pre-order window ──
+    // A dine_in order must point at a real booking at the SAME business that
+    // is still live (pending/confirmed) and whose booked time hasn't passed —
+    // otherwise the /pfo link in an old "confirmed" email keeps taking orders
+    // for a cancelled, no-show or completed booking. A missing appointment
+    // makes get() fail, which denies. Mirrors src/utils/preOrder.js by hand.
+    function isPreOrderOpen(appointmentId, businessId) {
+      let appt = get(/databases/$(database)/documents/appointments/$(appointmentId)).data;
+      return appt.businessId == businessId
+        && appt.status in ['pending', 'confirmed']
+        && appt.appointmentDatetime > request.time;
+    }
+
+    // Releasing a held slot (cancel / no-show) — 2026-11-06. booked goes DOWN
+    // and the stored capacity is left exactly as it was. Allowed without
+    // re-checking capacity against the business/service doc, because that
+    // doc may have changed since the booking (owner lowered the table count,
+    // changed slotCapacity, or deleted the seating type) — and then a
+    // cancel would be denied forever, leaving a customer unable to cancel
+    // and the table stuck as booked. No new power: a decrement was already
+    // possible (see the slot-lock comment below — rules can't tell a real
+    // cancel from a fake one); this only stops a legit one from failing.
+    function isSlotRelease() {
+      return request.resource.data.booked is int
+        && request.resource.data.booked >= 0
+        && request.resource.data.booked < resource.data.get('booked', 0)
+        && request.resource.data.get('capacity', null) == resource.data.get('capacity', null);
+    }
+
+    // No same-day bookings (2026-11-06) — earliest bookable date is tomorrow,
+    // Pakistan time (UTC+5, no DST). `date` is the 'yyyy-MM-dd' string
+    // useBooking writes. timestamp.date() is UTC midnight of that day, so
+    // minus 5h = PKT midnight; it must still be in the future. Mirrors
+    // SlotPicker.jsx's `date > today` by hand.
+    function isFutureDayPKT(dateStr) {
+      return dateStr is string
+        && dateStr.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && timestamp.date(int(dateStr[0:4]), int(dateStr[5:7]), int(dateStr[8:10]))
+             - duration.value(5, 'h') > request.time;
+    }
+
+    // ── Audit log ──
+    // Append-only record of every SuperAdmin mutation. No one may edit or
+    // delete an entry — including the superAdmin who wrote it — so the trail
+    // stays trustworthy.
+    match /auditLog/{logId} {
+      allow read:   if isSuperAdmin();
+      // eatsAdmin may APPEND (their mutations get logged for accountability)
+      // but never read — Directors audit Ops, Ops can't see or shape the trail.
+      // managerBD/managerOps also log (accountability for their edit powers);
+      // teamLead never mutates anything, so it never needs to log.
+      allow create: if isSuperAdmin() || isEatsAdmin() || (isOps() && opsRole() != 'teamLead');
+      allow update, delete: if false;
+    }
+
+    // ── Users ──
+    // A user may only touch their own profile. `role` is chosen at creation
+    // but IMMUTABLE afterwards, so an existing customer can never flip
+    // themselves to businessAdmin. Even a self-declared admin gains nothing:
+    // every privileged action below is gated on OWNERSHIP (adminUid / email),
+    // not on this role field. Role is a UI hint; ownership is the real gate.
+    match /users/{userId} {
+      allow read: if (request.auth != null && request.auth.uid == userId) || isSuperAdmin() || isCsr();
+      allow create: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.role in ['customer', 'businessAdmin'];
+      allow update: if (request.auth != null && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role)   // role cannot change (self-service)
+        || isSuperAdmin();   // superAdmin may freely edit role/businessId/etc.
+      allow delete: if (request.auth != null && request.auth.uid == userId) || isSuperAdmin();
+
+      // Per-device push history, written server-side only (functions/index.js,
+      // via Admin SDK — bypasses these rules) whenever a push is sent to a
+      // logged-in user. Client may toggle `read` or delete its own, never
+      // create one itself — this is a log of what was actually sent, not a
+      // client-authored record.
+      match /notifications/{notifId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow update: if request.auth != null && request.auth.uid == userId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+        allow delete: if request.auth != null && request.auth.uid == userId;
+        allow create: if false;
+      }
+    }
+
+    // ── Businesses ──
+    // Public reads only for active businesses. A business can only be created
+    // by its own owner (adminUid must equal the caller), with a valid shape —
+    // no creating businesses on someone else's behalf or with a spoofed owner.
+    match /businesses/{businessId} {
+      // Public sees active businesses; the owner can ALWAYS read their own
+      // (otherwise deactivating a business would lock its admin out).
+      allow read: if resource.data.isActive == true
+        || (request.auth != null && request.auth.uid == resource.data.adminUid)
+        || isSuperAdmin()
+        || isEatsAdmin()
+        || isCsr()
+        || isOps();
+      // allow create: if (request.auth != null
+      //   && request.resource.data.adminUid == request.auth.uid
+      //   && request.resource.data.type in ['restaurant', 'salon', 'clinic', 'hotel', 'padel', 'sehatkamla', 'nayasaa', 'rasoomat', 'catering', 'studyabroad', 'makeup', 'carrental', 'eventmanagement', 'carvalet', 'beachhuts']
+      //   && request.resource.data.name is string
+      //   && request.resource.data.name.size() > 0) || isSuperAdmin();
+      // ── HARDENED 2026-11-17 ── a self-registering owner could create their
+      // business already approved (isActive: true) and/or paid-up (far
+      // activeUntil, or no trialEndsAt at all = "always active" grandfather
+      // clause). Self-serve creates must now start hidden, unpaid, with a
+      // trial of at most ~30 days (AdminRegister.jsx + useBusinesses.create
+      // already do exactly this). eatsAdmin onboards vendors via this same
+      // adminUid==self path and may activate them — exempt, as before.
+      allow create: if (request.auth != null
+        && request.resource.data.adminUid == request.auth.uid
+        && request.resource.data.type in ['restaurant', 'salon', 'clinic', 'hotel', 'padel', 'sehatkamla', 'nayasaa', 'rasoomat', 'catering', 'studyabroad', 'makeup', 'carrental', 'eventmanagement', 'carvalet', 'beachhuts']
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && (isEatsAdmin() || isSelfServeBusinessCreate())) || isSuperAdmin();
+      // eatsAdmin may update any business (onboarding/deactivating FoodVends via
+      // isActive, editing details) but never hard-delete — that stays with the
+      // owner or superAdmin, matching the app's soft-delete convention.
+      // managerBD/managerOps (isOpsManager) get the same unrestricted-field
+      // update grant, for the B2B side of Operations monitoring.
+      // allow update: if (request.auth != null
+      //   && request.auth.uid == resource.data.adminUid) || isSuperAdmin() || isEatsAdmin() || isOpsManager();
+      // ── HARDENED 2026-11-17 ── the owner's update was unrestricted, so an
+      // owner could approve themselves (isActive), extend their own
+      // subscription (activeUntil / trialEndsAt), change business type, or
+      // hand the business to another uid (adminUid) straight from the
+      // console. Owners may now change everything EXCEPT these keys;
+      // superAdmin / eatsAdmin / Ops managers keep the full grant (they are
+      // who set isActive / activeUntil in the app).
+      allow update: if (request.auth != null
+        && request.auth.uid == resource.data.adminUid
+        && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['adminUid', 'isActive', 'activeUntil', 'trialEndsAt', 'type', 'createdAt', 'offersOrdering', 'email']))
+        || isSuperAdmin() || isEatsAdmin() || isOpsManager();
+      allow delete: if (request.auth != null
+        && request.auth.uid == resource.data.adminUid) || isSuperAdmin();
+
+      // Services — public read (menu), owner-only write.
+      match /services/{serviceId} {
+        allow read: if true;
+        allow write: if (request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/businesses/$(businessId)).data.adminUid)
+          || isSuperAdmin();
+
+        // Slot locks for one seating type (2026-11-06) — per-service
+        // counterpart to the business-level slots below, so a restaurant's
+        // 12-person tables fill up independently of its 2-person tables.
+        // Same capacity-pinned defense-in-depth: `capacity` must equal THIS
+        // service's own tableCount, read fresh via get(), never trusted from
+        // the request. Only used when the service has a tableCount (see
+        // slotPools in src/utils/slots.js); others keep the business pool.
+        match /slots/{slotDocId} {
+          allow read: if true;
+          allow create: if isSuperAdmin() || (request.resource.data.booked is int
+            && request.resource.data.booked >= 0
+            && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)/services/$(serviceId)).data.get('tableCount', 1)
+            && request.resource.data.booked <= request.resource.data.capacity);
+          allow update: if isSuperAdmin() || isSlotRelease() || (request.resource.data.booked is int
+            && request.resource.data.booked >= 0
+            && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)/services/$(serviceId)).data.get('tableCount', 1)
+            && request.resource.data.booked <= request.resource.data.capacity);
+          allow delete: if isSuperAdmin();
+        }
+
+        // Room-night locks for hotel room types — per-room-type counterpart to
+        // the business-level roomNights below, same capacity-pinned
+        // defense-in-depth (capacity must match this service's own
+        // totalRooms, read fresh via get(), never trusted from the request).
+        // Used only once a hotel has room-type docs; hotels with none keep
+        // using the business-level pool further down.
+        match /roomNights/{nightId} {
+          allow read: if true;
+          allow create: if isSuperAdmin() || (request.resource.data.booked is int
+            && request.resource.data.booked >= 0
+            && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)/services/$(serviceId)).data.get('totalRooms', 1)
+            && request.resource.data.booked <= request.resource.data.capacity);
+          allow update: if isSuperAdmin() || (request.resource.data.booked is int
+            && request.resource.data.booked >= 0
+            && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)/services/$(serviceId)).data.get('totalRooms', 1)
+            && request.resource.data.booked <= request.resource.data.capacity);
+          allow delete: if isSuperAdmin();
+        }
+      }
+
+      // QunjeeEats menu items — public read (customers browse the menu),
+      // written by Ops (eatsAdmin) on the vendor's behalf. Owner-check kept
+      // for shape-parity with services, though FoodVends have no self-service
+      // owner in practice.
+      match /menuItems/{itemId} {
+        allow read: if true;
+        allow write: if (request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/businesses/$(businessId)).data.adminUid)
+          || isSuperAdmin()
+          || isEatsAdmin();
+      }
+
+      // Slot locks — public read (availability); writes bounded by capacity.
+      // Guest (unauthenticated) checkout is a deliberate product requirement,
+      // so these can't require request.auth — anyone can call the client SDK
+      // either way. What rules CAN still enforce without an auth check:
+      // `capacity` must equal the business's own slotCapacity (read fresh via
+      // get(), never trusted from the request), so a caller can no longer
+      // fabricate an inflated capacity to force overbooking past what the
+      // business actually has. The real no-double-book guarantee (and the
+      // only thing that can bound `booked` itself, since a decrement is
+      // indistinguishable in shape from a legitimate cancellation) still
+      // lives in the client transaction in useBooking. superAdmin may bypass
+      // the capacity math (e.g. to manually clear a stuck lock) and,
+      // uniquely, delete a lock doc outright — no one else may ever delete one.
+      match /slots/{slotDocId} {
+        allow read: if true;
+        allow create: if isSuperAdmin() || (request.resource.data.booked is int
+          && request.resource.data.booked >= 0
+          && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)).data.get('slotCapacity', 1)
+          && request.resource.data.booked <= request.resource.data.capacity);
+        allow update: if isSuperAdmin() || isSlotRelease() || (request.resource.data.booked is int
+          && request.resource.data.booked >= 0
+          && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)).data.get('slotCapacity', 1)
+          && request.resource.data.booked <= request.resource.data.capacity);
+        allow delete: if isSuperAdmin();
+      }
+
+      // Room-night locks — the hotel-booking counterpart to slots above, one
+      // doc per calendar night instead of per time-slot. Same capacity-pinned
+      // defense-in-depth as slots (see comment above): `capacity` must match
+      // the business's own totalRooms, read fresh via get(), never trusted
+      // from the request. booked can move by more than 1 per write (a
+      // reservation can claim several rooms at once), so this stays a bound
+      // check rather than an exact-increment check, same as slots already is.
+      match /roomNights/{nightId} {
+        allow read: if true;
+        allow create: if isSuperAdmin() || (request.resource.data.booked is int
+          && request.resource.data.booked >= 0
+          && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)).data.get('totalRooms', 1)
+          && request.resource.data.booked <= request.resource.data.capacity);
+        allow update: if isSuperAdmin() || (request.resource.data.booked is int
+          && request.resource.data.booked >= 0
+          && request.resource.data.capacity == get(/databases/$(database)/documents/businesses/$(businessId)).data.get('totalRooms', 1)
+          && request.resource.data.booked <= request.resource.data.capacity);
+        allow delete: if isSuperAdmin();
+      }
+    }
+
+    // ── Appointments ──
+    match /appointments/{appointmentId} {
+      // Guest booking allowed, but the shape is validated: new bookings start
+      // 'pending' and must carry the slot ids they claimed. A business whose
+      // trial/subscription has lapsed can't receive new bookings — existing
+      // ones are untouched (this rule only gates create, not read/update).
+      allow create: if request.resource.data.status == 'pending'
+        && request.resource.data.businessId is string
+        && request.resource.data.customerEmail is string
+        && request.resource.data.bookedSlotIds is list
+        && (isFutureDayPKT(request.resource.data.date) || isSuperAdmin())
+        && (isSubscriptionActive(request.resource.data.businessId) || isSuperAdmin())
+        && (isUserActive() || isSuperAdmin());
+
+      // NO anonymous reads (closes the PII leak). A signed-in customer may read
+      // only appointments booked with their own verified email; the owning
+      // admin may read their business's appointments. Guests see their booking
+      // on the post-booking confirmation screen and sign in to look it up later.
+      // isOps() last (not OR'd in earlier) — it calls get() on config/opsTeam,
+      // which errors if that doc doesn't exist yet; placed last, it only ever
+      // gets evaluated once every other (already-safe, pre-existing) clause
+      // has failed, so a not-yet-created opsTeam doc can never break an
+      // ordinary customer's or business owner's read via short-circuiting.
+      allow read: if isSuperAdmin() || isCsr() || (request.auth != null && (
+        request.auth.token.email == resource.data.customerEmail
+        || request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid
+      )) || isOps();
+
+      // Updates: (a) the owning admin, (b) the customer cancelling their own
+      // pending/confirmed booking, (c) an unauthenticated fcmToken save
+      // (guests write their push token back right after booking), (d)
+      // superAdmin, unrestricted, or (e) managerOps (isOpsOperational) —
+      // Operations console's status-change capability. isOpsOperational()
+      // last for the same not-yet-created-doc safety reason as read, above.
+      allow update: if isSuperAdmin() || (
+        request.auth != null && (
+          request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid
+          || (
+            resource.data.customerId == request.auth.uid
+            && resource.data.status in ['pending', 'confirmed']
+            // cancelReason added 2026-09-24 (CancelReasonDialog) — optional, bounded
+            // to CANCEL_REASON_MAX in src/utils/cancelReasons.js.
+            // && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName'])
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName', 'cancelReason'])
+            && isValidCancelReason()
+            && request.resource.data.status == 'cancelled'
+          )
+        )
+      ) || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fcmToken']) || isOpsOperational();
+
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Hotel Room Reservations ──
+    // Date-range counterpart to appointments (check-in/check-out spanning
+    // nights, instead of a single date+time). Same access philosophy: guest
+    // booking allowed with a validated shape, no anonymous reads, subscription
+    // gate on create, owning admin/customer/superAdmin/CSR scoping on
+    // read/update. No fcmToken clause — v1 has no reminder wiring that would
+    // populate one.
+    match /reservations/{reservationId} {
+      allow create: if request.resource.data.status == 'pending'
+        && request.resource.data.businessId is string
+        && request.resource.data.customerEmail is string
+        && request.resource.data.bookedNightIds is list
+        && (isSubscriptionActive(request.resource.data.businessId) || isSuperAdmin())
+        && (isUserActive() || isSuperAdmin());
+
+      // isOps()/isOpsOperational() last in both clauses — see the matching
+      // comment on appointments' read/update above for why (not-yet-created
+      // config/opsTeam must never break an existing customer/owner path).
+      allow read: if isSuperAdmin() || isCsr() || (request.auth != null && (
+        request.auth.token.email == resource.data.customerEmail
+        || request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid
+      )) || isOps();
+
+      allow update: if isSuperAdmin() || (
+        request.auth != null && (
+          request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid
+          || (
+            resource.data.customerId == request.auth.uid
+            && resource.data.status in ['pending', 'confirmed']
+            // cancelReason added 2026-09-24 (CancelReasonDialog) — optional, bounded
+            // to CANCEL_REASON_MAX in src/utils/cancelReasons.js.
+            // && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName'])
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName', 'cancelReason'])
+            && isValidCancelReason()
+            && request.resource.data.status == 'cancelled'
+          )
+        )
+      ) || isOpsOperational();
+
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── QunjeeEats Orders ──
+    // Same access philosophy as appointments: guests may CREATE with a
+    // validated shape; NO anonymous reads (same PII stance). Ops (eatsAdmin)
+    // runs the order lifecycle on ops-managed vendors' behalf; owner-managed
+    // vendors (F2) read/update their own business's orders via adminUid —
+    // the same owning-admin pattern appointments use.
+    match /orders/{orderId} {
+      // Guest ordering allowed; new orders start 'pending' with the fields
+      // the app relies on. dine_in = F1 pre-order tied to a booking, so it
+      // must carry the appointment it belongs to — and, since the whole
+      // point of AFO is protecting the restaurant from a no-show, it must
+      // also carry proof of upfront payment (server-enforced, not just a
+      // UI gate — see CheckoutPage.jsx). pickup = self-pickup, no address
+      // needed, same shape as dine_in otherwise. Same subscription gate as
+      // appointments — no new orders for a lapsed business, existing ones
+      // untouched.
+      allow create: if request.resource.data.status == 'pending'
+        && request.resource.data.businessId is string
+        && request.resource.data.customerEmail is string
+        && request.resource.data.items is list
+        && request.resource.data.fulfillmentType in ['delivery', 'pickup', 'dine_in']
+        && (request.resource.data.fulfillmentType != 'dine_in'
+            || (request.resource.data.appointmentId is string
+                && request.resource.data.paymentProofUrl is string
+                && isPreOrderOpen(request.resource.data.appointmentId, request.resource.data.businessId)))
+        && (isSubscriptionActive(request.resource.data.businessId) || isSuperAdmin())
+        && (isUserActive() || isSuperAdmin());
+
+      // Signed-in customer sees their own orders; the owning vendor admin
+      // sees their business's orders; Ops (eatsAdmin), Operations console
+      // (isOps) and superAdmin see all. isOps() last — see the matching
+      // comment on appointments' read above (not-yet-created config/opsTeam
+      // must never break an existing customer/owner path).
+      allow read: if isSuperAdmin() || isEatsAdmin() || isCsr()
+        || (request.auth != null && request.auth.token.email == resource.data.customerEmail)
+        || (request.auth != null
+            && request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid)
+        || isOps();
+
+      // Ops/superAdmin/owning vendor admin/managerOps run status transitions;
+      // a signed-in customer may only cancel their own not-yet-dispatched
+      // order, and only by flipping status → 'cancelled' (no other edits).
+      // The trailing fcmToken clause mirrors appointments: the confirmation
+      // page writes this device's push token back right after ordering
+      // (guests included), and may touch nothing else. isOpsOperational()
+      // last, same not-yet-created-doc safety reason as read, above.
+      allow update: if isSuperAdmin() || isEatsAdmin()
+        || (request.auth != null
+            && request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid)
+        || (
+        request.auth != null
+        && resource.data.customerId == request.auth.uid
+        && resource.data.status in ['pending', 'confirmed', 'preparing']
+        // cancelReason added 2026-09-24 (CancelReasonDialog) — optional, bounded
+        // to CANCEL_REASON_MAX in src/utils/cancelReasons.js.
+        // && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'cancelledByRole', 'cancelledByUid', 'cancelledByName', 'cancelReason'])
+        && isValidCancelReason()
+        && request.resource.data.status == 'cancelled'
+      ) || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fcmToken']) || isOpsOperational();
+
+      // Hard delete stays Directors-only; Ops cancels via status instead.
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Subscription invoices ──
+    // One record per SuperAdmin activation/extension (see docs/Billing-
+    // Subscription.md, BusinessDetailPage's Subscription tab). Only
+    // SuperAdmin ever writes one — a business owner may only read their own,
+    // matching the owning-admin read pattern used for appointments/orders.
+    // `hidden` lets SuperAdmin pull an invoice from the business's own view
+    // (e.g. a mistaken/draft one) without deleting the record outright —
+    // SuperAdmin's own read is unaffected either way.
+    match /invoices/{invoiceId} {
+      allow read: if isSuperAdmin()
+        || (request.auth != null
+            && request.auth.uid == get(/databases/$(database)/documents/businesses/$(resource.data.businessId)).data.adminUid
+            && resource.data.get('hidden', false) != true);
+      allow create: if isSuperAdmin();
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // ── Support tickets (CSR) ──
+    // Append-and-own model: a CSR agent creates a ticket and may only update
+    // the ones they created (status/notes as a case progresses); superAdmin
+    // has full oversight. This is CSR's only write surface — see the
+    // csrAgents allowlist above and docs/CRM-Support.md.
+    match /supportTickets/{ticketId} {
+      allow read: if isCsr() || isSuperAdmin();
+      allow create: if isCsr() && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isSuperAdmin()
+        || (isCsr() && resource.data.createdBy == request.auth.uid);
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Push token registry (installed PWA devices) ──
+    // Doc id IS the FCM token (unguessable), written by the device itself on
+    // launch — guests included, since guests order/book too. No client list
+    // access: enumeration would leak every device's push address. The
+    // welcomePush/campaignPush functions read via Admin SDK (bypasses rules).
+    match /pushTokens/{token} {
+      allow read: if isSuperAdmin();
+      allow create, update: if request.resource.data.token == token
+        && request.resource.data.keys().hasOnly(['token', 'uid', 'userAgent', 'lastSeenAt']);
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Push campaigns (broadcast custom notifications) ──
+    // Creating a doc here { title, body, url? } broadcasts to every device in
+    // pushTokens via the campaignPush function, which writes sent/failed
+    // counts back. Directors-only — this is a megaphone.
+    match /pushCampaigns/{campaignId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ── FAQs (support chat widget self-serve) ──
+    // Public read — the chat widget shows these to signed-out visitors too.
+    // Managed from the CSR and SuperAdmin consoles only.
+    match /faqs/{faqId} {
+      allow read: if true;
+      allow write: if isCsr() || isSuperAdmin();
+    }
+
+    // ── Ad Banners (Home + category page slots) ──
+    // Simplified v0 — see docs/AdBanners-Plan.md for the fuller plan (dates,
+    // pricing tiers) this isn't implementing yet. One doc per placement
+    // (docId is the placement key: 'home', 'restaurants', etc.), holding
+    // whatever image/link SuperAdmin currently has live there. Public read,
+    // SuperAdmin-only write.
+    match /adBanners/{placementId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ── Latest Updates ticker (home page banner) ──
+    // Public read for the ticker. No SuperAdmin UI yet — messages are
+    // hand-typed in the Firebase Console directly, same as config/superAdmins.
+    match /updates/{updateId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── Session logs (SuperAdmin Users page) ──
+    // Written only by logSessionOnDisconnect (functions/index.js) via the
+    // Admin SDK, which bypasses these rules entirely — no client write path.
+    match /sessionLogs/{logId} {
+      allow read: if isSuperAdmin();
+      allow write: if false;
+    }
+  }
+}

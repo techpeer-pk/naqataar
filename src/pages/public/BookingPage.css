@@ -1,0 +1,95 @@
+.booking-page    { background: var(--bg); }
+.booking-container { max-width: 640px; }
+.booking-title   { margin: 0.75rem 0 1.5rem; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-mid); font-size: 0.875rem; padding: 0; margin-bottom: 1rem;
+}
+.back-link:hover { color: var(--primary); }
+
+.booking-card { margin-top: 0; }
+.booking-nav  { padding-top: 1.25rem; }
+.booking-nav-group { display: flex; gap: 0.75rem; }
+.btn-nav-back,
+.btn-nav-primary { flex: 1; justify-content: center; }
+
+/* Stepper spacing override for booking */
+.booking-page .stepper { margin-bottom: 1.5rem; }
+.step-label { font-size: 0.8rem; }
+@media (max-width: 480px) { .step-label { display: none; } }
+
+/* Service selector */
+.service-select-list  { display: flex; flex-direction: column; gap: 0.6rem; }
+.service-select-item  {
+  position: relative;
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-align: left; cursor: pointer; width: 100%;
+  transition: all var(--transition);
+}
+.service-select-item:hover   { border-color: var(--primary-light); background: var(--primary-pale); }
+.service-select-item.selected { border-color: var(--primary); background: var(--primary-pale); }
+.service-select-info { flex: 1; }
+.service-select-name { display: block; font-weight: 600; margin-bottom: 0.15rem; }
+.service-select-desc { font-size: 0.82rem; color: var(--text-muted); }
+.service-select-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; font-size: 0.82rem; color: var(--text-muted); }
+.service-select-price { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+.service-select-check {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; transition: all var(--transition);
+}
+.service-select-check.checked { background: var(--primary); border-color: var(--primary); }
+.service-select-hint { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.6rem; }
+.service-select-total {
+  font-size: 0.85rem; font-weight: 600; color: var(--primary);
+  margin-top: 0.75rem; padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.service-select-thumb {
+  width: 44px; height: 44px; border-radius: 8px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+/* Sub-section headers within the merged "Details & Confirm" step — smaller
+   and quieter than .step-heading so they read as sub-sections of one step,
+   not as three stacked pages. .section-heading-divided adds the rule that
+   separates it from whatever came before (Details / Advance Payment). */
+.section-heading {
+  font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); margin: 0 0 1rem;
+}
+.section-heading-divided {
+  margin-top: 1.75rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Confirm summary */
+.confirm-summary {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+.confirm-row {
+  display: flex; gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-label { width: 80px; font-weight: 600; color: var(--text-mid); flex-shrink: 0; }
+.confirm-value { flex: 1; }
+.confirm-note  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+@media (max-width: 480px) {
+  .booking-nav { padding-top: 1rem; }
+  .confirm-row { flex-direction: column; gap: 0.25rem; }
+  .confirm-label { width: auto; }
+}

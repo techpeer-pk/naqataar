@@ -1,0 +1,37 @@
+.sa-table-toolbar { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+.sa-toolbar-export { margin-left: auto; }
+
+/* Wraps only <table> so a wide table scrolls on its own — the toolbar
+   above and pagination footer below stay pinned instead of scrolling
+   out of view with it on mobile. */
+.dt-scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.sa-row-clickable { cursor: pointer; }
+
+/* Deep-link target — briefly flashes so a row is easy to spot in a long
+   table after an Appointments/Orders cross-link scrolls to it. */
+.row-highlighted td { animation: row-flash 2.4s ease-out 1; }
+@keyframes row-flash {
+  0%   { background: var(--primary-pale); }
+  70%  { background: var(--primary-pale); }
+  100% { background: transparent; }
+}
+
+.sa-th-sortable { cursor: pointer; user-select: none; transition: color var(--transition); }
+.sa-th-sortable:hover { color: var(--primary); }
+.sa-th-inner { display: inline-flex; align-items: center; gap: 0.3rem; }
+.sa-th-sort-idle { opacity: 0.35; }
+.sa-th-sortable:hover .sa-th-sort-idle { opacity: 0.7; }
+
+.presence-dot     { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-left: 0.4rem; vertical-align: middle; }
+.presence-online  { background: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.18); }
+.presence-offline { background: var(--border); }
+
+.sa-table-pagination {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 0.75rem; padding: 0.6rem 0.75rem; border-top: 1px solid var(--border);
+}
+.sa-page-size { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--text-muted); }
+.sa-page-size select { padding: 0.25rem 0.5rem; }
+.sa-page-nav { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-muted); }
+.sa-page-info { font-size: 0.85rem; color: var(--text-muted); }

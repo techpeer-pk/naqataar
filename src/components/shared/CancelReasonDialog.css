@@ -1,0 +1,38 @@
+.cancel-reason-message {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  margin-bottom: 1rem;
+}
+.cancel-reason-fields {
+  margin-bottom: 1rem;
+}
+.cancel-reason-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.cancel-reason-chip {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border, #EAEAEA);
+  background: #fff;
+  color: var(--text-mid);
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.cancel-reason-chip.active {
+  border-color: #DC2626;
+  background: #FEF2F2;
+  color: #B91C1C;
+  font-weight: 600;
+}
+textarea.form-control.cancel-reason-other {
+  margin-top: 0.6rem;
+  min-height: 64px;
+}
+.cancel-reason-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

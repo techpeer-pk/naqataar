@@ -1,0 +1,107 @@
+.appt-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  font-size: 0.9rem;
+}
+.appt-detail-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.appt-detail-cancel {
+  margin-left: auto;
+}
+/* Two classes so it reliably beats .btn-danger's own background
+   regardless of CSS bundling order (same reasoning as .sa-modal.card
+   in Modal.css). */
+.btn-danger.appt-detail-cancel {
+  background: transparent;
+}
+.btn-danger.appt-detail-cancel:hover {
+  background: #DC2626;
+}
+.appt-detail-cancel-confirm {
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  border-radius: var(--radius, 10px);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: #991B1B;
+}
+.appt-detail-cancel-confirm-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.appt-detail-cancel-confirm-row input {
+  flex: 1 1 100px;
+  min-width: 0;
+}
+.appt-detail-section {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border, #EAEAEA);
+}
+.appt-detail-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.appt-detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.appt-detail-name {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.appt-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.appt-detail-table td {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border, #F1F1F1);
+}
+.appt-detail-table td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+.appt-detail-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.6rem;
+  font-size: 0.95rem;
+}
+.appt-detail-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Strong visual warning for a price-mismatch-flagged booking — doesn't
+   block Confirm (a false positive would otherwise dead-end the admin), but
+   makes it very hard to miss what the "Price" badge is warning about.
+   Two classes (.sa-modal.sa-modal-price-flag) so it reliably beats
+   .sa-modal.card's own background regardless of bundling order, same
+   pattern as .btn-danger.appt-detail-cancel above. */
+.sa-modal.sa-modal-price-flag {
+  background: #FEF2F2;
+  border: 2px solid #DC2626;
+}
+.sa-modal-price-flag .card-header {
+  background: #FEE2E2;
+  margin: -1px -1px 0;
+  padding-left: calc(1rem + 1px);
+}
+.sa-modal-price-flag .appt-detail-total {
+  color: #DC2626;
+  font-weight: 700;
+}

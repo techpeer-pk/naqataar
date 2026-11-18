@@ -1,0 +1,8 @@
+.shutdown-screen {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 2rem; background: var(--bg);
+}
+.shutdown-logo { height: 48px; width: auto; margin-bottom: 1.5rem; }
+.shutdown-screen h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--primary); }
+.shutdown-screen p { color: var(--text-muted); max-width: 420px; font-size: 0.95rem; }

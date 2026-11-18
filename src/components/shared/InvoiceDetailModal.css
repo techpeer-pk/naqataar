@@ -1,0 +1,106 @@
+.invoice-doc {
+  font-size: 0.9rem;
+}
+.invoice-doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--primary, #1C223F);
+}
+.invoice-doc-brand {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary, #1C223F);
+}
+.invoice-doc-meta {
+  text-align: right;
+  font-size: 0.85rem;
+}
+.invoice-doc-billto {
+  margin-bottom: 1.25rem;
+}
+.invoice-doc-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+.invoice-doc-billto-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.invoice-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.invoice-doc-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border, #EAEAEA);
+}
+.invoice-doc-table td {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border, #F1F1F1);
+}
+.invoice-doc-table th:last-child, .invoice-doc-table td:last-child { text-align: right; white-space: nowrap; }
+.invoice-doc-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  padding-top: 0.5rem;
+}
+.invoice-doc-activity {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px dashed var(--border, #EAEAEA);
+}
+.invoice-doc-activity-line {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.invoice-doc-revenue-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-mid, #444);
+  padding: 0.15rem 0;
+}
+.invoice-doc-activity-note {
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+.invoice-doc-footer {
+  margin-top: 2rem;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* Print — the portal copy (a direct child of <body>, rendered by
+   InvoiceDetailModal.jsx via createPortal) is invisible on screen and only
+   shown when printing. It's deliberately OUTSIDE the modal's fixed/
+   overflow-auto ancestor chain — printing straight out of the on-screen
+   modal copy clipped everything past the header, since print media doesn't
+   handle a fixed-position ancestor's viewport math the way screen does. */
+.invoice-print-portal {
+  display: none;
+}
+@media print {
+  body * { visibility: hidden; }
+  .invoice-print-portal, .invoice-print-portal * { visibility: visible; }
+  .invoice-print-portal {
+    display: block;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 2rem;
+  }
+  .no-print { display: none !important; }
+}

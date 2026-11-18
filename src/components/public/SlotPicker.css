@@ -1,0 +1,93 @@
+.slot-picker { margin-top: 0.5rem; }
+
+/* A calendar shouldn't stretch to fill an arbitrarily wide parent — cap it
+   at a normal widget width and center it, same as any date-picker. */
+.cal-wrap { max-width: 340px; margin: 0 auto; }
+
+.cal-header {
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  margin-bottom: 1rem;
+}
+.cal-month-label {
+  font-weight: 700; font-size: 1rem;
+  min-width: 140px; text-align: center;
+}
+.strip-nav {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: all var(--transition);
+}
+.strip-nav:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.strip-nav:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.cal-weekday-row {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem; margin-bottom: 0.4rem;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem; margin-bottom: 1.25rem;
+}
+.cal-cell {
+  aspect-ratio: 1; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.cal-cell.empty     { visibility: hidden; border: none; background: transparent; }
+.cal-cell-num        { font-size: 0.95rem; font-weight: 600; }
+.cal-cell:hover:not(:disabled) { border-color: var(--primary-light); background: var(--primary-pale); }
+.cal-cell.today      { border-color: var(--primary); }
+.cal-cell.selected   { background: var(--primary); border-color: var(--primary); }
+.cal-cell.selected .cal-cell-num { color: white; }
+.cal-cell.closed     { opacity: 0.3; cursor: not-allowed; background: var(--bg); }
+
+@media (max-width: 480px) {
+  .cal-grid, .cal-weekday-row { gap: 0.25rem; }
+  .cal-cell-num { font-size: 0.82rem; }
+  .cal-weekday  { font-size: 0.62rem; }
+  .cal-month-label { font-size: 0.9rem; min-width: 120px; }
+  .strip-nav    { width: 26px; height: 26px; }
+  .time-slots   { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); }
+}
+
+.time-slots-wrap { padding-top: 0.25rem; }
+.no-slots { color: var(--text-muted); font-size: 0.9rem; padding: 0.75rem 0; }
+
+.time-slot-group + .time-slot-group { margin-top: 1rem; }
+.time-slot-group-header {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+  gap: 0.5rem;
+}
+.time-slot {
+  padding: 0.55rem 0.25rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; text-align: center; white-space: nowrap;
+  transition: all var(--transition);
+}
+.time-slot:hover   { border-color: var(--primary-light); color: var(--primary); background: var(--primary-pale); }
+.time-slot.selected { background: var(--primary); border-color: var(--primary); color: white; }

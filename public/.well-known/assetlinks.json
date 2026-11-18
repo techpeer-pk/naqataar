@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.web.qunjee.twa",
+    "sha256_cert_fingerprints": [
+      "8B:2C:C9:CD:AF:46:34:1A:AE:D4:42:D7:7C:DF:C5:96:47:CF:E0:0C:19:27:B6:1B:E4:E5:8F:FC:22:16:2B:8E",
+      "17:10:51:43:4C:D0:A8:85:84:87:B9:DE:D7:A0:70:1B:38:FF:E1:DD:71:A1:8F:B0:EE:70:FA:11:D1:5E:5D:6F"
+    ]
+  }
+}]

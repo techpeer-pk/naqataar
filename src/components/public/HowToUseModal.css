@@ -1,0 +1,63 @@
+.how-to-overlay {
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  animation: howToFade 0.2s ease;
+}
+
+@keyframes howToFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.how-to-card {
+  position: relative;
+  width: 100%; max-width: 480px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: howToUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 480px) {
+  .how-to-overlay { align-items: center; }
+}
+
+@keyframes howToUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.how-to-close {
+  position: absolute; top: 0.9rem; right: 0.9rem;
+  background: rgba(0, 0, 0, 0.06); border: none; cursor: pointer;
+  color: var(--text-mid); width: 28px; height: 28px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.how-to-close:hover { background: rgba(0, 0, 0, 0.1); color: var(--text); }
+
+.how-to-title {
+  color: var(--text); font-weight: 700; font-size: 1.1rem;
+  margin: 0 0 1rem; padding-right: 1.5rem;
+}
+
+.how-to-video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #000;
+}
+.how-to-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+.how-to-done {
+  width: 100%; margin-top: 1.4rem;
+}

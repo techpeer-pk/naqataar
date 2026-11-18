@@ -1,0 +1,26 @@
+/* Above BottomNav (z-index 500) so the tab bar can't cover the popup on mobile. */
+.legal-modal-backdrop {
+  z-index: 600;
+}
+.sa-modal.card.legal-modal {
+  max-width: 760px;
+}
+.legal-modal-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  color: var(--text-muted);
+}
+/* The doc's own .card.legal-body would nest a card inside the modal card. */
+.legal-embedded .legal-body.card {
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+.legal-embedded .legal-updated {
+  margin-bottom: 1.25rem;
+}
+.legal-embedded .legal-header {
+  margin-bottom: 0;
+}

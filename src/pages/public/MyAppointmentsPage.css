@@ -1,0 +1,63 @@
+.my-appts { background: var(--bg); }
+.my-appts-container { max-width: 700px; }
+.my-appts-header {
+  display: flex; align-items: flex-start; gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+.my-appts-header h1 { font-size: 1.8rem; }
+.my-appts-header p  { color: var(--text-muted); margin-top: 0.2rem; }
+
+.email-lookup { margin-bottom: 2rem; }
+.email-lookup-inner { display: flex; gap: 0.75rem; align-items: flex-end; }
+@media (max-width: 480px) { .email-lookup-inner { flex-direction: column; } }
+
+.appt-ref {
+  font-size: 0.72rem; color: var(--text-muted);
+  font-family: ui-monospace, monospace; letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+}
+.appt-requested {
+  font-size: 0.72rem; color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.my-appts-signin-hint {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.83rem; color: var(--text-muted);
+  margin: -1rem 0 1.5rem;
+}
+.my-appts-signin-hint a { color: var(--primary); font-weight: 500; }
+
+.appt-section-title { font-size: 1rem; color: var(--text-mid); margin: 1.5rem 0 0.75rem; }
+.appt-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.appt-card-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+.appt-business { font-weight: 600; font-size: 0.95rem; }
+.appt-service  { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+.appt-card-meta {
+  display: flex; flex-wrap: wrap; gap: 1rem;
+  font-size: 0.82rem; color: var(--text-mid);
+}
+.appt-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+.appt-cancel-btn { margin-top: 0.9rem; }
+
+/* Amber/dine-in palette (matches badge-dinein elsewhere) so this reads as
+   cross-link info, not another action button next to Cancel. */
+.appt-order-link {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  margin-top: 0.85rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #FED7AA;
+  background: #FFF7ED; color: #9A3412;
+  font-size: 0.8rem; line-height: 1.4;
+}
+.appt-order-link svg { flex-shrink: 0; margin-top: 0.1rem; }
+.appt-order-link strong { font-weight: 600; }
+.appt-order-link:hover { background: #FFEDD5; }

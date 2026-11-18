@@ -1,0 +1,204 @@
+.home {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 900px 650px at 15% -80px, rgba(235, 87, 13, 0.14), transparent 65%),
+    radial-gradient(ellipse 900px 700px at 100% 420px, rgba(28, 34, 63, 0.07), transparent 60%),
+    var(--bg);
+  padding: 1.5rem;
+}
+
+.home-share {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 10;
+}
+
+.home-register {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 10;
+}
+
+.home-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 420px;
+}
+@media (min-width: 640px) {
+  .home-inner { max-width: 840px; }
+}
+@media (min-width: 992px) {
+  .home-inner { max-width: 1180px; }
+}
+
+/* Brand */
+.home-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.home-brand-logo { height: 44px; width: auto; display: block; }
+.home-brand-icon {
+  color: #1A56DB;
+}
+.home-brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+/* CTA */
+.home-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+.home-cta-label {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* 6 category cards — richer than a bare photo tile (colored header + a
+   row-list of sub-actions), so 1 column on mobile instead of 2. */
+.home-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 1rem;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .home-cards { grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
+}
+@media (min-width: 992px) {
+  .home-cards { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+}
+
+.home-category-card {
+  display: block;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.home-category-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.home-category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  min-height: 92px;
+  color: var(--white);
+}
+.home-category-card-link .home-category-header {
+  border-radius: var(--radius);
+}
+.home-category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+.home-category-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+.home-category-subtitle {
+  font-size: 0.76rem;
+  margin: 0.15rem 0 0;
+  opacity: 0.88;
+}
+
+.home-category-rows {
+  display: flex;
+  flex-direction: column;
+}
+.home-category-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1.1rem;
+  text-decoration: none;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+.home-category-row:hover {
+  background: var(--bg-alt);
+}
+.home-category-row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--text-mid);
+}
+.home-category-row-icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+.home-category-row-label {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.home-category-row-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Bottom links */
+.home-bottom-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* My Bookings */
+.home-my-bookings {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+.home-my-bookings:hover {
+  color: #1A56DB;
+}

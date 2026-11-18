@@ -1,0 +1,117 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /avatars/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Advance-payment screenshots, uploaded by the booking customer before
+    // their appointment is created. Read is any signed-in user rather than
+    // an owner-only check — the download URL itself is only ever handed to
+    // whoever Firestore already lets read the appointment doc it's attached
+    // to (see firestore.rules appointments.read), so this is not the real
+    // access boundary; it just keeps the bucket closed to anonymous callers.
+    match /payment-proofs/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Business logos — public read (shown to every customer browsing),
+    // write gated by uid rather than businessId so the rule needs no
+    // Firestore lookup; ProfilePage only ever uploads for the signed-in
+    // admin's own uid.
+    match /business-logos/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Menu-item photos — public read (customers browse the menu). Write/delete
+    // gated by uid, not businessId: the uploader may be the owner (F2,
+    // /admin/menu) OR an Ops/eatsAdmin staffer managing a vendor's menu on
+    // their behalf (/eatsadmin/.../menu) — either way it's THEIR own uid
+    // folder, and the Firestore write (owner/eatsAdmin/superAdmin) is the
+    // real ownership check on the menuItems doc itself.
+    match /menu-item-images/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Service photos (bookable services — table type, stylist, doctor, etc.)
+    // — public read, write/delete gated by uid (ServicesPage only ever
+    // uploads for the signed-in business owner's own uid).
+    match /service-images/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Banner images (Home + category page slots) — public read. Write is
+    // any signed-in user rather than a real SuperAdmin check (same reasoning
+    // as payment-proofs above: this isn't the real access boundary). The
+    // actual gate is the `adBanners` Firestore write rule (isSuperAdmin(),
+    // already proven there) plus /superadmin/ads being behind
+    // SuperProtectedRoute — a signed-in non-admin could upload a stray file
+    // here, but has no way to point any adBanners doc at it.
+    // Path deliberately avoids the word "ad"/"ads" — a literal "ad-banners/"
+    // URL segment gets silently blocked by ad-blockers (EasyList-style
+    // filters match on URL substrings), which was hanging the image load
+    // with neither a load nor an error event ever firing.
+    match /promo-banners/{placementId}/{fileName} {
+      allow read: if true;
+      // ── HARDENED 2026-09-25 (eth-hack drill, verified exploitable) ──
+      // Write+delete were gated only on `request.auth != null`, so ANY
+      // signed-in customer could upload into promo-banners/ and delete
+      // objects there. Chained with public-read adBanners docs (firestore.rules
+      // adBanners.read == true), which expose the LIVE banner's exact object
+      // path AND its download token, that allowed overwriting the live home
+      // banner at its own URL (arbitrary/defacing image shown to every
+      // visitor) or deleting it (broken banner / DoS). Confirmed live: a plain
+      // customer got 200 on upload and 204 on delete.
+      // Now gated on SuperAdmin via cross-service Firestore lookup, mirroring
+      // firestore.rules isSuperAdmin() (config/superAdmins.uids) — the exact
+      // same condition the paired adBanners doc write already requires, so the
+      // only legit writer (SuperProtectedRoute → /superadmin/ads →
+      // useAdBanners.saveImage/removeImage, passing the superAdmin's own uid)
+      // is unaffected. size + contentType clauses kept identical. Adds one
+      // Firestore read per banner write/delete — negligible (only SuperAdmin
+      // ever writes here). Original lines kept below, commented, per repo rule.
+      // ── IAM REQUIRED for firestore.get() here (2026-09-28) ──
+      // Cross-service rules only work if the Storage service agent
+      // service-519086565319@gcp-sa-firebasestorage.iam.gserviceaccount.com
+      // has role "Firebase Rules Firestore Service Agent". Without it every
+      // firestore.get() fails → deny → 403 for EVERYONE, SuperAdmin included
+      // (that's what broke /superadmin/ads after the 09-25 deploy). The CLI
+      // only offers to grant it via an interactive Y/n prompt, and skips the
+      // check entirely when (a) run non-interactively or (b) this file is
+      // unchanged since the last deploy ("already up to date").
+      // allow write: if request.auth != null
+      //   && request.resource.size < 5 * 1024 * 1024
+      //   && request.resource.contentType.matches('image/.*');
+      // allow delete: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid in firestore.get(/databases/(default)/documents/config/superAdmins).data.uids
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null
+        && request.auth.uid in firestore.get(/databases/(default)/documents/config/superAdmins).data.uids;
+    }
+  }
+}

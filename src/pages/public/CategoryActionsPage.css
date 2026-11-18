@@ -1,0 +1,111 @@
+.cat-actions {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  background: var(--bg);
+  padding: 1.5rem;
+}
+
+.cat-actions-inner {
+  width: 100%;
+  max-width: 720px;
+  padding-top: 1rem;
+}
+
+.cat-actions-back {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+.cat-actions-back:hover {
+  color: var(--text);
+}
+
+.cat-actions-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 1.5rem;
+}
+
+/* .ad-banner-placeholder / --live: defined once in src/styles/global.css,
+   shared by every page's Ad slot — see docs/AdBanners-Plan.md. */
+
+.cat-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 260px));
+  gap: 1rem;
+}
+
+.cat-action-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.cat-action-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.cat-action-tile.is-disabled {
+  width: 100%; padding: 0; font-family: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.cat-action-tile.is-disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Same treatment as the /index category cards' image area — aspect-ratio
+   box, object-fit: cover, no letterboxed white space around the icon. */
+.cat-action-icon-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+.cat-action-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cat-action-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.cat-action-content {
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+.cat-action-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cat-action-badge {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .cat-actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -1,0 +1,588 @@
+/* Fonts loaded via <link> in index.html */
+
+/* ── Design Tokens ── */
+:root {
+  /* Qunjee Brand Colors — navy + white (matches qunjee.com's global theme) */
+  /* --primary:       #1C223F; */
+  /* --primary-light: #2E3A66; */
+  /* --primary-pale:  #EDEDF0; */
+  /* --primary-dark:  #12162B; */
+  /* Orange — matches the hover accent on qunjee.com's own booking cards (#FF6600) */
+  /* --accent:        #FF6600; */
+  /* --accent-dark:   #E65C00; */
+  /* --accent-pale:   #FFF3E8; */
+  /* 2026-11-17: Qufree teal theme (brand #1B5566) — whole app */
+  --primary:       #1B5566;
+  --primary-light: #2A7186;
+  --primary-pale:  #E8F4FA;
+  --primary-dark:  #123F4C;
+  --accent:        #1F8FA6;
+  --accent-dark:   #187587;
+  --accent-pale:   #E6F5F8;
+
+  /* Neutrals — white, matching qunjee.com (no more warm-cream tint) */
+  --bg:            #FFFFFF;
+  --bg-alt:        #F7F7F7;
+  --surface:       #FFFFFF;
+  --border:        #EAEAEA;
+  /* --text:          #1C223F; */
+  --text:          #1A2E35; /* 2026-11-17 Qufree: deep slate-teal */
+  /* --text-mid:      #55596F; */
+  /* --text-muted:    #8A8D9C; */
+  /* 2026-11-17 Qufree: navy-tinted greys -> teal-tinted greys (matched the old navy) */
+  --text-mid:      #4A646D;
+  --text-muted:    #7E949B;
+  --white:         #FFFFFF;
+
+  /* Reminder urgency colors */
+  --reminder-future-bg:    #F3F0FB;
+  --reminder-future-border:#7D5FCF;
+  --reminder-future-text:  #4A3780;
+  --reminder-calm-bg:      #EBF5FB;
+  --reminder-calm-border:  #2980B9;
+  --reminder-calm-text:    #1A5276;
+  --reminder-urgent-bg:    #FEF9E7;
+  --reminder-urgent-border:#F39C12;
+  --reminder-urgent-text:  #784212;
+  --reminder-excited-bg:   #EAFAF1;
+  --reminder-excited-border:#27AE60;
+  --reminder-excited-text: #145A32;
+  --reminder-now-bg:       #FDEDEC;
+  --reminder-now-border:   #E74C3C;
+  --reminder-now-text:     #78281F;
+
+  /* Shadows — neutral black tint, matching qunjee.com's card shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-lg: 0 15px 40px rgba(0,0,0,0.15);
+
+  /* Shape & Motion */
+  --radius:    18px;
+  --radius-sm: 10px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Typography — matches qunjee.com (Poppins body / Montserrat headings) */
+  --font-display: 'Montserrat', sans-serif;
+  --font-body:    'Poppins', system-ui, sans-serif;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Typography ── */
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+h3 { font-size: 1.25rem; }
+a  { color: inherit; text-decoration: none; }
+
+/* ── Layout ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+.page      { min-height: calc(100vh - 70px); padding: 2rem 0; }
+
+@media (max-width: 990px) {
+  main.has-bottom-nav { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 500;
+  cursor: pointer; transition: all var(--transition);
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--primary); color: var(--white);
+  box-shadow: 0 2px 12px rgba(28,34,63,0.30);
+}
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(28,34,63,0.40); }
+.btn-accent {
+  background: var(--accent); color: var(--white);
+  box-shadow: 0 2px 12px rgba(255,102,0,0.30);
+}
+.btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--primary-pale); color: var(--primary);
+  border: 1.5px solid var(--primary-light);
+}
+.btn-secondary:hover { background: var(--primary); color: var(--white); }
+.btn-ghost {
+  background: transparent; color: var(--text-mid);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg-alt); }
+.btn-danger  { background: #FEE2E2; color: #DC2626; border: 1.5px solid #FCA5A5; }
+.btn-danger:hover { background: #DC2626; color: white; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+.btn-sm   { padding: 0.4rem 0.9rem; font-size: 0.85rem; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.card:hover    { box-shadow: var(--shadow-md); }
+.card-body     { padding: 1.5rem; }
+.card-header   { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+
+/* Deep-link target — briefly flashes so a card is easy to spot in a long
+   list after "Advance Food Order" / "Booking" cross-links scroll to it. */
+.card-highlighted { animation: card-flash 2.4s ease-out 1; }
+@keyframes card-flash {
+  0%   { box-shadow: 0 0 0 3px var(--primary-light); }
+  70%  { box-shadow: 0 0 0 3px var(--primary-light); }
+  100% { box-shadow: var(--shadow-sm); }
+}
+
+/* Shared image-upload row (business logo, menu-item photo). */
+.logo-upload-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+/* "Click to zoom" hint on clickable photos (menu items, services) — always
+   visible, not hover-only, so it works on touch devices too. */
+.zoom-badge {
+  position: absolute;
+  bottom: 6px; right: 6px;
+  display: inline-flex; align-items: center; gap: 0.2rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 5px;
+  background: rgba(12, 14, 24, 0.62);
+  color: #fff;
+  font-size: 0.62rem; font-weight: 600;
+  pointer-events: none;
+}
+
+/* Customer-facing "payment being verified" note — My Appointments + My Orders. */
+.verify-pending-note {
+  display: flex; align-items: flex-start; gap: 0.4rem;
+  margin-top: 0.75rem;
+  font-size: 0.78rem; line-height: 1.4; color: #92400E;
+}
+.verify-pending-note svg { flex-shrink: 0; margin-top: 0.1rem; }
+
+/* ── Forms ── */
+.form-group   { margin-bottom: 1.25rem; }
+.form-label   { display: block; font-size: 0.88rem; font-weight: 500; color: var(--text-mid); margin-bottom: 0.4rem; }
+.form-control {
+  width: 100%; padding: 0.7rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.95rem; color: var(--text);
+  background: var(--surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(28,34,63,0.15);
+}
+.form-control::placeholder { color: var(--text-muted); }
+textarea.form-control { resize: vertical; min-height: 100px; }
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238A8D9C' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
+}
+
+.form-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+/* Fixed, non-editable country-code badge glued to the left of a phone
+   input — see docs/UI-Field-Validation.md. */
+.phone-input-group { display: flex; }
+.phone-input-prefix {
+  display: flex; align-items: center; flex-shrink: 0;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--border); border-right: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  background: var(--bg);
+  font-size: 0.95rem; font-weight: 600; color: var(--text-mid);
+}
+.phone-input-group .form-control { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+/* ── Sign-in gate + advance-payment proof (shared by booking + Eats checkout) ── */
+.step-heading { font-size: 1.15rem; margin-bottom: 1.25rem; }
+
+.google-btn { gap: 0.6rem; border-color: var(--border); }
+.google-btn:hover { background: var(--bg); }
+.auth-divider {
+  display: flex; align-items: center; gap: 1rem;
+  color: var(--text-muted); font-size: 0.8rem;
+  margin: 1.25rem 0;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.booking-auth-gate { text-align: center; padding: 0.5rem 0; }
+.auth-gate-icon {
+  width: 56px; height: 56px;
+  background: var(--primary-pale);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
+  margin: 0 auto 1rem;
+}
+.auth-gate-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5; }
+.booking-auth-gate .google-btn { margin-bottom: 0.5rem; }
+.booking-auth-gate .form-group { text-align: left; }
+.auth-gate-footer { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+.auth-gate-footer a { color: var(--primary); }
+
+.payment-proof-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid var(--primary-light);
+  border-radius: var(--radius-sm);
+  background: var(--primary-pale);
+}
+.payment-proof-title { font-size: 0.95rem; margin-bottom: 0.35rem; }
+.payment-proof-amount { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 0.75rem; }
+.bank-details-card {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+.bank-details-card > div { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+.bank-details-card span { color: var(--text-muted); flex-shrink: 0; }
+.bank-details-card strong { text-align: right; word-break: break-word; }
+.bank-details-value { display: flex; align-items: center; gap: 0.4rem; }
+.bank-details-copy-btn {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem; height: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-mid);
+  cursor: pointer;
+}
+.bank-details-copy-btn:hover { border-color: var(--primary-light); color: var(--primary); }
+.payment-proof-coc-toggle {
+  display: block;
+  margin-top: 0.5rem;
+  background: none; border: none; padding: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.payment-proof-coc-toggle:hover { color: var(--primary); }
+.proof-upload-input {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer; font-size: 0.85rem; color: var(--text-mid);
+}
+.proof-upload-input:hover { border-color: var(--primary-light); }
+.proof-upload-input-label {
+  flex: 1; min-width: 0;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+@media (max-width: 420px) {
+  .bank-details-card > div { flex-direction: column; gap: 0.15rem; }
+  .bank-details-card strong { text-align: left; }
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.7rem; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 500;
+}
+.badge-pending   { background: #FEF3C7; color: #92400E; }
+.badge-confirmed { background: #D1FAE5; color: #065F46; }
+.badge-cancelled { background: #FEE2E2; color: #991B1B; }
+.badge-completed { background: #DBEAFE; color: #1E40AF; }
+.badge-no_show   { background: #FCE7F3; color: #9D174D; }
+.badge-restaurant { background: #FFF7ED; color: #9A3412; }
+.badge-salon      { background: #FAF5FF; color: #6B21A8; }
+.badge-clinic     { background: #EFF6FF; color: #1E40AF; }
+.badge-hotel      { background: #F0FDFA; color: #115E59; }
+.badge-padel      { background: #F0FDF4; color: #166534; }
+.badge-sehatkamla { background: #EFF6FF; color: #0F3D91; }
+.badge-staff      { background: #FDF4E3; color: #92400E; border: 1px solid #F5D9A8; }
+.badge-superadmin { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+.badge-customer   { background: #EFF6FF; color: #1E40AF; }
+.badge-price-flag { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; cursor: help; }
+/* Only blinks while the booking is still actionable — once cancelled there's
+   nothing left to urgently act on, but it stays visibly red/flagged so the
+   history of "this was a tampered booking" is never lost. */
+.badge-price-flag.badge-price-flag-blink { animation: price-flag-blink 1s step-start infinite; }
+.badge-overdue    { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; cursor: help; }
+.badge-ontop      { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+
+.badge-promo {
+  background: linear-gradient(135deg, #F97316, #EF4444);
+  color: #fff; border: none; font-weight: 700; letter-spacing: 0.02em;
+  text-transform: uppercase; font-size: 0.68rem;
+  animation: promo-pulse 1.6s ease-in-out infinite;
+}
+.service-select-info .badge-promo,
+.service-row-info .badge-promo {
+  display: inline-block;
+  margin: 0.25rem 0 0.35rem;
+}
+@keyframes promo-pulse {
+  0%, 100% { opacity: 1;    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50%      { opacity: 0.65; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}
+/* step-start (hard toggle, not a fade) — a genuine "blink" for the price
+   mismatch badge, deliberately more urgent-looking than badge-promo's soft
+   pulse above since this one flags a potential fraud/revenue-loss booking,
+   not a marketing tag. */
+@keyframes price-flag-blink {
+  0%, 49%  { background: #FEE2E2; color: #991B1B; border-color: #FCA5A5; }
+  50%, 100% { background: #DC2626; color: #fff; border-color: #DC2626; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* badge-price-flag-blink deliberately excluded — it's a fraud/revenue-loss
+     warning, not decorative motion, so it stays blinking regardless of the
+     user's reduced-motion preference. */
+  .badge-promo { animation: none; }
+}
+
+.link-btn {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: var(--primary); font-size: 0.8rem; font-weight: 500;
+}
+.link-btn:hover { text-decoration: underline; }
+.link-btn:disabled { opacity: 0.6; cursor: default; }
+
+.input-icon-toggle {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; padding: 0.25rem; cursor: pointer;
+  color: var(--text-muted); display: flex; align-items: center;
+}
+.input-icon-toggle:hover { color: var(--text); }
+.input-with-toggle { padding-right: 2.5rem !important; }
+
+/* ── Business Type Colors ── */
+.type-restaurant { --type-color: #F97316; }
+.type-salon      { --type-color: #A855F7; }
+.type-clinic     { --type-color: #3B82F6; }
+
+/* ── Loading ── */
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--bg-alt);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Small inline spinner for action buttons (Confirm/Cancel/Delete/etc.) —
+   disabled alone doesn't read as "in progress" to every user, this makes it
+   visible at icon size instead of only the 36px full-page .spinner above. */
+.icon-spin { animation: spin 0.7s linear infinite; }
+.loading-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; flex-direction: column; gap: 1rem;
+  background: var(--bg);
+}
+
+/* ── Toast ── */
+.toast-custom { font-family: var(--font-body) !important; font-size: 0.9rem !important; }
+
+/* ── Utilities ── */
+.divider  { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+.text-muted { color: var(--text-muted); }
+.text-center { text-align: center; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.4s ease both; }
+
+@keyframes pulse-slow   { 0%,100%{opacity:1} 50%{opacity:.75} }
+@keyframes pulse-medium { 0%,100%{opacity:1} 50%{opacity:.6} }
+@keyframes pulse-fast   { 0%,100%{opacity:1} 50%{opacity:.5} }
+@keyframes bounce-gentle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+/* ── Responsive Grid ── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+
+/* ── Mobile Base ── */
+@media (max-width: 480px) {
+  .container   { padding: 0 0.875rem; }
+  .page        { padding: 1.25rem 0; }
+  .card-body   { padding: 1rem; }
+  .card-header { padding: 0.875rem 1rem; }
+  h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  h2 { font-size: clamp(1.25rem, 4vw, 1.8rem); }
+}
+
+/* ── Stepper ── */
+.stepper {
+  display: flex; align-items: center; gap: 0;
+  margin-bottom: 2rem;
+}
+.step {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
+}
+.step.active  { color: var(--primary); }
+.step.done    { color: var(--primary-light); }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 600; background: var(--surface);
+}
+.step.active  .step-dot { border-color: var(--primary); background: var(--primary); color: white; }
+.step.done    .step-dot { border-color: var(--primary-light); background: var(--primary-pale); color: var(--primary); }
+.step-line { flex: 1; height: 2px; background: var(--border); min-width: 24px; }
+.step-line.done { background: var(--primary-light); }
+
+/* ── Ad Banner ── Single shared definition so every page's Ad slot (Home,
+   each category actions page) stays visually identical — fix once here,
+   not per-page. Mockup only, see docs/AdBanners-Plan.md. */
+.ad-banner-placeholder {
+  width: 100%;
+  aspect-ratio: 1600 / 534;
+  margin: 0 auto 2rem;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.ad-banner-placeholder--live {
+  border: none;
+  background: none;
+  overflow: hidden;
+}
+.ad-banner-placeholder--live img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ad-banner-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
+}
+
+/* ── Ad Carousel (2026-11-17) — components/public/AdCarousel.jsx ──
+   Rotating ad slot, 4:3 (matches the 1200x900 crop in SuperAdmin → Ad
+   Management → Ad Carousel). */
+.ad-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 0 auto 2rem;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface);
+  touch-action: pan-y;
+}
+.ad-carousel--empty {
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.ad-carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.45s ease;
+}
+.ad-carousel-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  display: block;
+}
+.ad-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+}
+.ad-carousel-dots {
+  position: absolute;
+  left: 0; right: 0; bottom: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.ad-carousel-dot {
+  width: 8px; height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+.ad-carousel-dot.active {
+  width: 20px;
+  background: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ad-carousel-track { transition: none; }
+}
+
+/* ── Ad chip (2026-11-17) — components/public/AdChip.jsx. Sits top-left on
+   a live ad in AdBannerStrip (.ad-banner-image-wrap is position:relative)
+   and AdCarousel (.ad-carousel is position:relative). Non-interactive, so
+   taps still reach the ad link underneath. ── */
+.ad-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.62);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  pointer-events: none;
+  user-select: none;
+  backdrop-filter: blur(2px);
+}
+
+/* ══ 2026-11-17 Qufree theme — shadows/focus rings that were hard-coded to
+   the old navy (rgba(28,34,63,…)) / orange (rgba(255,102,0,…)) above. ══ */
+.btn-primary { box-shadow: 0 2px 12px rgba(27, 85, 102, 0.30); }
+.btn-primary:hover { box-shadow: 0 4px 16px rgba(27, 85, 102, 0.40); }
+.btn-accent { box-shadow: 0 2px 12px rgba(31, 143, 166, 0.30); }
+.form-control:focus { box-shadow: 0 0 0 3px rgba(27, 85, 102, 0.15); }

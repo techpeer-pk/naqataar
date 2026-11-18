@@ -1,0 +1,92 @@
+.pwa-guide-overlay {
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: pwaGuideFade 0.2s ease;
+}
+
+@keyframes pwaGuideFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pwa-guide-card {
+  position: relative;
+  width: 100%; max-width: 420px;
+  background: #0D1B3E;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
+  animation: pwaGuideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 480px) {
+  .pwa-guide-overlay { align-items: center; }
+  .pwa-guide-card { border-radius: var(--radius); }
+}
+
+@keyframes pwaGuideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.pwa-guide-close {
+  position: absolute; top: 0.9rem; right: 0.9rem;
+  background: rgba(255,255,255,0.1); border: none; cursor: pointer;
+  color: rgba(255,255,255,0.6); width: 28px; height: 28px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.pwa-guide-close:hover { background: rgba(255,255,255,0.2); color: white; }
+
+.pwa-guide-title {
+  color: white; font-weight: 600; font-size: 1.05rem;
+  margin: 0 0 1.1rem;
+}
+
+.pwa-guide-steps { display: flex; flex-direction: column; gap: 0.9rem; }
+
+.pwa-guide-step {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.pwa-guide-num {
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
+  background: var(--accent); color: white;
+  font-size: 0.72rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.pwa-guide-icon {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 9px;
+  background: rgba(255,255,255,0.08); color: white;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.pwa-guide-text {
+  color: rgba(255,255,255,0.85); font-size: 0.85rem; line-height: 1.35;
+  margin: 0;
+}
+.pwa-guide-text strong { color: white; }
+
+.pwa-guide-done {
+  width: 100%; margin-top: 1.4rem;
+}
+
+/* ══ 2026-11-17 Qufree theme override — light sheet, teal accents (old navy /
+   orange rules above kept for history). ══ */
+.pwa-guide-overlay { background: rgba(18, 63, 76, 0.45); }
+.pwa-guide-card {
+  background: #FFFFFF;
+  border: 1px solid #CFE4EE;
+  box-shadow: 0 -10px 30px rgba(27, 85, 102, 0.18);
+}
+.pwa-guide-close { background: #E8F4FA; color: #1B5566; }
+.pwa-guide-close:hover { background: #CFE4EE; color: #123F4C; }
+.pwa-guide-title { color: #123F4C; }
+.pwa-guide-num { background: #1B5566; color: #fff; }
+.pwa-guide-icon { background: #E8F4FA; color: #1B5566; }
+.pwa-guide-text { color: var(--text-mid); }
+.pwa-guide-text strong { color: #123F4C; }
+.pwa-guide-done.btn-primary { background: #1B5566; box-shadow: 0 4px 12px rgba(27, 85, 102, 0.28); }
+.pwa-guide-done.btn-primary:hover { background: #123F4C; }

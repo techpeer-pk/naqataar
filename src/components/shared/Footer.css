@@ -1,0 +1,161 @@
+.footer {
+  background: #080808;
+  position: relative;
+  margin-top: auto;
+}
+
+/* Wave top */
+.footer-wave {
+  line-height: 0;
+  margin-bottom: -2px;
+}
+.footer-wave svg {
+  width: 100%; height: 60px; display: block;
+}
+
+/* Body */
+.footer-body {
+  max-width: 1200px; margin: 0 auto;
+  padding: 3rem 1.5rem 2.25rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Brand */
+.footer-brand {
+  display: flex; align-items: center; gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+.footer-logo-img { height: 34px; width: auto; display: block; }
+.footer-logo {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--primary, #1C223F);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  box-shadow: 0 4px 20px rgba(28,34,63,0.4);
+}
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 700;
+  color: white;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 0.92rem; color: #aaa;
+  line-height: 1.6; margin-bottom: 1.5rem;
+  max-width: 340px;
+}
+.footer-tagline em {
+  font-style: italic; color: #ccc;
+}
+
+.footer-contact {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.footer-contact span {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; color: #aaa;
+}
+
+.footer-github {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  color: rgba(255,255,255,0.65); font-size: 0.88rem;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+.footer-github:hover {
+  border-color: var(--primary, #1A56DB);
+  color: white;
+  background: rgba(26,86,219,0.15);
+  transform: translateY(-1px);
+}
+
+.footer-col-title {
+  font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--accent, #FF6600); margin-bottom: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Horizontal, not stacked — one short link cluster shouldn't need its own
+   tall column now that Customers/Book-By-Type (duplicated the Navbar) are gone. */
+.footer-inline-links { list-style: none; display: flex; gap: 1.25rem; flex-wrap: wrap; }
+
+.footer-link {
+  font-size: 0.88rem; color: #aaa;
+  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.footer-link:hover {
+  color: white;
+  padding-left: 4px;
+}
+
+/* Bottom bar */
+.footer-bottom {
+  border-top: 1px solid #222;
+  padding: 1.25rem 1.5rem;
+}
+.footer-bottom-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.83rem; color: #888;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.footer-copy svg { color: var(--accent, #FF6600); }
+.footer-copy a {
+  color: #fff;
+  transition: color 0.2s;
+}
+.footer-copy a:hover { color: #ccc; }
+
+.footer-legal-links { display: flex; gap: 1.25rem; }
+.footer-legal-links .footer-link { font-size: 0.83rem; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .footer-body {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-bottom-inner { flex-direction: column; align-items: flex-start; }
+}
+
+/* Below the BottomNav breakpoint, the fixed tab bar already owns the bottom
+   of the screen — a marketing footer stacked above it just adds scroll
+   depth for no navigational value. Desktop keeps it (bar is hidden there). */
+@media (max-width: 990px) {
+  .footer-with-bottom-nav { display: none; }
+}
+
+/* ══ 2026-11-17 Qufree teal footer — overrides the old Qunjee black/navy/
+   orange look above (kept for history). The wave now rises out of the page
+   background into a deep-teal footer. ══ */
+.footer { background: #123F4C; }
+.footer-wave { background: var(--bg, #FFFFFF); }
+.footer-tagline { color: #C9E0E8; }
+.footer-tagline em { color: #FFFFFF; }
+.footer-contact span { color: #C9E0E8; }
+.footer-contact a.footer-link { color: #FFFFFF; }
+.footer-col-title { color: #8FD3E0; }
+.footer-link { color: #C9E0E8; }
+.footer-link:hover { color: #FFFFFF; }
+.footer-bottom { border-top-color: rgba(255, 255, 255, 0.12); background: #0E3440; }
+.footer-copy { color: #9FC2CD; }
+.footer-copy svg { color: #8FD3E0; }
+.footer-maker { color: #FFFFFF; font-weight: 600; }

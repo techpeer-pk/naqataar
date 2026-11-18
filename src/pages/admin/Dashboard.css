@@ -1,0 +1,115 @@
+.admin-layout { background: var(--bg); }
+
+.dashboard-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+}
+.dashboard-header h1 { margin-bottom: 0.2rem; }
+
+/* Needs-review alert — amber/urgent so it reads as "action needed", distinct
+   from the neutral Advance Payment widget right below it. */
+.needs-review-banner {
+  margin-bottom: 1.5rem;
+  border: 1.5px solid #FCD34D;
+  background: #FFFBEB;
+}
+.needs-review-banner-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.needs-review-info { display: flex; align-items: flex-start; gap: 0.75rem; color: #92400E; }
+.needs-review-title { font-weight: 600; color: #78350F; }
+.needs-review-sub { font-size: 0.82rem; margin-top: 0.15rem; max-width: 46ch; color: #92400E; }
+.needs-review-actions { display: flex; align-items: center; gap: 0.6rem; }
+
+/* Suspended-account variant — same shape, red instead of amber, for when
+   there's no "still time left" framing to soften. */
+.needs-review-banner--danger { border-color: #FCA5A5; background: #FEF2F2; }
+.needs-review-banner--danger .needs-review-info,
+.needs-review-banner--danger .needs-review-sub { color: #991B1B; }
+.needs-review-banner--danger .needs-review-title { color: #7F1D1D; }
+
+/* Advance-payment quick toggle */
+.adv-payment-widget { margin-bottom: 1.5rem; }
+.adv-payment-widget-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.adv-payment-widget-info { display: flex; align-items: flex-start; gap: 0.75rem; color: var(--primary); }
+.adv-payment-widget-title { font-weight: 600; color: var(--text); }
+.adv-payment-widget-sub { font-size: 0.82rem; margin-top: 0.15rem; max-width: 46ch; }
+.adv-payment-widget-actions { display: flex; align-items: center; gap: 0.9rem; }
+
+.toggle-switch {
+  position: relative; width: 44px; height: 26px; flex-shrink: 0;
+  border-radius: 999px; border: none; background: var(--border);
+  cursor: pointer; transition: background var(--transition);
+}
+.toggle-switch.on { background: var(--primary); }
+.toggle-switch:disabled { opacity: 0.6; cursor: default; }
+.toggle-switch-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; box-shadow: var(--shadow-sm);
+  transition: transform var(--transition);
+}
+.toggle-switch.on .toggle-switch-knob { transform: translateX(18px); }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.stat-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.stat-card--primary .stat-icon { background: var(--primary-pale);  color: var(--primary); }
+.stat-card--amber   .stat-icon { background: #FEF3C7;              color: #92400E; }
+.stat-card--green   .stat-icon { background: #D1FAE5;              color: #065F46; }
+.stat-card--blue    .stat-icon { background: #DBEAFE;              color: #1E40AF; }
+.stat-card--teal    .stat-icon { background: #CCFBF1;              color: #0F766E; }
+.stat-card--red     .stat-icon { background: #FEE2E2;              color: #991B1B; }
+.stat-value { font-size: 2rem; font-weight: 700; font-family: var(--font-display); line-height: 1; }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+.dashboard-section { }
+.dashboard-section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem;
+}
+.dashboard-section-header h2 { font-size: 1.2rem; }
+.view-all-link {
+  display: flex; align-items: center; gap: 0.3rem;
+  color: var(--primary); font-size: 0.875rem; font-weight: 500;
+}
+
+/* .card sets overflow:hidden; .appt-table.card (two classes) beats plain
+   .card (one class) regardless of which rule the bundler places last, so
+   the horizontal scroll can never get silently clipped again. */
+
+.appt-table.card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.recent-appt-actions { display: flex; gap: 0.4rem; }
+.appt-table table { width: fit-content; border-collapse: collapse; min-width: 560px; }
+.appt-table th, .appt-table td { padding: 0.85rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+.appt-table th { background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-mid); white-space: nowrap; }
+.appt-table tr:last-child td { border-bottom: none; }
+.appt-table tr:hover td { background: var(--bg); }
+.customer-name    { font-weight: 500; }
+.customer-contact { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+@media (max-width: 560px) {
+  .needs-review-banner-inner,
+  .adv-payment-widget-inner { flex-direction: column; align-items: stretch; }
+  .needs-review-actions,
+  .adv-payment-widget-actions { justify-content: space-between; }
+  .needs-review-actions .btn { flex: 1; }
+}

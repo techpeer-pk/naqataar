@@ -1,0 +1,121 @@
+.reminder-banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius);
+  border-left: 4px solid;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Urgency Themes ── */
+.reminder-banner--future {
+  background: var(--reminder-future-bg);
+  border-left-color: var(--reminder-future-border);
+  color: var(--reminder-future-text);
+}
+.reminder-banner--calm {
+  background: var(--reminder-calm-bg);
+  border-left-color: var(--reminder-calm-border);
+  color: var(--reminder-calm-text);
+}
+.reminder-banner--urgent {
+  background: var(--reminder-urgent-bg);
+  border-left-color: var(--reminder-urgent-border);
+  color: var(--reminder-urgent-text);
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+.reminder-banner--excited {
+  background: var(--reminder-excited-bg);
+  border-left-color: var(--reminder-excited-border);
+  color: var(--reminder-excited-text);
+  animation: bounce-gentle 1s ease-in-out infinite;
+}
+.reminder-banner--now {
+  background: var(--reminder-now-bg);
+  border-left-color: var(--reminder-now-border);
+  color: var(--reminder-now-text);
+  animation: pulse-fast 0.5s ease-in-out infinite;
+}
+
+/* ── Pulsing ring (excited only) ── */
+.reminder-pulse-ring {
+  display: none;
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 2px solid currentColor;
+  opacity: 0;
+  animation: ring-expand 1.5s ease-out infinite;
+}
+.reminder-banner--excited .reminder-pulse-ring,
+.reminder-banner--now .reminder-pulse-ring {
+  display: block;
+}
+@keyframes ring-expand {
+  0%   { transform: scale(0.96); opacity: 0.6; }
+  100% { transform: scale(1.04); opacity: 0; }
+}
+
+/* ── Emoji ── */
+.reminder-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Text body ── */
+.reminder-body {
+  flex: 1;
+}
+.reminder-headline {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+.reminder-countdown {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 0.2rem;
+}
+.reminder-note {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* ── Appointment details ── */
+.reminder-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+.reminder-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+@media (max-width: 600px) {
+  .reminder-banner {
+    flex-direction: column;
+  }
+  .reminder-details {
+    min-width: unset;
+    border-top: 1px solid currentColor;
+    padding-top: 0.75rem;
+    opacity: 0.7;
+    width: 100%;
+  }
+  .reminder-countdown {
+    font-size: 1.25rem;
+  }
+}

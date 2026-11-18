@@ -1,0 +1,21 @@
+.sa-modal-backdrop {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+/* .card (global.css) sets overflow:hidden at the same specificity as
+   .sa-modal alone — .sa-modal.card (two classes) beats it regardless of
+   CSS bundling order, so the popup's vertical scroll can't be silently
+   clipped. Same fix as .appt-table.card in Dashboard.css. */
+.sa-modal.card {
+  width: 100%; max-width: 480px;
+  max-height: calc(100vh - 2.5rem);
+  overflow-y: auto;
+  margin: auto;
+}
+.sa-modal .card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 1;
+}

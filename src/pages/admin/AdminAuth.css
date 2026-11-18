@@ -1,0 +1,64 @@
+.auth-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); padding: 2rem 1rem;
+}
+.auth-card {
+  width: 100%; max-width: 420px;
+  padding: 2.5rem;
+  border-top: 3px solid var(--primary);
+}
+.auth-tabs {
+  display: flex;
+  background: var(--primary-pale);
+  border-radius: 999px;
+  padding: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+.auth-tab {
+  flex: 1;
+  border: none; background: transparent;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  font-family: var(--font-body); font-size: 0.875rem; font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.auth-tab:hover  { color: var(--primary); }
+.auth-tab.active { background: var(--primary); color: #fff; }
+
+.auth-brand {
+  display: flex; align-items: center; gap: 0.6rem;
+  color: var(--primary); font-size: 1.2rem; font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 1.75rem;
+}
+.auth-logo-img { height: 34px; width: auto; display: block; }
+.auth-brand-tag {
+  background: var(--primary-pale); color: var(--primary);
+  border: 1px solid var(--primary-light);
+  border-radius: 999px; font-size: 0.7rem; padding: 0.1rem 0.5rem;
+  font-family: var(--font-body); font-weight: 500;
+}
+.auth-title { font-size: 1.6rem; margin-bottom: 0.4rem; }
+.auth-sub   { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+/* .google-btn / .auth-divider now live in global.css (shared with booking + Eats checkout) */
+
+.input-icon-wrap { position: relative; }
+.input-icon      { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.input-with-icon { padding-left: 2.75rem !important; }
+
+.auth-footer    { text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-muted); }
+.auth-footer a  { color: var(--primary); font-weight: 500; }
+.auth-footer a:hover { text-decoration: underline; }
+
+.consent-check       { font-weight: 400 !important; color: var(--text-mid); font-size: 0.88rem; }
+.consent-check a     { color: var(--accent); font-weight: 600; text-decoration: underline; }
+.consent-check a:hover { color: var(--accent-dark); }
+
+/* 2026-11-17: "Business login" / "Customer login" text link under Install App */
+.auth-switch-link { margin-top: 0.6rem; font-size: 0.85rem; }
+/* same teal as --primary (#1B5566), 25% lighter (25% tint toward white) */
+.auth-switch-link a { color: #54808C; }
+.auth-switch-link a:hover { color: var(--primary); }

@@ -1,0 +1,73 @@
+.eats-cart-container {
+  max-width: 640px;
+}
+.eats-cart-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: 0.15rem;
+}
+.eats-cart-biz {
+  margin-bottom: 1.25rem;
+}
+.eats-cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.eats-cart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.eats-cart-item-name {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.eats-cart-item-price {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+}
+.eats-cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.eats-cart-remove {
+  border: none;
+  background: none;
+  color: #EF4444;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+}
+.eats-cart-remove:hover {
+  background: #FEE2E2;
+}
+.eats-cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+.eats-cart-cod-note {
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+.eats-cart-clear {
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 420px) {
+  .eats-cart-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .eats-cart-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

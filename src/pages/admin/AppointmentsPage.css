@@ -1,0 +1,76 @@
+.booking-ref-cell {
+  font-family: ui-monospace, monospace; font-weight: 600;
+  font-size: 0.82rem; color: var(--primary); letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.appt-filters { margin-bottom: 0; }
+.appt-filters-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.status-filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.status-tab {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; transition: all var(--transition);
+}
+.status-tab:hover  { border-color: var(--primary-light); color: var(--primary); }
+.status-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+.status-count {
+  background: rgba(255,255,255,0.25);
+  border-radius: 999px; padding: 0 0.4rem;
+  font-size: 0.72rem;
+}
+.status-tab:not(.active) .status-count { background: var(--bg-alt); color: var(--text-muted); }
+
+.action-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.action-confirm  { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
+.action-confirm:hover  { background: #065F46; color: white; }
+.action-complete { background: #DBEAFE; color: #1E40AF; border: 1px solid #93C5FD; }
+.action-complete:hover { background: #1E40AF; color: white; }
+
+/* Reuse from Dashboard.css */
+.appt-table.card { overflow-x: auto;}
+.appt-table table { width: fit-content; border-collapse: collapse; min-width: 640px; }
+.appt-table th, .appt-table td { padding: 0.85rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+.appt-table th { background: var(--bg); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-mid); }
+.appt-table tr:last-child td { border-bottom: none; }
+.appt-table tr:hover td { background: var(--bg); }
+.customer-name    { font-weight: 500; }
+.customer-contact { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+.customer-notes   { font-size: 0.78rem; color: var(--text-mid); margin-top: 0.3rem; font-style: italic; max-width: 220px; }
+.order-row-items-preview { font-size: 0.85rem; color: var(--text-muted); }
+
+/* Cross-link chip to the linked dine-in food order (amber, matches
+   badge-dinein — the reciprocal .booking-chip on /admin/orders uses navy). */
+.linked-order-chip {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  margin-top: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #FFF7ED; color: #9A3412;
+  font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+}
+.linked-order-chip:hover { background: #FFEDD5; }
+
+/* Reciprocal of .linked-order-chip, shown on /admin/orders for dine-in
+   orders — links back to the table booking (navy, matches booking-ref-cell). */
+.booking-chip { color: var(--primary); font-weight: 600; }
+.booking-chip:hover { text-decoration: underline; }
+
+/* Menu item photo — table thumbnail + larger preview in the Add/Edit form. */
+.menu-item-thumb {
+  width: 40px; height: 40px; border-radius: 8px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.menu-item-thumb-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-alt); color: var(--text-muted);
+}
+.menu-item-thumb-lg { width: 64px; height: 64px; border-radius: 12px; }

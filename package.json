@@ -1,0 +1,42 @@
+{
+  "name": "naqatar",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "emulator": "firebase emulators:start --project demo-naqatar",
+    "seed": "node scripts/seed-emulator.mjs",
+    "sync:rules": "node scripts/sync-rules.mjs",
+    "test:smoke": "firebase emulators:exec --only auth,firestore --project demo-naqatar \"node scripts/seed-emulator.mjs && node scripts/smoke-test.mjs\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.3.3",
+    "@sentry/react": "^10.69.0",
+    "date-fns": "^3.0.6",
+    "firebase": "^10.7.0",
+    "html-to-image": "^1.11.13",
+    "lucide-react": "^0.303.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-easy-crop": "^6.2.2",
+    "react-hot-toast": "^2.4.1",
+    "react-is": "^19.2.7",
+    "react-router-dom": "^6.21.0",
+    "recharts": "^3.9.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "firebase-admin": "^12.7.0",
+    "sharp": "^0.35.3",
+    "terser": "^5.46.1",
+    "vite": "^7.3.1",
+    "vite-plugin-pwa": "^0.21.1",
+    "workbox-window": "^7.0.0"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "csrAgents": {
+      ".read": false,
+      ".write": false
+    },
+    "superAdmins": {
+      ".read": false,
+      ".write": false
+    },
+
+    "notifications": {
+      // Public read (no auth) — the bell icon must work for signed-out
+      // guests too, not just logged-in accounts. Managed by hand from the
+      // Firebase Console (admin access bypasses these rules anyway) — no
+      // app-side write path, so no timestamp field: the bell just compares
+      // the message text itself against what it last showed.
+      ".read": true,
+      "latest": {
+        ".write": "auth != null && root.child('superAdmins').child(auth.uid).exists()",
+        ".validate": "newData.hasChild('message')",
+        "message": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 500" },
+        "url":     { ".validate": "newData.isString()" }
+      }
+    },
+
+    "supportChats": {
+      ".read": "auth != null && (root.child('csrAgents').child(auth.uid).exists() || root.child('superAdmins').child(auth.uid).exists())",
+      ".write": "auth != null && (root.child('csrAgents').child(auth.uid).exists() || root.child('superAdmins').child(auth.uid).exists())",
+
+      "$chatId": {
+        ".read": "auth != null && auth.uid === $chatId",
+        ".write": "auth != null && auth.uid === $chatId",
+
+        "meta": {
+          ".validate": "newData.hasChildren(['subjectType', 'subjectId', 'status'])",
+          "subjectType": { ".validate": "newData.val() === 'customer' || newData.val() === 'businessAdmin'" },
+          "status": { ".validate": "newData.val() === 'open' || newData.val() === 'closed'" }
+        },
+
+        "messages": {
+          "$messageId": {
+            ".validate": "newData.hasChildren(['senderId', 'senderRole', 'text', 'createdAt'])",
+            "senderId":   { ".validate": "newData.isString()" },
+            "senderRole": { ".validate": "newData.val() === 'customer' || newData.val() === 'businessAdmin' || newData.val() === 'csr'" },
+            "text":       { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 2000" },
+            "createdAt":  { ".validate": "newData.val() === now" }
+          }
+        }
+      }
+    },
+
+    "status": {
+      ".read": "auth != null && root.child('superAdmins').child(auth.uid).exists()",
+      "$uid": {
+        ".read":  "auth != null && root.child('superAdmins').child(auth.uid).exists()",
+        ".write": "auth != null && auth.uid === $uid",
+
+        "lastSeen": { ".validate": "newData.val() === now" },
+        "connections": {
+          "$connId": {
+            ".validate": "newData.hasChildren(['connectedAt'])",
+            "connectedAt": { ".validate": "newData.val() === now" }
+          }
+        }
+      }
+    },
+
+    "csrStatus": {
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+
+        "lastSeen": { ".validate": "newData.val() === now" },
+        "connections": {
+          "$connId": {
+            ".validate": "newData.hasChildren(['connectedAt'])",
+            "connectedAt": { ".validate": "newData.val() === now" }
+          }
+        }
+      }
+    },
+
+    "csrSessionLogs": {
+      // Written only by logCsrSessionOnDisconnect (Cloud Function, Admin SDK
+      // — bypasses these rules). No client write path on purpose, same as
+      // Firestore's sessionLogs; this is a login/logout audit trail, not
+      // something a CSR agent's own client should ever be able to alter.
+      ".read": "auth != null && root.child('superAdmins').child(auth.uid).exists()",
+      ".write": false
+    },
+
+    "visitors": {
+      // Public read+write: every visitor's browser bumps these counters
+      // anonymously (that's the point of a hit counter). Read must also be
+      // public, not just superAdmin — runTransaction()/get() need read
+      // access on a path to work at all, since the client computes the new
+      // value from the current one; restricting read here silently breaks
+      // every write except a plain set() (found the hard way: only
+      // `lastVisit` was landing, everything else uses a transaction/get()
+      // and was failing on the read step). Nothing under here is
+      // sensitive — just counts, timestamps, and rotating anonymous ids —
+      // and it's only ever displayed inside /superadmin, never on the
+      // public site, regardless of what the RTDB rule itself allows.
+      ".read": true,
+
+      "totalCount":  { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0" },
+      "uniqueCount": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0" },
+      "lastVisit":   { ".write": true, ".validate": "newData.isNumber()" },
+      "daily": {
+        "$date": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0" }
+      },
+      "unique": {
+        "$visitorId": {
+          ".write": "$visitorId.matches(/^visitor_[A-Za-z0-9_]{1,60}$/)",
+          ".validate": "newData.hasChildren(['firstVisit', 'lastVisit', 'visitCount'])",
+          "firstVisit": { ".validate": "newData.isNumber()" },
+          "lastVisit":  { ".validate": "newData.isNumber()" },
+          "visitCount": { ".validate": "newData.isNumber() && newData.val() >= 0" }
+        }
+      }
+    }
+  }
+}

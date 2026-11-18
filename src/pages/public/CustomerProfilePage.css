@@ -1,0 +1,51 @@
+.customer-profile-container { max-width: 960px; }
+.customer-profile-heading {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.customer-profile-grid {
+  display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start;
+}
+
+/* Avatar */
+.profile-avatar-card { margin-bottom: 1.5rem; }
+.profile-avatar-row { display: flex; align-items: center; gap: 1.5rem; }
+.profile-avatar {
+  width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
+  background: var(--bg-alt); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; font-weight: 700; overflow: hidden;
+}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-avatar-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+/* Activity stats */
+.profile-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+.profile-stat-card { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; }
+.profile-stat-value { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+.profile-stat-label { font-size: 0.8rem; color: var(--text-muted); }
+@media (max-width: 480px) { .profile-stats-row { grid-template-columns: 1fr; } }
+
+/* Security / logout / danger sections */
+.profile-section-card { margin-top: 1.5rem; }
+.profile-section-card .card-header h3 { display: flex; align-items: center; gap: 0.5rem; }
+
+/* Notifications toggle — matches admin/Dashboard.css .toggle-switch */
+.toggle-switch {
+  position: relative; width: 44px; height: 26px; flex-shrink: 0;
+  border-radius: 999px; border: none; background: var(--border);
+  cursor: pointer; transition: background var(--transition);
+}
+.toggle-switch.on { background: var(--primary); }
+.toggle-switch:disabled { opacity: 0.6; cursor: default; }
+.toggle-switch-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; box-shadow: var(--shadow-sm);
+  transition: transform var(--transition);
+}
+.toggle-switch.on .toggle-switch-knob { transform: translateX(18px); }
+.profile-logout-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.profile-danger-card { border-color: #FCA5A5; }
+.profile-danger-card .card-header { background: #FEF2F2; border-color: #FCA5A5; }
+.profile-danger-card .card-header h3 { color: #DC2626; display: flex; align-items: center; gap: 0.5rem; }

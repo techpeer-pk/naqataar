@@ -1,0 +1,65 @@
+.type-groups {
+  display: flex; flex-direction: column; gap: 0.9rem;
+}
+.type-group-label {
+  display: block;
+  font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-muted); margin-bottom: 0.4rem;
+}
+.type-selector {
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+}
+.type-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; flex: 1;
+  transition: all var(--transition);
+}
+.type-btn:hover { border-color: var(--primary-light); background: var(--primary-pale); }
+.type-btn.active { border-color: var(--primary); background: var(--primary-pale); color: var(--primary); }
+.type-btn-icon { display: flex; }
+
+.register-notice {
+  display: flex; align-items: flex-start; gap: 0.55rem;
+  background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A;
+  border-radius: var(--radius-sm); padding: 0.75rem 0.9rem;
+  font-size: 0.82rem; line-height: 1.45; margin-bottom: 1.5rem;
+}
+.register-notice svg { margin-top: 0.15rem; }
+
+.notice-modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(15, 23, 42, 0.65);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.25rem;
+  animation: notice-fade 0.2s ease-out;
+}
+.notice-modal-card {
+  width: 100%; max-width: 420px;
+  background: linear-gradient(180deg, #FFFBEB 0%, #FFF3D6 100%);
+  border: 2px solid #F59E0B;
+  border-radius: var(--radius);
+  padding: 1.85rem 1.5rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  animation: notice-pop 0.25s ease-out;
+}
+.notice-modal-icon { color: #D97706; margin-bottom: 0.5rem; }
+.notice-modal-title {
+  font-size: 1.2rem; font-weight: 800; color: #92400E;
+  margin: 0 0 0.65rem;
+}
+.notice-modal-text {
+  font-size: 0.92rem; line-height: 1.55; color: #78350F;
+  margin: 0 0 1.35rem;
+}
+.notice-modal-text strong { color: #B45309; }
+@keyframes notice-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes notice-pop {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}

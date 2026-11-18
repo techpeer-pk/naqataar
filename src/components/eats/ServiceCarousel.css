@@ -1,0 +1,165 @@
+/* Eats business page — swipeable service photos (ServiceCarousel.jsx).
+   Mobile-first: one card at ~82% width with the next one peeking in, so the
+   swipe is obvious; 4:3 photos keep the Book button above the fold on a
+   typical phone even under the header card. */
+.svc-carousel {
+  --svc-gutter: 1.5rem;   /* = .container side padding (global.css) */
+  --svc-gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+@media (max-width: 480px) {
+  .svc-carousel { --svc-gutter: 0.875rem; }
+}
+
+.svc-carousel-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.svc-carousel-track {
+  position: relative; /* children's offsetLeft is measured from here (goTo) */
+  display: flex;
+  gap: var(--svc-gap);
+  margin: 0 calc(-1 * var(--svc-gutter));   /* bleed to the screen edges… */
+  padding: 0.25rem var(--svc-gutter) 0.9rem; /* …while card 1 lines up with the page; bottom room for the shadow */
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--svc-gutter);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.svc-carousel-track::-webkit-scrollbar { display: none; }
+
+.svc-slide {
+  flex: 0 0 82%;
+  max-width: 340px;
+  scroll-snap-align: start;
+}
+
+.svc-slide-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.svc-slide-link:hover { box-shadow: var(--shadow-md); }
+.svc-slide-link:active { transform: scale(0.985); }
+.svc-slide-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.svc-slide-photo-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--bg-alt);
+}
+.svc-slide-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.svc-slide-promo {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+}
+
+.svc-slide-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  padding: 0.75rem 0.9rem 0.9rem;
+}
+.svc-slide-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.svc-slide-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+/* Same navy pill as the "Book" buttons on the business page. */
+.svc-slide-book {
+  flex-shrink: 0;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.svc-slide-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* Dots only render when the track actually overflows (see canScroll). */
+.svc-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.15rem;
+}
+.svc-dot {
+  display: grid;
+  place-items: center;
+  width: 24px;   /* comfortable tap target around a small dot */
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.svc-dot::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #D5D6DD;
+  transition: width var(--transition), background var(--transition);
+}
+.svc-dot.active::before {
+  width: 20px;
+  background: var(--accent);
+}
+
+/* Desktop: everything fits — three across, no bleed. */
+@media (min-width: 991px) {
+  .svc-carousel-track {
+    margin: 0;
+    padding: 0.25rem 0 0.9rem;
+    scroll-padding-inline: 0;
+  }
+  .svc-slide {
+    flex-basis: calc((100% - 2 * var(--svc-gap)) / 3);
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-slide-link,
+  .svc-dot::before { transition: none; }
+}
