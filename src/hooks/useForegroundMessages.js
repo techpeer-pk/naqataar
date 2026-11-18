@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getMessagingInstance } from '../firebase';
+import { t } from '../i18n';
 
 const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
@@ -22,7 +23,7 @@ export function useForegroundMessages() {
       unsubscribe = onMessage(messaging, (payload) => {
         // Functions send data-only payloads; notification kept as fallback.
         const { title, body } = payload.data || payload.notification || {};
-        toast(body || title || 'New notification', { icon: '🔔' });
+        toast(body || title || t('New notification'), { icon: '🔔' });
       });
     })();
 

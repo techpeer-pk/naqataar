@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Lock, Eye, EyeOff } from 'lucide-react';
+import { t } from '../../i18n';
 
 export default function PasswordField({ value, onChange, placeholder = '••••••••', autoComplete, required, minLength }) {
   const [visible, setVisible] = useState(false);
@@ -22,7 +23,7 @@ export default function PasswordField({ value, onChange, placeholder = '••�
         className="input-icon-toggle"
         tabIndex={-1}
         onClick={() => setVisible(v => !v)}
-        aria-label={visible ? 'Hide password' : 'Show password'}
+        aria-label={visible ? t('Hide password') : t('Show password')}
       >
         {visible ? <EyeOff size={16} /> : <Eye size={16} />}
       </button>

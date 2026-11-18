@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { t } from '../i18n';
 
 // registerType: 'autoUpdate' (vite.config.js) already installs+activates a
 // new service worker automatically on the user's NEXT visit/reload — no
@@ -33,17 +34,17 @@ export function usePwaUpdateNotice() {
     if (!needRefresh || toastShown.current) return;
     toastShown.current = true;
     toast(
-      (t) => (
+      (toastItem) => (
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          A new version is available.
+          {t('A new version is available.')}
           <button
             className="btn btn-primary btn-sm"
             onClick={() => {
-              toast.dismiss(t.id);
+              toast.dismiss(toastItem.id);
               updateServiceWorker(true);
             }}
           >
-            Reload
+            {t('Reload')}
           </button>
         </span>
       ),

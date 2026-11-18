@@ -2,36 +2,38 @@ import { CalendarCheck, Clock, MapPin, Bell } from 'lucide-react';
 import { useCountdown } from '../../hooks/useCountdown';
 import { formatTime12h } from '../../utils/format';
 import './ReminderBanner.css';
+import { t } from '../../i18n';
 
+// Countdown copy — all strings go through t() (Hinglish dictionary).
 const URGENCY_CONFIG = {
   future: {
     emoji: '📆',
-    headline: (d) => `${d} day${d === 1 ? '' : 's'} to go`,
-    countdown: (d, h, m, s) => `${d}d ${h}hr ${m}min ${s}sec left`,
+    headline: (d) => t(d === 1 ? '{d} day to go' : '{d} days to go', { d }),
+    countdown: (d, h, m, s) => t('{d}d {h}hr {m}min {s}sec left', { d, h, m, s }),
     note: 'Mark your calendar!',
   },
   calm: {
     emoji: '📅',
-    headline: () => `See you tomorrow!`,
-    countdown: (d, h, m, s) => `${h}hr ${m}min ${s}sec left`,
+    headline: () => t('See you tomorrow!'),
+    countdown: (d, h, m, s) => t('{h}hr {m}min {s}sec left', { h, m, s }),
     note: 'Your appointment is tomorrow.',
   },
   urgent: {
     emoji: '⏰',
-    headline: () => `Almost time!`,
-    countdown: (d, h, m, s) => `${m}min ${s}sec remaining`,
+    headline: () => t('Almost time!'),
+    countdown: (d, h, m, s) => t('{m}min {s}sec remaining', { m, s }),
     note: 'Get ready — time to head out!',
   },
   excited: {
     emoji: '🎉',
-    headline: () => `Hurray!`,
-    countdown: (d, h, m, s) => `${m}min ${s}sec left`,
+    headline: () => t('Hurray!'),
+    countdown: (d, h, m, s) => t('{m}min {s}sec left', { m, s }),
     note: "You're almost there!",
   },
   now: {
     emoji: '🎊',
-    headline: () => `Your appointment is NOW!`,
-    countdown: () => `It's time!`,
+    headline: () => t('Your appointment is NOW!'),
+    countdown: () => t("It's time!"),
     note: "Head in — they're waiting for you!",
   },
 };
@@ -57,7 +59,7 @@ export default function ReminderBanner({ appointment }) {
         <p className="reminder-countdown" aria-live="polite">
           {config.countdown(cd.days, cd.hours, cd.minutes, cd.seconds)}
         </p>
-        <p className="reminder-note">{config.note}</p>
+        <p className="reminder-note">{t(config.note)}</p>
       </div>
 
       <div className="reminder-details">
@@ -71,7 +73,7 @@ export default function ReminderBanner({ appointment }) {
         </div>
         <div className="reminder-detail-item">
           <Clock size={14} />
-          <span>{appointment.date} at {formatTime12h(appointment.time)}</span>
+          <span>{t('{date} at {time}', { date: appointment.date, time: formatTime12h(appointment.time) })}</span>
         </div>
         {appointment.businessAddress && (
           <div className="reminder-detail-item">

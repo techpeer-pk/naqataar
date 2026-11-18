@@ -14,6 +14,7 @@ import { useRoomBooking } from '../../hooks/useRoomBooking';
 import { useEmailNotifications } from '../../hooks/useEmailNotifications';
 import ReminderBanner from '../../components/public/ReminderBanner';
 import './MyAppointmentsPage.css';
+import { t, statusLabel } from '../../i18n';
 
 function sortAppointments(list) {
   return [...list].sort((a, b) => {
@@ -76,9 +77,9 @@ export default function MyAppointmentsPage() {
       // No manual refetch needed — the live subscription picks it up.
       await cancelAppointment(appt, { role: 'customer', uid: user?.uid, name: user?.displayName, reason });
       await sendCancellation(appt, reason);
-      toast.success('Appointment cancelled.');
+      toast.success(t('Appointment cancelled.'));
     } catch {
-      toast.error('Could not cancel. Try again.');
+      toast.error(t('Could not cancel. Try again.'));
     } finally {
       setCancellingId(null);
       setCancelTarget(null);
@@ -93,9 +94,9 @@ export default function MyAppointmentsPage() {
       // Atomic: flips status to cancelled and releases the held room-nights.
       // No manual refetch needed — the live subscription picks it up.
       await cancelReservation(resv, { role: 'customer', uid: user?.uid, name: user?.displayName, reason });
-      toast.success('Reservation cancelled.');
+      toast.success(t('Reservation cancelled.'));
     } catch {
-      toast.error('Could not cancel. Try again.');
+      toast.error(t('Could not cancel. Try again.'));
     } finally {
       setCancellingResvId(null);
       setCancelTarget(null);
@@ -119,10 +120,10 @@ export default function MyAppointmentsPage() {
         <div className="my-appts-header">
           <CalendarCheck size={28} />
           <div>
-            <h1>My Appointments</h1>
+            <h1>{t('My Appointments')}</h1>
             {user && isCustomer
-              ? <p className="text-muted">Signed in as <strong>{user.email}</strong></p>
-              : <p className="text-muted">Sign in to view your bookings.</p>
+              ? <p className="text-muted">{t('Signed in as')} <strong>{user.email}</strong></p>
+              : <p className="text-muted">{t('Sign in to view your bookings.')}</p>
             }
           </div>
         </div>
@@ -131,10 +132,10 @@ export default function MyAppointmentsPage() {
         {!(user && isCustomer) && (
           <div className="empty-state">
             <LogIn size={40} />
-            <p>Sign in to view and manage your bookings.</p>
-            <Link to="/index/login" className="btn btn-primary">Sign In</Link>
+            <p>{t('Sign in to view and manage your bookings.')}</p>
+            <Link to="/index/login" className="btn btn-primary">{t('Sign In')}</Link>
             <p className="my-appts-signin-hint" style={{ marginTop: '0.75rem' }}>
-              New here? <Link to="/index/register">Create a free account</Link>
+              {t('New here?')} <Link to="/index/register">{t('Create a free account')}</Link>
             </p>
           </div>
         )}
@@ -168,7 +169,7 @@ export default function MyAppointmentsPage() {
             {appointments.length === 0 && reservations.length === 0 ? (
               <div className="empty-state">
                 <CalendarCheck size={40} />
-                <p>No bookings found for <strong>{email}</strong>.</p>
+                <p>{t('No bookings found for')} <strong>{email}</strong>.</p>
               </div>
             ) : (
               <>
@@ -177,7 +178,7 @@ export default function MyAppointmentsPage() {
                 ))}
                 {(upcoming.length > 0 || upcomingResv.length > 0) && (
                   <>
-                    <h2 className="appt-section-title">Upcoming</h2>
+                    <h2 className="appt-section-title">{t('Upcoming')}</h2>
                     <div className="appt-list">
                       {upcoming.map(a => (
                         <AppointmentCard
@@ -204,7 +205,7 @@ export default function MyAppointmentsPage() {
                 )}
                 {(past.length > 0 || pastResv.length > 0) && (
                   <>
-                    <h2 className="appt-section-title">Past</h2>
+                    <h2 className="appt-section-title">{t('Past')}</h2>
                     <div className="appt-list">
                       {past.map(a => (
                         <AppointmentCard
@@ -228,7 +229,7 @@ export default function MyAppointmentsPage() {
 
       <CancelReasonDialog
         open={!!cancelTarget}
-        title={cancelTarget?.kind === 'resv' ? 'Cancel Reservation' : 'Cancel Appointment'}
+        title={cancelTarget?.kind === 'resv' ? t('Cancel Reservation') : t('Cancel Appointment')}
         message="This action is recorded against your account and can't be undone."
         presets={CUSTOMER_CANCEL_REASONS}
         loading={!!cancelTarget && (cancelTarget.kind === 'resv' ? cancellingResvId : cancellingId) === cancelTarget.item.id}
@@ -256,7 +257,7 @@ function AppointmentCard({ appt, order, canCancel, cancelling, onCancel, highlig
               </p>
             )}
           </div>
-          <span className={`badge badge-${appt.status}`}>{appt.status === 'no_show' ? 'No-Show' : appt.status}</span>
+          <span className={`badge badge-${appt.status}`}>{statusLabel(appt.status)}</span>
         </div>
         <div className="appt-card-meta">
           <span><CalendarCheck size={13} /> {appt.date}</span>
@@ -288,7 +289,7 @@ function AppointmentCard({ appt, order, canCancel, cancelling, onCancel, highlig
         )}
         {canCancel && (
           <button className="btn btn-danger btn-sm appt-cancel-btn" disabled={cancelling} onClick={onCancel}>
-            <X size={14} /> {cancelling ? 'Cancelling…' : 'Cancel Appointment'}
+            <X size={14} /> {cancelling ? t('Cancelling…') : t('Cancel Appointment')}
           </button>
         )}
       </div>
@@ -329,7 +330,7 @@ function ReservationCard({ resv, canCancel, cancelling, onCancel }) {
         )}
         {canCancel && (
           <button className="btn btn-danger btn-sm appt-cancel-btn" disabled={cancelling} onClick={onCancel}>
-            <X size={14} /> {cancelling ? 'Cancelling…' : 'Cancel Reservation'}
+            <X size={14} /> {cancelling ? t('Cancelling…') : t('Cancel Reservation')}
           </button>
         )}
       </div>

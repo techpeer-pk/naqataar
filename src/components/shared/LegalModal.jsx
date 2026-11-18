@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Loader2 } from 'lucide-react';
 import '../superadmin/Modal.css';
 import './LegalModal.css';
+import { t } from '../../i18n';
 
 // Lazy so the register pages don't pay for the full legal text up front —
 // same chunks App.jsx already splits out for the /terms and /privacy routes.
@@ -40,7 +41,7 @@ export default function LegalModal({ doc, onOpenDoc, onClose }) {
     <div className="sa-modal-backdrop legal-modal-backdrop" onClick={onClose}>
       <div className="sa-modal card fade-up legal-modal" onClick={e => e.stopPropagation()}>
         <div className="card-header">
-          <h3>{TITLES[doc]}</h3>
+          <h3>{t(TITLES[doc])}</h3>
           <button type="button" className="btn btn-ghost btn-sm" onClick={onClose} aria-label="Close"><X size={16} /></button>
         </div>
         <div className="card-body">

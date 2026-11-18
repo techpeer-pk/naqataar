@@ -8,6 +8,7 @@ import { useAppointments } from '../../hooks/useAppointments';
 import { accountRef } from '../../utils/format';
 import { enableNotifications, disableNotifications, NOTIF_OPT_OUT_KEY } from '../../hooks/usePwaPushRegistration';
 import './CustomerProfilePage.css';
+import { t } from '../../i18n';
 
 const notifSupported = typeof Notification !== 'undefined';
 
@@ -47,9 +48,9 @@ export default function CustomerProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!form.displayName.trim()) { toast.error('Name cannot be empty.'); return; }
+    if (!form.displayName.trim()) { toast.error(t('Name cannot be empty.')); return; }
     if (form.phone && !isValidLocalPhoneDigits(form.phone)) {
-      toast.error(`Please enter a valid ${PH_LOCAL_PHONE_LEN}-digit phone number.`);
+      toast.error(t('Please enter a valid {n}-digit phone number.', { n: PH_LOCAL_PHONE_LEN }));
       return;
     }
     setSaving(true);
@@ -62,9 +63,9 @@ export default function CustomerProfilePage() {
         displayName: form.displayName.trim(),
         ...(form.phone ? { phone: toFullPhone(form.phone) } : {}),
       });
-      toast.success('Profile updated!');
+      toast.success(t('Profile updated!'));
     } catch {
-      toast.error('Save failed.');
+      toast.error(t('Save failed.'));
     } finally {
       setSaving(false);
     }
@@ -74,14 +75,14 @@ export default function CustomerProfilePage() {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (!file.type.startsWith('image/')) { toast.error('Please choose an image file.'); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error('Image must be under 5MB.'); return; }
+    if (!file.type.startsWith('image/')) { toast.error(t('Please choose an image file.')); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error(t('Image must be under 5MB.')); return; }
     setUploading(true);
     try {
       await uploadAvatar(file);
-      toast.success('Photo updated!');
+      toast.success(t('Photo updated!'));
     } catch {
-      toast.error('Upload failed.');
+      toast.error(t('Upload failed.'));
     } finally {
       setUploading(false);
     }
@@ -91,9 +92,9 @@ export default function CustomerProfilePage() {
     setUploading(true);
     try {
       await removeAvatar();
-      toast.success('Photo removed.');
+      toast.success(t('Photo removed.'));
     } catch {
-      toast.error('Could not remove photo.');
+      toast.error(t('Could not remove photo.'));
     } finally {
       setUploading(false);
     }
@@ -101,29 +102,29 @@ export default function CustomerProfilePage() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (pwForm.next.length < 6) { toast.error('New password must be at least 6 characters.'); return; }
-    if (pwForm.next !== pwForm.confirm) { toast.error('Passwords do not match.'); return; }
+    if (pwForm.next.length < 6) { toast.error(t('New password must be at least 6 characters.')); return; }
+    if (pwForm.next !== pwForm.confirm) { toast.error(t('Passwords do not match.')); return; }
     setPwSaving(true);
     try {
       await changePassword(pwForm.current, pwForm.next);
-      toast.success('Password updated!');
+      toast.success(t('Password updated!'));
       setPwForm({ current: '', next: '', confirm: '' });
     } catch (err) {
-      toast.error(err.code === 'auth/wrong-password' ? 'Current password is incorrect.' : 'Could not update password.');
+      toast.error(err.code === 'auth/wrong-password' ? t('Current password is incorrect.') : t('Could not update password.'));
     } finally {
       setPwSaving(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm('This will permanently delete your account and profile data. This cannot be undone. Continue?')) return;
+    if (!window.confirm(t('This will permanently delete your account and profile data. This cannot be undone. Continue?'))) return;
     setDeleting(true);
     try {
       await deleteAccount(delPassword);
-      toast.success('Account deleted.');
+      toast.success(t('Account deleted.'));
       navigate('/', { replace: true });
     } catch (err) {
-      toast.error(err.code === 'auth/wrong-password' ? 'Password is incorrect.' : 'Could not delete account. Try signing in again first.');
+      toast.error(err.code === 'auth/wrong-password' ? t('Password is incorrect.') : t('Could not delete account. Try signing in again first.'));
     } finally {
       setDeleting(false);
     }
@@ -135,16 +136,16 @@ export default function CustomerProfilePage() {
       if (notifOn) {
         await disableNotifications();
         setNotifOn(false);
-        toast.success('Notifications turned off.');
+        toast.success(t('Notifications turned off.'));
       } else {
         const token = await enableNotifications(user?.uid);
         if (token) {
           setNotifOn(true);
-          toast.success('Notifications enabled!');
+          toast.success(t('Notifications enabled!'));
         } else if (Notification.permission === 'denied') {
-          toast.error('Blocked in your browser. Allow notifications from site settings to enable.');
+          toast.error(t('Blocked in your browser. Allow notifications from site settings to enable.'));
         } else {
-          toast.error('Could not enable notifications.');
+          toast.error(t('Could not enable notifications.'));
         }
       }
     } finally {
@@ -168,10 +169,10 @@ export default function CustomerProfilePage() {
         <div className="customer-profile-heading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <User size={24} color="var(--primary)" />
-            <h1>My Profile</h1>
+            <h1>{t('My Profile')}</h1>
           </div>
           <button type="submit" form="customer-profile-form" className="btn btn-primary" disabled={saving}>
-            <Save size={16} /> {saving ? 'Saving…' : 'Save Profile'}
+            <Save size={16} /> {saving ? t('Saving…') : t('Save Profile')}
           </button>
         </div>
 
@@ -180,7 +181,7 @@ export default function CustomerProfilePage() {
           <div className="card-body profile-avatar-row">
             <div className="profile-avatar">
               {userProfile?.photoURL
-                ? <img src={userProfile.photoURL} alt="Profile" />
+                ? <img src={userProfile.photoURL} alt={t('Profile')} />
                 : <span>{initials}</span>}
             </div>
             <div className="profile-avatar-actions">
@@ -214,14 +215,14 @@ export default function CustomerProfilePage() {
             <CalendarCheck size={20} color="var(--primary)" />
             <div>
               <p className="profile-stat-value">{appointments.length}</p>
-              <p className="profile-stat-label">Total Bookings</p>
+              <p className="profile-stat-label">{t('Total Bookings')}</p>
             </div>
           </div>
           <div className="card profile-stat-card">
             <Clock size={20} color="var(--primary)" />
             <div>
               <p className="profile-stat-value">{upcomingCount}</p>
-              <p className="profile-stat-label">Upcoming</p>
+              <p className="profile-stat-label">{t('Upcoming')}</p>
             </div>
           </div>
         </div>
@@ -231,20 +232,20 @@ export default function CustomerProfilePage() {
 
             {/* Personal Info */}
             <div className="card">
-              <div className="card-header"><h3>Personal Information</h3></div>
+              <div className="card-header"><h3>{t('Personal Information')}</h3></div>
               <div className="card-body">
                 <div className="form-group">
-                  <label className="form-label">Full Name *</label>
+                  <label className="form-label">{t('Full Name *')}</label>
                   <input
                     className="form-control"
-                    placeholder="Your name"
+                    placeholder={t('Your name')}
                     value={form.displayName}
                     onChange={e => setForm(f => ({ ...f, displayName: e.target.value }))}
                     required
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Phone</label>
+                  <label className="form-label">{t('Phone')}</label>
                   {/*
                     <input
                     className="form-control"
@@ -274,7 +275,7 @@ export default function CustomerProfilePage() {
             {notifSupported && (
               <div className="card">
                 <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3><Bell size={16} /> Push Notifications</h3>
+                  <h3><Bell size={16} /> {t('Push Notifications')}</h3>
                   <button
                     type="button"
                     role="switch"
@@ -282,7 +283,7 @@ export default function CustomerProfilePage() {
                     disabled={notifBusy || Notification.permission === 'denied'}
                     className={`toggle-switch ${notifOn ? 'on' : ''}`}
                     onClick={handleToggleNotifications}
-                    title={notifOn ? 'Turn off' : 'Turn on'}
+                    title={notifOn ? t('Turn off') : t('Turn on')}
                   >
                     <span className="toggle-switch-knob" />
                   </button>
@@ -290,8 +291,8 @@ export default function CustomerProfilePage() {
                 <div className="card-body">
                   <p className="form-hint">
                     {Notification.permission === 'denied'
-                      ? 'Blocked in your browser. Allow notifications for this site from your browser settings to enable.'
-                      : 'Get notified about your bookings & orders on this device.'}
+                      ? t('Blocked in your browser. Allow notifications for this site from your browser settings to enable.')
+                      : t('Get notified about your bookings on this device.')}
                   </p>
                 </div>
               </div>
@@ -299,24 +300,24 @@ export default function CustomerProfilePage() {
 
             {/* Account Info (read-only) */}
             <div className="card">
-              <div className="card-header"><h3>Account</h3></div>
+              <div className="card-header"><h3>{t('Account')}</h3></div>
               <div className="card-body">
                 <div className="form-group">
-                  <label className="form-label">Email Address</label>
+                  <label className="form-label">{t('Email Address')}</label>
                   <input className="form-control" value={user.email || ''} disabled />
-                  <p className="form-hint">Email cannot be changed.</p>
+                  <p className="form-hint">{t('Email cannot be changed.')}</p>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Account Type</label>
-                  <input className="form-control" value="Customer" disabled />
+                  <label className="form-label">{t('Account Type')}</label>
+                  <input className="form-control" value={t('Customer')} disabled />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Support ID</label>
+                  <label className="form-label">{t('Support ID')}</label>
                   <input className="form-control" value={accountRef(user.uid)} disabled style={{ fontFamily: 'ui-monospace, monospace' }} />
-                  <p className="form-hint">Quote this when you call Support — it helps us confirm it's really you.</p>
+                  <p className="form-hint">{t("Quote this when you call Support — it helps us confirm it's really you.")}</p>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Member Since</label>
+                  <label className="form-label">{t('Member Since')}</label>
                   <input
                     className="form-control"
                     value={user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
@@ -331,10 +332,10 @@ export default function CustomerProfilePage() {
         {/* Security */}
         {!isGoogleUser() && (
           <form onSubmit={handleChangePassword} className="card profile-section-card">
-            <div className="card-header"><h3><KeyRound size={16} /> Change Password</h3></div>
+            <div className="card-header"><h3><KeyRound size={16} /> {t('Change Password')}</h3></div>
             <div className="card-body">
               <div className="form-group">
-                <label className="form-label">Current Password</label>
+                <label className="form-label">{t('Current Password')}</label>
                 <input
                   className="form-control"
                   type="password"
@@ -344,7 +345,7 @@ export default function CustomerProfilePage() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">New Password</label>
+                <label className="form-label">{t('New Password')}</label>
                 <input
                   className="form-control"
                   type="password"
@@ -355,7 +356,7 @@ export default function CustomerProfilePage() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Confirm New Password</label>
+                <label className="form-label">{t('Confirm New Password')}</label>
                 <input
                   className="form-control"
                   type="password"
@@ -366,7 +367,7 @@ export default function CustomerProfilePage() {
                 />
               </div>
               <button type="submit" className="btn btn-secondary" disabled={pwSaving}>
-                {pwSaving ? 'Updating…' : 'Update Password'}
+                {pwSaving ? t('Updating…') : t('Update Password')}
               </button>
             </div>
           </form>
@@ -376,34 +377,34 @@ export default function CustomerProfilePage() {
         <div className="card profile-section-card">
           <div className="card-body profile-logout-row">
             <div>
-              <h3>Sign Out</h3>
-              <p className="form-hint">You'll need to sign in again to book or view appointments.</p>
+              <h3>{t('Sign Out')}</h3>
+              <p className="form-hint">{t("You'll need to sign in again to book or view appointments.")}</p>
             </div>
             <button type="button" className="btn btn-secondary" onClick={handleLogout}>
-              <LogOut size={16} /> Logout
+              <LogOut size={16} /> {t('Sign Out')}
             </button>
           </div>
         </div>
 
         {/* Danger zone */}
         <div className="card profile-section-card profile-danger-card">
-          <div className="card-header"><h3><AlertTriangle size={16} /> Danger Zone</h3></div>
+          <div className="card-header"><h3><AlertTriangle size={16} /> {t('Danger Zone')}</h3></div>
           <div className="card-body">
-            <p className="form-hint">Deleting your account permanently removes your profile. Your appointment history stays with the businesses you booked with.</p>
+            <p className="form-hint">{t('Deleting your account permanently removes your profile. Your appointment history stays with the clinics you booked with.')}</p>
             {!isGoogleUser() && (
               <div className="form-group">
-                <label className="form-label">Confirm Password</label>
+                <label className="form-label">{t('Confirm Password')}</label>
                 <input
                   className="form-control"
                   type="password"
-                  placeholder="Enter password to confirm"
+                  placeholder={t('Enter password to confirm')}
                   value={delPassword}
                   onChange={e => setDelPassword(e.target.value)}
                 />
               </div>
             )}
             <button type="button" className="btn btn-danger" disabled={deleting} onClick={handleDeleteAccount}>
-              <Trash2 size={16} /> {deleting ? 'Deleting…' : 'Delete My Account'}
+              <Trash2 size={16} /> {deleting ? t('Deleting…') : t('Delete My Account')}
             </button>
           </div>
         </div>

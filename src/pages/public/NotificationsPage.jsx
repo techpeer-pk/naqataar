@@ -7,6 +7,7 @@ import { useNotifications } from '../../hooks/useNotifications';
 import { formatDate } from '../../utils/format';
 import Sk from '../../components/shared/Skeleton';
 import './NotificationsPage.css';
+import { t } from '../../i18n';
 
 export default function NotificationsPage() {
   const { user, isCustomer } = useAuth();
@@ -33,19 +34,19 @@ export default function NotificationsPage() {
     try {
       await remove(user.uid, n.id);
     } catch {
-      toast.error('Could not delete. Please try again.');
+      toast.error(t('Could not delete. Please try again.'));
     } finally {
       setBusyId(null);
     }
   };
 
   const handleClearAll = async () => {
-    if (!window.confirm('Clear all notifications?')) return;
+    if (!window.confirm(t('Clear all notifications?'))) return;
     setClearing(true);
     try {
       await clearAll(user.uid, notifications.map(n => n.id));
     } catch {
-      toast.error('Could not clear notifications. Please try again.');
+      toast.error(t('Could not clear notifications. Please try again.'));
     } finally {
       setClearing(false);
     }
@@ -57,10 +58,10 @@ export default function NotificationsPage() {
         <div className="notifications-header">
           <Bell size={28} />
           <div>
-            <h1>My Notifications</h1>
+            <h1>{t('My Notifications')}</h1>
             {user && isCustomer
-              ? <p className="text-muted">Signed in as <strong>{user.email}</strong></p>
-              : <p className="text-muted">Sign in to see your notifications.</p>
+              ? <p className="text-muted">{t('Signed in as')} <strong>{user.email}</strong></p>
+              : <p className="text-muted">{t('Sign in to see your notifications.')}</p>
             }
           </div>
           {searched && !loading && notifications.length > 0 && (
@@ -70,7 +71,7 @@ export default function NotificationsPage() {
               disabled={clearing}
               onClick={handleClearAll}
             >
-              <Trash2 size={14} /> {clearing ? 'Clearing…' : 'Clear all'}
+              <Trash2 size={14} /> {clearing ? t('Clearing…') : t('Clear all')}
             </button>
           )}
         </div>
@@ -78,8 +79,8 @@ export default function NotificationsPage() {
         {!(user && isCustomer) && (
           <div className="empty-state">
             <LogIn size={40} />
-            <p>Sign in to see your notifications.</p>
-            <Link to="/index/login" className="btn btn-primary">Sign In</Link>
+            <p>{t('Sign in to see your notifications.')}</p>
+            <Link to="/index/login" className="btn btn-primary">{t('Sign In')}</Link>
           </div>
         )}
 
@@ -98,7 +99,7 @@ export default function NotificationsPage() {
           notifications.length === 0 ? (
             <div className="empty-state">
               <Bell size={40} />
-              <p>No notifications yet.</p>
+              <p>{t('No notifications yet.')}</p>
             </div>
           ) : (
             <div className="notifications-list">
@@ -110,7 +111,7 @@ export default function NotificationsPage() {
                         {!n.read && <span className="notification-dot" />}
                         <p className="notification-title">{n.title}</p>
                         <p className="notification-body">{n.body}</p>
-                        <p className="notification-time">{formatDate(n.createdAt) || 'Just now'}</p>
+                        <p className="notification-time">{formatDate(n.createdAt) || t('Just now')}</p>
                       </div>
                     </div>
                     <button

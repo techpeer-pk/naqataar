@@ -7,6 +7,7 @@ import EmailTypoHint from '../../components/shared/EmailTypoHint';
 import { isValidLocalPhoneDigits, toFullPhone, PH_LOCAL_PHONE_LEN } from '../../utils/validation';
 import LegalModal from '../../components/shared/LegalModal';
 import '../admin/AdminAuth.css';
+import { t } from '../../i18n';
 
 export default function CustomerRegister() {
   const { register } = useAuth();
@@ -19,20 +20,20 @@ export default function CustomerRegister() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValidLocalPhoneDigits(form.phone)) {
-      toast.error(`Please enter a valid ${PH_LOCAL_PHONE_LEN}-digit phone number.`);
+      toast.error(t('Please enter a valid {n}-digit phone number.', { n: PH_LOCAL_PHONE_LEN }));
       return;
     }
     setLoading(true);
     try {
       // await register(form.email, form.password, form.name, form.phone, 'customer');
       await register(form.email, form.password, form.name, toFullPhone(form.phone), 'customer');
-      toast.success('Account created!');
+      toast.success(t('Account created!'));
       navigate('/index/my-appointments');
     } catch (err) {
       if (err.code === 'auth/email-already-in-use')
-        toast.error('Email already registered. Please sign in.');
+        toast.error(t('Email already registered. Please sign in.'));
       else
-        toast.error('Registration failed. Try again.');
+        toast.error(t('Registration failed. Try again.'));
     } finally {
       setLoading(false);
     }
@@ -45,15 +46,15 @@ export default function CustomerRegister() {
           {/* <img src="/qunjee-logo.png" alt="Qunjee" className="auth-logo-img" /> */}
           {/* <img src="/qufree-logo.png" alt="Qufree" className="auth-logo-img" /> */}
           <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="auth-logo-img" width={522} height={160} />
-          <span className="auth-brand-tag">Customer</span>
+          <span className="auth-brand-tag">{t('Customer')}</span>
         </div>
 
-        <h1 className="auth-title">Create Account</h1>
-        <p className="auth-sub">Sign up to track all your bookings in one place.</p>
+        <h1 className="auth-title">{t('Create Account')}</h1>
+        <p className="auth-sub">{t('Sign up to track all your bookings in one place.')}</p>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label className="form-label">{t('Full Name')}</label>
             <div className="input-icon-wrap">
               <User size={16} className="input-icon" />
               <input className="form-control input-with-icon" placeholder="Your name"
@@ -61,7 +62,7 @@ export default function CustomerRegister() {
             </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label className="form-label">{t('Email')}</label>
             <div className="input-icon-wrap">
               <Mail size={16} className="input-icon" />
               <input className="form-control input-with-icon" type="email" placeholder="you@example.com"
@@ -70,7 +71,7 @@ export default function CustomerRegister() {
             <EmailTypoHint email={form.email} onFix={email => setForm(f => ({ ...f, email }))} />
           </div>
           <div className="form-group">
-            <label className="form-label">Phone</label>
+            <label className="form-label">{t('Phone')}</label>
             {/*
               <div className="input-icon-wrap">
               <Phone size={16} className="input-icon" />
@@ -93,7 +94,7 @@ export default function CustomerRegister() {
             </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Password</label>
+            <label className="form-label">{t('Password')}</label>
             <div className="input-icon-wrap">
               <Lock size={16} className="input-icon" />
               <input className="form-control input-with-icon" type="password" placeholder="Min 6 characters"
@@ -105,26 +106,26 @@ export default function CustomerRegister() {
               <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                 style={{ marginTop: '0.2rem' }} required />
               <span>
-                I agree to the{' '}
+                {t('I agree to the')}{' '}
                 {/* <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</Link> */}
-                <a href="/terms" onClick={e => { e.preventDefault(); setLegalDoc('terms'); }}>Terms of Service</a>{' '}
-                and{' '}
+                <a href="/terms" onClick={e => { e.preventDefault(); setLegalDoc('terms'); }}>{t('Terms of Service')}</a>{' '}
+                {t('and')}{' '}
                 {/* <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link> */}
-                <a href="/privacy" onClick={e => { e.preventDefault(); setLegalDoc('privacy'); }}>Privacy Policy</a>.
+                <a href="/privacy" onClick={e => { e.preventDefault(); setLegalDoc('privacy'); }}>{t('Privacy Policy')}</a>.
               </span>
             </label>
           </div>
 
           <button className="btn btn-primary btn-full" type="submit" disabled={loading || !agreed}>
-            {loading ? 'Creating account…' : 'Create Account'}
+            {loading ? t('Creating account…') : t('Create Account')}
           </button>
         </form>
 
         <p className="auth-footer">
-          Already have an account? <Link to="/index/login">Sign In</Link>
+          {t('Already have an account?')} <Link to="/index/login">{t('Sign In')}</Link>
         </p>
         <p className="auth-footer">
-          <Link to="/index">← Back to Home</Link>
+          <Link to="/index">{t('← Back to Home')}</Link>
         </p>
 
         {/* Outside every <form> on purpose — keeps the popup's buttons from ever

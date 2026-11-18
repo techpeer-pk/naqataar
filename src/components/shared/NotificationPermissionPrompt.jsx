@@ -3,6 +3,7 @@ import { Bell, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { enableNotifications } from '../../hooks/usePwaPushRegistration';
 import './NotificationPermissionPrompt.css';
+import { t } from '../../i18n';
 
 const DISMISS_KEY = 'notif-prompt-dismissed';
 
@@ -18,8 +19,8 @@ export default function NotificationPermissionPrompt() {
     // early meant handleEnable's `user?.uid` snapshot was still null even for
     // a tester who really was logged in, so their token saved with no uid.
     if (loading) return;
-    const t = setTimeout(() => setShowPrompt(true), 4000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setShowPrompt(true), 4000);
+    return () => clearTimeout(timer);
   }, [loading]);
 
   const handleEnable = async () => {
@@ -41,15 +42,15 @@ export default function NotificationPermissionPrompt() {
           <Bell size={22} />
         </div>
         <div className="notif-text">
-          <p className="notif-title">Stay Updated</p>
+          <p className="notif-title">{t('Stay Updated')}</p>
           {/* <p className="notif-sub">Get notified about your bookings & orders</p> */}
-          <p className="notif-sub">Get notified about your bookings</p>
+          <p className="notif-sub">{t('Get notified about your bookings')}</p>
         </div>
         <div className="notif-actions">
           <button className="btn btn-primary btn-sm" onClick={handleEnable}>
-            Enable
+            {t('Enable')}
           </button>
-          <button className="notif-close" onClick={handleDismiss} aria-label="Dismiss">
+          <button className="notif-close" onClick={handleDismiss} aria-label={t('Dismiss')}>
             <X size={16} />
           </button>
         </div>

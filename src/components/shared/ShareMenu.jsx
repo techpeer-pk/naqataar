@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Share2, Link2, Share as ShareOutIcon, Facebook, Twitter, Linkedin, Send, Mail, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './ShareMenu.css';
+import { t } from '../../i18n';
 
 function WhatsAppIcon() {
   return (
@@ -82,8 +83,8 @@ export default function ShareMenu({ url, title, text, className = '' }) {
   //   setOpen(false);
   // };
   const copyLink = async () => {
-    if (await copyText(shareUrl)) toast.success('Link copied');
-    else toast.error('Could not copy link');
+    if (await copyText(shareUrl)) toast.success(t('Link copied'));
+    else toast.error(t('Could not copy link'));
     setOpen(false);
   };
 
@@ -101,7 +102,7 @@ export default function ShareMenu({ url, title, text, className = '' }) {
   ];
   const shareTo = (href) => { openShareWindow(href); setOpen(false); };
   const shareByEmail = () => {
-    window.location.href = `mailto:?subject=${enc(title || 'Check this out')}&body=${enc(message)}`;
+    window.location.href = `mailto:?subject=${enc(title || t('Check this out'))}&body=${enc(message)}`;
     setOpen(false);
   };
   const shareBySms = () => {
@@ -135,10 +136,10 @@ export default function ShareMenu({ url, title, text, className = '' }) {
         type="button"
         className="share-menu-trigger"
         onClick={() => setOpen(o => !o)}
-        aria-label="Share"
+        aria-label={t('Share')}
         aria-haspopup="menu"
         aria-expanded={open}
-        title="Share"
+        title={t('Share')}
       >
         <Share2 size={18} />
       </button>
@@ -149,21 +150,21 @@ export default function ShareMenu({ url, title, text, className = '' }) {
           {canNativeShare && (
             <button type="button" role="menuitem" className="share-menu-item share-menu-item--primary" onClick={shareMore}>
               <span className="share-menu-icon"><ShareOutIcon size={16} /></span>
-              Share via…
+              {t('Share via…')}
             </button>
           )}
           <button type="button" role="menuitem" className="share-menu-item" onClick={copyLink}>
             <span className="share-menu-icon"><Link2 size={16} /></span>
-            Copy Link
+            {t('Copy Link')}
           </button>
           <button type="button" role="menuitem" className="share-menu-item" onClick={shareOnWhatsApp}>
             <span className="share-menu-icon"><WhatsAppIcon /></span>
             WhatsApp
           </button>
-          {targets.map(t => (
-            <button key={t.key} type="button" role="menuitem" className="share-menu-item" onClick={() => shareTo(t.href)}>
-              <span className="share-menu-icon">{t.icon}</span>
-              {t.label}
+          {targets.map(target => (
+            <button key={target.key} type="button" role="menuitem" className="share-menu-item" onClick={() => shareTo(target.href)}>
+              <span className="share-menu-icon">{target.icon}</span>
+              {target.label}
             </button>
           ))}
           <button type="button" role="menuitem" className="share-menu-item" onClick={shareByEmail}>

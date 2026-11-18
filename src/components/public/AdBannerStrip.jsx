@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAdBanner } from '../../hooks/useAdBanners';
 import Sk from '../shared/Skeleton';
 import AdChip from './AdChip';
+import { t } from '../../i18n';
 
 // Renders whatever SuperAdmin currently has live for this placement — see
 // docs/AdBanners-Plan.md. No banner configured yet → falls back to the
@@ -38,7 +39,7 @@ export default function AdBannerStrip({ placement }) {
   if (!banner?.imageUrl) {
     return (
       <div className="ad-banner-placeholder">
-        <span>Place your Ad here</span>
+        <span>{t('Place your Ad here')}</span>
       </div>
     );
   }

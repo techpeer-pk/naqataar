@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAdBanner } from '../../hooks/useAdBanners';
 import Sk from '../shared/Skeleton';
 import AdChip from './AdChip';
+import { t } from '../../i18n';
 
 const AUTOPLAY_MS = 4000;
 const SWIPE_PX = 40;
@@ -22,8 +23,8 @@ export default function AdCarousel({ placement }) {
 
   useEffect(() => {
     if (paused || slides.length < 2) return;
-    const t = setInterval(() => setIndex(i => (i + 1) % slides.length), AUTOPLAY_MS);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setIndex(i => (i + 1) % slides.length), AUTOPLAY_MS);
+    return () => clearInterval(timer);
   }, [paused, slides.length]);
 
   if (loading) {
@@ -31,7 +32,7 @@ export default function AdCarousel({ placement }) {
   }
 
   if (!slides.length) {
-    return <div className="ad-carousel ad-carousel--empty"><span>Place your Ad here</span></div>;
+    return <div className="ad-carousel ad-carousel--empty"><span>{t('Place your Ad here')}</span></div>;
   }
 
   const go = (i) => setIndex((i + slides.length) % slides.length);

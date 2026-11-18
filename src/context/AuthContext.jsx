@@ -18,6 +18,7 @@ import { doc, setDoc, getDoc, deleteDoc, serverTimestamp } from 'firebase/firest
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { auth, db, storage, googleProvider } from '../firebase';
 import { useIdleLogout } from '../hooks/useIdleLogout';
+import { t } from '../i18n';
 
 const AuthContext = createContext(null);
 
@@ -180,8 +181,8 @@ export function AuthProvider({ children }) {
       throw Object.assign(
         new Error(
           profile.role === 'businessAdmin'
-            ? 'This account is registered as a Business Admin. Use the Business Login page.'
-            : 'This account is registered as a customer. Use the customer Sign In page.'
+            ? t('This account is registered as a clinic. Use the Clinic Login page.')
+            : t('This account is registered as a customer. Use the customer Sign In page.')
         ),
         { code: 'auth/role-mismatch' }
       );
@@ -212,7 +213,7 @@ export function AuthProvider({ children }) {
       if (err.code === 'auth/account-exists-with-different-credential') {
         const methods = await fetchSignInMethodsForEmail(auth, err.customData?.email || '');
         const method = methods[0] === 'password' ? 'email/password' : methods[0];
-        throw Object.assign(new Error(`This email is already registered via ${method}. Please sign in with that method.`), { code: err.code });
+        throw Object.assign(new Error(t('This email is already registered via {method}. Please sign in with that method.', { method })), { code: err.code });
       }
       throw err;
     }
@@ -242,7 +243,7 @@ export function AuthProvider({ children }) {
       if (role === 'businessAdmin') {
         await signOut(auth);
         throw Object.assign(
-          new Error('No business account found for this Google account. Please use "Register Business" first.'),
+          new Error(t('No clinic account found for this Google account. Please register your clinic first.')),
           { code: 'auth/no-admin-account' }
         );
       }
@@ -259,8 +260,8 @@ export function AuthProvider({ children }) {
         throw Object.assign(
           new Error(
             existing.role === 'businessAdmin'
-              ? 'This Google account is registered as a Business Admin. Use the Business Login page.'
-              : 'This Google account is registered as a customer. Use the customer Sign In page.'
+              ? t('This Google account is registered as a clinic. Use the Clinic Login page.')
+              : t('This Google account is registered as a customer. Use the customer Sign In page.')
           ),
           { code: 'auth/role-mismatch' }
         );

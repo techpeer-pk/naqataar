@@ -3,6 +3,7 @@ import { X, Loader2 } from 'lucide-react';
 import Modal from '../superadmin/Modal';
 import { CANCEL_REASON_OTHER, CANCEL_REASON_MAX } from '../../utils/cancelReasons';
 import './CancelReasonDialog.css';
+import { t } from '../../i18n';
 
 /**
  * Preset-reason picker + "Other" free text. Reports the final reason string
@@ -23,7 +24,7 @@ export function CancelReasonFields({ presets, required = false, onChange, resetK
   return (
     <div className="cancel-reason-fields">
       <label className="form-label">
-        Reason for cancelling {required ? '*' : <span className="text-muted">(optional)</span>}
+        {t('Reason for cancelling')} {required ? '*' : <span className="text-muted">{t('(optional)')}</span>}
       </label>
       <div className="cancel-reason-options">
         {presets.map(p => (
@@ -33,7 +34,7 @@ export function CancelReasonFields({ presets, required = false, onChange, resetK
             className={`cancel-reason-chip${preset === p ? ' active' : ''}`}
             onClick={() => setPreset(prev => prev === p ? '' : p)}
           >
-            {p}
+            {t(p)}
           </button>
         ))}
       </div>
@@ -45,7 +46,7 @@ export function CancelReasonFields({ presets, required = false, onChange, resetK
           maxLength={CANCEL_REASON_MAX}
           value={other}
           onChange={e => setOther(e.target.value)}
-          placeholder="Tell us briefly why…"
+          placeholder={t('Tell us briefly why…')}
         />
       )}
     </div>
@@ -66,16 +67,16 @@ export default function CancelReasonDialog({ open, title = 'Cancel', message, pr
   const canConfirm = !loading && (!required || reason.length > 0);
 
   return (
-    <Modal open={open} onClose={onClose} title={title}>
+    <Modal open={open} onClose={onClose} title={t(title)}>
       <div className="cancel-reason-dialog">
         {message && <p className="cancel-reason-message">{message}</p>}
         <CancelReasonFields presets={presets} required={required} onChange={setReason} resetKey={open} />
         <div className="cancel-reason-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={onClose} disabled={loading}>
-            Never mind
+            {t('Never mind')}
           </button>
           <button type="button" className="btn btn-danger btn-sm" disabled={!canConfirm} onClick={() => onConfirm(reason)}>
-            {loading ? <><Loader2 size={14} className="icon-spin" /> Wait…</> : <><X size={14} /> Confirm Cancel</>}
+            {loading ? <><Loader2 size={14} className="icon-spin" /> {t('Wait…')}</> : <><X size={14} /> {t('Confirm Cancel')}</>}
           </button>
         </div>
       </div>

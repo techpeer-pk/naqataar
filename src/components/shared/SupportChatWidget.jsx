@@ -6,6 +6,7 @@ import { useFaqs } from '../../hooks/useFaqs';
 import { CHAT_TOGGLE_EVENT } from '../../utils/chatEvents';
 import { linkifyParts } from '../../utils/linkify';
 import './SupportChatWidget.css';
+import { t } from '../../i18n';
 
 function toTime(ms) {
   return ms ? new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
@@ -133,8 +134,8 @@ export default function SupportChatWidget({ docked = false }) {
       {open && (
         <div className={`chat-widget-panel${docked ? ' docked' : ''}`}>
           <div className="chat-widget-header">
-            <span>Chat with Support</span>
-            <button className="chat-widget-close" onClick={() => setOpen(false)} aria-label="Close chat">
+            <span>{t('Chat with Support')}</span>
+            <button className="chat-widget-close" onClick={() => setOpen(false)} aria-label={t('Close chat')}>
               <X size={18} />
             </button>
           </div>
@@ -142,7 +143,7 @@ export default function SupportChatWidget({ docked = false }) {
           <div className="chat-widget-messages" ref={listRef}>
             {allMessages.length === 0 ? (
               /* <p className="chat-widget-empty">Send a message and Qunjee Support will reply here.</p> */
-              <p className="chat-widget-empty">Send a message and Naqatar Support will reply here.</p>
+              <p className="chat-widget-empty">{t('Send a message and Naqatar Support will reply here.')}</p>
             ) : (
               allMessages.map(m => (
                 <div key={m.id} data-msg-id={m.id} className={`chat-bubble ${m.senderRole === 'csr' || m.senderRole === 'system' ? 'from-support' : 'from-me'}`}>
@@ -179,7 +180,7 @@ export default function SupportChatWidget({ docked = false }) {
           <form className="chat-widget-input-row" onSubmit={handleSend}>
             <input
               className="form-control"
-              placeholder="Type a message…"
+              placeholder={t('Type a message…')}
               value={text}
               onChange={e => setText(e.target.value)}
             />
@@ -188,12 +189,12 @@ export default function SupportChatWidget({ docked = false }) {
             </button>
           </form>
 
-          <p className="chat-widget-footer-note">Note: Need to login for this assistance or chat.</p>
+          <p className="chat-widget-footer-note">{t('Note: Need to login for this assistance or chat.')}</p>
         </div>
       )}
 
       {!docked && (
-        <button className="chat-widget-fab" onClick={() => setOpen(o => !o)} aria-label={open ? 'Close support chat' : 'Open support chat'}>
+        <button className="chat-widget-fab" onClick={() => setOpen(o => !o)} aria-label={open ? t('Close support chat') : t('Open support chat')}>
           {open ? <X size={22} /> : <MessageCircle size={22} />}
         </button>
       )}

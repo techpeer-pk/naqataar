@@ -1,5 +1,6 @@
 import { AlertTriangle } from 'lucide-react';
 import { suggestEmailFix } from '../../utils/emailTypo';
+import { t } from '../../i18n';
 
 // Renders nothing until the typed email's domain matches a known typo, then
 // shows a one-tap fix under the input. Place directly below an email field.
@@ -18,7 +19,7 @@ export default function EmailTypoHint({ email, onFix }) {
       }}
     >
       <AlertTriangle size={14} style={{ flexShrink: 0 }} />
-      <span>Did you mean <strong>{fixed}</strong>? Tap to fix.</span>
+      <span>{t('Did you mean')} <strong>{fixed}</strong>? {t('Tap to fix.')}</span>
     </button>
   );
 }

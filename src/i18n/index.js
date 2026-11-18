@@ -24,4 +24,16 @@ export function t(text, vars) {
   return out.replace(/\{(\w+)\}/g, (m, k) => (vars[k] ?? m));
 }
 
+// Appointment status values stored in Firestore → display label.
+const STATUS_LABELS = {
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  no_show: 'No-Show',
+};
+export function statusLabel(status) {
+  return t(STATUS_LABELS[status] || status || '');
+}
+
 export default t;

@@ -3,6 +3,7 @@ import { Download, X, Smartphone } from 'lucide-react';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import PWAInstallGuideModal from './PWAInstallGuideModal';
 import './PWAInstallPrompt.css';
+import { t } from '../../i18n';
 
 const DISMISS_KEY = 'pwa-install-dismissed';
 
@@ -17,12 +18,12 @@ export default function PWAInstallPrompt() {
     if (isInstalled || showPrompt || sessionStorage.getItem(DISMISS_KEY)) return;
 
     if (installPrompt) {
-      const t = setTimeout(() => setShowPrompt(true), 3000);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => setShowPrompt(true), 3000);
+      return () => clearTimeout(timer);
     }
     if (isIOS) {
-      const t = setTimeout(() => setShowPrompt(true), 5000);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => setShowPrompt(true), 5000);
+      return () => clearTimeout(timer);
     }
   }, [installPrompt, isIOS, isInstalled, showPrompt]);
 
@@ -48,17 +49,17 @@ export default function PWAInstallPrompt() {
         </div>
         <div className="pwa-text">
           {/* <p className="pwa-title">Install Qunjee</p> */}
-          <p className="pwa-title">Install Naqatar</p>
+          <p className="pwa-title">{t('Install Naqatar')}</p>
           {isIOSNonSafari ? (
-            <p className="pwa-sub">Open this site in <strong>Safari</strong> to install it</p>
+            <p className="pwa-sub">{t('Open this site in Safari to install it')}</p>
           ) : isIOS ? (
             <p className="pwa-sub">
-              Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>
+              {t('Tap Share, then "Add to Home Screen"')}
               {' — '}
-              <button className="pwa-how-link" onClick={() => setShowGuide(true)}>How?</button>
+              <button className="pwa-how-link" onClick={() => setShowGuide(true)}>{t('How?')}</button>
             </p>
           ) : (
-            <p className="pwa-sub">Install for faster access & offline use</p>
+            <p className="pwa-sub">{t('Install for faster access & offline use')}</p>
           )}
         </div>
         <div className="pwa-actions">

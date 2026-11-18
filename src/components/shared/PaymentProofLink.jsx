@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, ExternalLink } from 'lucide-react';
 import './PaymentProofLink.css';
+import { t } from '../../i18n';
 
 // Inline preview instead of opening a new tab — an admin working through a
 // list of pending items shouldn't lose their place switching tabs each time.
@@ -12,7 +13,7 @@ export default function PaymentProofLink({ url }) {
   return (
     <>
       <button type="button" className="payment-proof-link" onClick={() => setOpen(true)}>
-        View screenshot
+        {t('View screenshot')}
       </button>
       {open && (
         <div className="proof-lightbox-overlay" onClick={() => setOpen(false)}>
