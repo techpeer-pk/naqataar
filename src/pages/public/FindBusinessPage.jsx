@@ -38,10 +38,13 @@ export default function FindBusinessPage() {
     }
     setLoading(true);
     try {
-      const found = await fetchByPhone(number);
+      // Naqatar: clinics only. fetchByPhone searches every active business
+      // on the shared QuFree backend (salons, restaurants, hotels…), whose
+      // booking pages don't exist in this app.
+      const found = (await fetchByPhone(number)).filter(b => b.type === 'clinic');
       if (found.length === 1) navigate(`/index/business/${found[0].id}`);
       else if (found.length > 1) setMatches(found);
-      else setError('No business found with this number.');
+      else setError('No clinic found with this number.');
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
