@@ -48,7 +48,7 @@ export default function PWAInstallPrompt() {
         </div>
         <div className="pwa-text">
           {/* <p className="pwa-title">Install Qunjee</p> */}
-          <p className="pwa-title">Install Qufree</p>
+          <p className="pwa-title">Install Naqatar</p>
           {isIOSNonSafari ? (
             <p className="pwa-sub">Open this site in <strong>Safari</strong> to install it</p>
           ) : isIOS ? (

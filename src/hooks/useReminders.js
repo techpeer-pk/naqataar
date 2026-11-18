@@ -79,11 +79,11 @@ function scheduleLocalNotifications(targetMs, scheduled) {
         if (reg) {
           reg.showNotification(r.title, {
             body: r.body,
-            icon: '/icons/icon-192x192.png',
-            badge: '/icons/icon-96x96.png',
+            icon: '/icons-naqatar/icon-192x192.png',
+            badge: '/icons-naqatar/badge-monochrome.png',
           });
         } else {
-          new Notification(r.title, { body: r.body, icon: '/icons/icon-192x192.png' });
+          new Notification(r.title, { body: r.body, icon: '/icons-naqatar/icon-192x192.png' });
         }
       } catch {
         // Notification API unavailable

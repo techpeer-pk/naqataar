@@ -11,11 +11,14 @@
   /* --accent:        #FF6600; */
   /* --accent-dark:   #E65C00; */
   /* --accent-pale:   #FFF3E8; */
-  /* 2026-11-17: Qufree teal theme (brand #1B5566) — whole app */
-  --primary:       #1B5566;
+  /* Naqatar theme: teal + gold from the logo — whole app */
+  --primary:       #1D565D; /* Naqatar teal (from logo) */
   --primary-light: #2A7186;
   --primary-pale:  #E8F4FA;
   --primary-dark:  #123F4C;
+  --gold:          #A9873F; /* Naqatar gold (from logo) */
+  --gold-dark:     #8C6F2F;
+  --gold-pale:     #F6F0E2;
   --accent:        #1F8FA6;
   --accent-dark:   #187587;
   --accent-pale:   #E6F5F8;

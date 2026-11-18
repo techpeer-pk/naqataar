@@ -33,7 +33,7 @@
   font-family: var(--font-display);
   margin-bottom: 1.75rem;
 }
-.auth-logo-img { height: 34px; width: auto; display: block; }
+.auth-logo-img { height: 44px; width: auto; display: block; } /* Naqatar lockup */
 .auth-brand-tag {
   background: var(--primary-pale); color: var(--primary);
   border: 1px solid var(--primary-light);
@@ -59,6 +59,6 @@
 
 /* 2026-11-17: "Business login" / "Customer login" text link under Install App */
 .auth-switch-link { margin-top: 0.6rem; font-size: 0.85rem; }
-/* same teal as --primary (#1B5566), 25% lighter (25% tint toward white) */
+/* same teal as --primary (#1D565D), 25% lighter (25% tint toward white) */
 .auth-switch-link a { color: #54808C; }
 .auth-switch-link a:hover { color: var(--primary); }

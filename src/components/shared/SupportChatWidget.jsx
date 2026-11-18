@@ -142,7 +142,7 @@ export default function SupportChatWidget({ docked = false }) {
           <div className="chat-widget-messages" ref={listRef}>
             {allMessages.length === 0 ? (
               /* <p className="chat-widget-empty">Send a message and Qunjee Support will reply here.</p> */
-              <p className="chat-widget-empty">Send a message and Qufree Support will reply here.</p>
+              <p className="chat-widget-empty">Send a message and Naqatar Support will reply here.</p>
             ) : (
               allMessages.map(m => (
                 <div key={m.id} data-msg-id={m.id} className={`chat-bubble ${m.senderRole === 'csr' || m.senderRole === 'system' ? 'from-support' : 'from-me'}`}>

@@ -156,7 +156,7 @@ export default function Dashboard() {
             <p>"{business.name}" is waiting for approval.</p>
             <p className="text-muted">
               {/* A Qunjee SuperAdmin needs to review and approve your registration before customers */}
-              A Qufree SuperAdmin needs to review and approve your registration before customers
+              The Naqatar team needs to review and approve your registration before customers
               can find or book with you. You can still set up your profile, services and menu in
               the meantime — <Link to="/admin/profile">go to Profile</Link>.
             </p>
@@ -203,7 +203,7 @@ export default function Dashboard() {
                     {!subStatus.active
                       ? 'Existing bookings and your profile are unaffected — only new customer bookings are on hold.'
                       // : 'Contact the Qunjee team to continue after this date.'}
-                      : 'Contact the Qufree team to continue after this date.'}
+                      : 'Contact the Naqatar team to continue after this date.'}
                   </p>
                 </div>
               </div>

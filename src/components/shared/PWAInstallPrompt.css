@@ -60,14 +60,14 @@
   border: 1px solid #CFE4EE;
   box-shadow: 0 10px 30px rgba(27, 85, 102, 0.16), 0 2px 6px rgba(27, 85, 102, 0.08);
 }
-.pwa-icon { background: #E8F4FA; color: #1B5566; }
+.pwa-icon { background: #E8F4FA; color: #1D565D; }
 .pwa-title { color: #123F4C; }
 .pwa-sub { color: var(--text-mid); }
-.pwa-how-link { color: #1B5566; }
+.pwa-how-link { color: #1D565D; }
 .pwa-actions .btn-primary {
-  background: #1B5566; color: #fff;
+  background: #1D565D; color: #fff;
   box-shadow: 0 4px 12px rgba(27, 85, 102, 0.28);
 }
 .pwa-actions .btn-primary:hover { background: #123F4C; box-shadow: 0 6px 16px rgba(27, 85, 102, 0.34); }
-.pwa-close { background: #E8F4FA; color: #1B5566; }
+.pwa-close { background: #E8F4FA; color: #1D565D; }
 .pwa-close:hover { background: #CFE4EE; color: #123F4C; }

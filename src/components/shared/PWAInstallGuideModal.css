@@ -81,12 +81,12 @@
   border: 1px solid #CFE4EE;
   box-shadow: 0 -10px 30px rgba(27, 85, 102, 0.18);
 }
-.pwa-guide-close { background: #E8F4FA; color: #1B5566; }
+.pwa-guide-close { background: #E8F4FA; color: #1D565D; }
 .pwa-guide-close:hover { background: #CFE4EE; color: #123F4C; }
 .pwa-guide-title { color: #123F4C; }
-.pwa-guide-num { background: #1B5566; color: #fff; }
-.pwa-guide-icon { background: #E8F4FA; color: #1B5566; }
+.pwa-guide-num { background: #1D565D; color: #fff; }
+.pwa-guide-icon { background: #E8F4FA; color: #1D565D; }
 .pwa-guide-text { color: var(--text-mid); }
 .pwa-guide-text strong { color: #123F4C; }
-.pwa-guide-done.btn-primary { background: #1B5566; box-shadow: 0 4px 12px rgba(27, 85, 102, 0.28); }
+.pwa-guide-done.btn-primary { background: #1D565D; box-shadow: 0 4px 12px rgba(27, 85, 102, 0.28); }
 .pwa-guide-done.btn-primary:hover { background: #123F4C; }

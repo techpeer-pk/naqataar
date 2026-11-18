@@ -51,13 +51,13 @@
   border: 1px solid #CFE4EE;
   box-shadow: 0 10px 30px rgba(27, 85, 102, 0.16), 0 2px 6px rgba(27, 85, 102, 0.08);
 }
-.notif-icon { background: #E8F4FA; color: #1B5566; }
+.notif-icon { background: #E8F4FA; color: #1D565D; }
 .notif-title { color: #123F4C; }
 .notif-sub { color: var(--text-mid); }
 .notif-actions .btn-primary {
-  background: #1B5566; color: #fff;
+  background: #1D565D; color: #fff;
   box-shadow: 0 4px 12px rgba(27, 85, 102, 0.28);
 }
 .notif-actions .btn-primary:hover { background: #123F4C; box-shadow: 0 6px 16px rgba(27, 85, 102, 0.34); }
-.notif-close { background: #E8F4FA; color: #1B5566; }
+.notif-close { background: #E8F4FA; color: #1D565D; }
 .notif-close:hover { background: #CFE4EE; color: #123F4C; }

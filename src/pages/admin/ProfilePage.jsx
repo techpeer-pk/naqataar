@@ -211,7 +211,7 @@ export default function ProfilePage() {
               <div className="card-header"><h3>Basic Information</h3></div>
               <div className="card-body">
                 {/* <p className="form-hint" style={{ marginTop: 0, marginBottom: '1rem' }}>
-                  Contact the Qufree team to update these details.
+                  Contact the Naqatar team to update these details.
                 </p> */}
                 {/* 2026-11-17: editable by the business owner again (user request). */}
                 <p className="form-hint" style={{ marginTop: 0, marginBottom: '1rem' }}>
@@ -263,7 +263,7 @@ export default function ProfilePage() {
                         value={form.phone || ''}
                         onChange={e => setForm(f => ({ ...f, phone: normaliseLocalPhone(e.target.value) }))} />
                     </div>
-                    <p className="form-hint">Customers find you on Qufree by this number.</p>
+                    <p className="form-hint">Customers find you on Naqatar by this number.</p>
                   </div>
                 </div>
                 {['hotel', 'nayasaa', 'beachhuts'].includes(business?.type) ? (

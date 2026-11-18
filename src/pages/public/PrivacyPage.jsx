@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import './LegalPage.css';
 
-// 2026-11-17: rewritten for Qufree (operated by TechPeer). The previous
+// 2026-11-17: rewritten for Naqatar (operated by TechPeer). The previous
 // Qunjee version is kept, fully commented out, at the bottom of this file.
 const LAST_UPDATED = 'November 17, 2026';
 
@@ -12,7 +12,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
   return (
     <div className={embedded ? 'legal-embedded' : 'page'}>
       <div className={embedded ? undefined : 'container legal-page'}>
-        {!embedded && <Link to="/find-business" className="legal-back">← Back to Qufree</Link>}
+        {!embedded && <Link to="/" className="legal-back">← Back to Naqatar</Link>}
 
         <div className="legal-header">
           {!embedded && <h1 className="legal-title">Privacy Policy</h1>}
@@ -23,10 +23,10 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>1. Overview &amp; Scope</h2>
             <p>
-              This Privacy Policy explains what information Qufree — operated by TechPeer —
+              This Privacy Policy explains what information Naqatar — operated by TechPeer —
               collects when you find a business by its number, view business pages, book
               appointments, or register a business, and how we use, share, and protect it. It
-              applies to the Qufree website and app.
+              applies to the Naqatar website and app.
             </p>
           </section>
 
@@ -36,7 +36,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
               <li><strong>Business-number searches</strong> — the phone number you type into "Find a business" is used only to look up the matching business. We don't save your searches to your account.</li>
               <li><strong>Account information</strong> — name, email, and password, via Firebase Authentication, when you create a customer or business account.</li>
               <li><strong>Profile photo</strong> — an avatar image you can optionally upload to your account, stored via Firebase Storage.</li>
-              <li><strong>Business information</strong> — business name, type, address, phone number, description, services, and working hours, if you register a business. The business phone number is searchable on Qufree and shown on the business page.</li>
+              <li><strong>Business information</strong> — business name, type, address, phone number, description, services, and working hours, if you register a business. The business phone number is searchable on Naqatar and shown on the business page.</li>
               <li><strong>Booking details</strong> — the name, phone number, and email you provide when booking an appointment. Bookings require you to be signed in.</li>
               <li><strong>Payment-proof screenshots</strong> — if a business pays a subscription or invoice by bank transfer, the screenshot uploaded as proof of payment is stored in our system and reviewed manually by our team.</li>
               <li><strong>Support &amp; communications</strong> — messages you send through live chat or support tickets, and correspondence over email or WhatsApp.</li>
@@ -68,10 +68,10 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
               <li><strong>The specific business</strong> you book with — so they can serve you.</li>
               <li><strong>Service providers</strong> that run the platform on our behalf: Google Firebase (authentication, database, file storage, hosting, push notifications), Google Analytics (usage analytics), Sentry (crash reporting), and EmailJS (booking confirmation emails).</li>
               <li><strong>Our own support and oversight staff</strong> (support console and SuperAdmin) — who can look up account and booking records to resolve support requests and operate the platform. Access is role-based and limited to what each role needs.</li>
-              <li><strong>Authorities</strong>, where required by law or to protect the rights, safety, or property of Qufree, our users, or the public.</li>
+              <li><strong>Authorities</strong>, where required by law or to protect the rights, safety, or property of Naqatar, our users, or the public.</li>
             </ul>
             <p>
-              Advertisers whose ads appear on Qufree (labeled "Sponsored") do not receive your
+              Advertisers whose ads appear on Naqatar (labeled "Sponsored") do not receive your
               personal information from us.
             </p>
           </section>
@@ -117,7 +117,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>8. Children's Privacy</h2>
             <p>
-              Qufree is not directed at children under 13, and business accounts require the
+              Naqatar is not directed at children under 13, and business accounts require the
               registrant to be at least 18. We don't knowingly collect personal information from
               children under 13; if you believe a child has provided us information, contact us
               and we'll remove it.
@@ -128,7 +128,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
             <h2>9. International Data Transfers</h2>
             <p>
               Our service providers (Firebase, Google Analytics, Sentry) may store and process data
-              on servers located outside Pakistan. By using Qufree, you understand your information
+              on servers located outside Pakistan. By using Naqatar, you understand your information
               may be processed in other countries with different data protection laws.
             </p>
           </section>
@@ -136,7 +136,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>10. Third-Party Links &amp; Ads</h2>
             <p>
-              Qufree may link to third-party sites, including advertisers' sites. Their privacy
+              Naqatar may link to third-party sites, including advertisers' sites. Their privacy
               practices are governed by their own privacy policies, not this one.
             </p>
           </section>
@@ -145,7 +145,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
             <h2>11. Changes to This Policy</h2>
             <p>
               We may update this Privacy Policy from time to time. Material changes will be
-              reflected by updating the "Last updated" date above. Continued use of Qufree after a
+              reflected by updating the "Last updated" date above. Continued use of Naqatar after a
               change means you accept the updated policy. See also our{' '}
               {embedded
                 ? <a href="/terms" onClick={e => { e.preventDefault(); onOpenDoc?.('terms'); }}>Terms of Service</a>
@@ -156,7 +156,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>12. Contact Us</h2>
             <p>
-              Qufree, operated by TechPeer — Karachi, Pakistan<br />
+              Naqatar, operated by TechPeer — Karachi, Pakistan<br />
               {/* The quickest way to reach us is the <strong>Help</strong> / support chat inside the app. */}
               Email: <a href="mailto:techpeer.pk@gmail.com">techpeer.pk@gmail.com</a><br />
               You can also use the <strong>Help</strong> / support chat inside the app.
@@ -170,7 +170,7 @@ export default function PrivacyPage({ embedded = false, onOpenDoc } = {}) {
 
 // ═══════════════════════════════════════════════════════════════════
 // PREVIOUS VERSION (Qunjee, last updated September 18, 2026) — kept for
-// reference, fully commented out. Replaced 2026-11-17 by the Qufree text above.
+// reference, fully commented out. Replaced 2026-11-17 by the Naqatar text above.
 // ═══════════════════════════════════════════════════════════════════
 // import { Link } from 'react-router-dom';
 // import './LegalPage.css';

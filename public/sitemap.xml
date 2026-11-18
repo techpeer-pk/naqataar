@@ -1,196 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-  <!-- 2026-11-17: live app moved to qufree.web.app (qunjee-com now serves a
-       static 404, and most public routes are disabled in App.jsx). Only the
-       routes still live are listed below; the previous list is kept
-       commented out at the bottom. -->
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://qufree.web.app/find-business</loc>
-    <lastmod>2026-11-17</lastmod>
+    <loc>https://naqatar.web.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
   <url>
-    <loc>https://qufree.web.app/index/login</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://qufree.web.app/index/register</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://qufree.web.app/admin/register</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://qufree.web.app/terms</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://qufree.web.app/privacy</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- PREVIOUS (qunjee-com.web.app) entries:
-  <url>
-    <loc>https://qunjee-com.web.app/</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/browse</loc>
-    <lastmod>2026-09-07</lastmod>
+    <loc>https://naqatar.web.app/clinics</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://qunjee-com.web.app/index/restaurants</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/travel</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/healthcare</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/salon</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/wedding</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/education</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/healthcare</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/nayasaa</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/rasoomat</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/hotel-booking</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/restaurant-booking</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/qunjeeats</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/login</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/index/register</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/admin/register</loc>
-    <lastmod>2026-09-07</lastmod>
+    <loc>https://naqatar.web.app/admin/register</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
   <url>
-    <loc>https://qunjee-com.web.app/documentation</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
-  <url>
-    <loc>https://qunjee-com.web.app/terms</loc>
-    <lastmod>2026-09-07</lastmod>
+    <loc>https://naqatar.web.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-
   <url>
-    <loc>https://qunjee-com.web.app/privacy</loc>
-    <lastmod>2026-09-07</lastmod>
+    <loc>https://naqatar.web.app/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  -->
-
 </urlset>

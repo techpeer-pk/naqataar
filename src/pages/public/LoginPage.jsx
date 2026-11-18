@@ -100,7 +100,7 @@ export default function LoginPage() {
         <div className="auth-brand">
           {/* <img src="/qunjee-logo.png" alt="Qunjee" className="auth-logo-img" /> */}
           {/* <img src="/qufree-logo.png" alt="Qufree" className="auth-logo-img" /> */}
-          <img src="/qufree-wordmark.png" alt="Qufree" className="auth-logo-img" />
+          <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="auth-logo-img" width={522} height={160} />
           <span className="auth-brand-tag">{mode.brandTag}</span>
         </div>
 

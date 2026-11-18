@@ -310,7 +310,7 @@ export default function AdminRegister() {
         <div className="auth-brand">
           {/* <img src="/qunjee-logo.png" alt="Qunjee" className="auth-logo-img" /> */}
           {/* <img src="/qufree-logo.png" alt="Qufree" className="auth-logo-img" /> */}
-          <img src="/qufree-wordmark.png" alt="Qufree" className="auth-logo-img" />
+          <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="auth-logo-img" width={522} height={160} />
           <span className="auth-brand-tag">Business</span>
         </div>
 
@@ -556,7 +556,7 @@ export default function AdminRegister() {
                   }}
                   required />
               </div>
-              <p className="form-hint">Customers will find your business on Qufree by this number.</p>
+              <p className="form-hint">Customers will find your clinic on Naqatar by this number.</p>
             </div>
             <div className="form-group">
               <label className="form-label">Description</label>

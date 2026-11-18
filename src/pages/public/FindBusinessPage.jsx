@@ -11,7 +11,7 @@ import './FindBusinessPage.css';
 // 2026-11-17 upgrade: hero + search card + "how it works", Qufree teal.
 const STEPS = [
   { icon: Hash,          title: 'Enter the number', text: "Type the business's phone number in any format." },
-  { icon: Search,        title: 'We find it',       text: 'Qufree matches it to the registered business.' },
+  { icon: Search,        title: 'We find it',       text: 'Naqatar matches it to the registered clinic.' },
   { icon: CalendarCheck, title: 'Book instantly',   text: 'Open its page, pick a service and a time.' },
 ];
 

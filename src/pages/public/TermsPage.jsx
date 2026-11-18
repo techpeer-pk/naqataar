@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import './LegalPage.css';
 
-// 2026-11-17: rewritten for Qufree (operated by TechPeer). The previous
+// 2026-11-17: rewritten for Naqatar (operated by TechPeer). The previous
 // Qunjee version is kept, fully commented out, at the bottom of this file.
 const LAST_UPDATED = 'November 17, 2026';
 
@@ -12,7 +12,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
   return (
     <div className={embedded ? 'legal-embedded' : 'page'}>
       <div className={embedded ? undefined : 'container legal-page'}>
-        {!embedded && <Link to="/find-business" className="legal-back">← Back to Qufree</Link>}
+        {!embedded && <Link to="/" className="legal-back">← Back to Naqatar</Link>}
 
         <div className="legal-header">
           {!embedded && <h1 className="legal-title">Terms of Service</h1>}
@@ -23,28 +23,28 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>1. Acceptance of Terms</h2>
             <p>
-              These Terms of Service ("Terms") govern your access to and use of Qufree — the
-              website, PWA and any related apps operated by TechPeer ("Qufree", "we", "us",
+              These Terms of Service ("Terms") govern your access to and use of Naqatar — the
+              website, PWA and any related apps operated by TechPeer ("Naqatar", "we", "us",
               "our"). By searching for a business, creating an account, booking an appointment,
-              registering a business, or otherwise using Qufree, you agree to these Terms and to
+              registering a business, or otherwise using Naqatar, you agree to these Terms and to
               our{' '}
               {embedded
                 ? <a href="/privacy" onClick={e => { e.preventDefault(); onOpenDoc?.('privacy'); }}>Privacy Policy</a>
                 : <Link to="/privacy">Privacy Policy</Link>}. If you do not agree, please do not use
-              Qufree.
+              Naqatar.
             </p>
           </section>
 
           <section>
-            <h2>2. The Qufree Platform</h2>
+            <h2>2. The Naqatar Platform</h2>
             <p>
-              Qufree lets you find a business registered on the platform by its phone number
+              Naqatar lets you find a business registered on the platform by its phone number
               (its "business number") and go straight to that business's page, where you can see
               its details and services and, where the business offers it, book an appointment
               online.
             </p>
             <p>
-              Businesses on Qufree may come from many fields — for example restaurants, salons
+              Businesses on Naqatar may come from many fields — for example restaurants, salons
               and personal care, healthcare providers, entertainment venues, wedding services,
               travel and education. Which services and booking options are available depends on
               each business.
@@ -73,12 +73,12 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <p>
               Business owners self-register their business, services, working hours and pricing.
               You are solely responsible for the accuracy of your listing and for honoring the
-              bookings customers place through it. Qufree does not guarantee bookings or revenue
+              bookings customers place through it. Naqatar does not guarantee bookings or revenue
               to any business.
             </p>
             <p>
               By registering a business, you agree that the business phone number you provide is
-              used to let customers find your listing on Qufree when they search for that number,
+              used to let customers find your listing on Naqatar when they search for that number,
               and is shown on your business page.
             </p>
           </section>
@@ -87,14 +87,14 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <h2>5. Bookings</h2>
             <p>
               Bookings are held against live availability at the business you select; a slot is
-              not guaranteed until the business accepts it. Qufree does not process card or online
+              not guaranteed until the business accepts it. Naqatar does not process card or online
               payments for bookings — any payment for the service itself is between you and the
               business.
             </p>
             <p>
               Cancellation, rescheduling and no-show handling are set by the individual business
-              you're booking with, unless stated otherwise on Qufree. Separately, if a business
-              does not accept or decline a pending booking within a reasonable window, Qufree may
+              you're booking with, unless stated otherwise on Naqatar. Separately, if a business
+              does not accept or decline a pending booking within a reasonable window, Naqatar may
               automatically cancel the request so the held slot becomes available to other
               customers.
             </p>
@@ -105,7 +105,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <p>
               New business accounts get a 30-day free trial. Continued access after the trial is
               arranged manually — typically over WhatsApp — and activated by our team once
-              payment is confirmed. Qufree does not run automatic recurring billing.
+              payment is confirmed. Naqatar does not run automatic recurring billing.
             </p>
             <p>
               Where payment is made by bank transfer, you may be asked to upload a screenshot as
@@ -118,9 +118,9 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>7. Advertising &amp; Sponsored Content</h2>
             <p>
-              Qufree may show advertisements, including banners and rotating ads. Advertising is
+              Naqatar may show advertisements, including banners and rotating ads. Advertising is
               labeled "Sponsored". Advertisers are responsible for their own ads, offers and
-              websites; an ad on Qufree is not an endorsement, and any dealing with an advertiser
+              websites; an ad on Naqatar is not an endorsement, and any dealing with an advertiser
               is between you and that advertiser.
             </p>
           </section>
@@ -130,10 +130,10 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <p>You agree not to:</p>
             <ul>
               <li>Provide false information when registering, searching or booking.</li>
-              <li>Use Qufree for any unlawful purpose or to harass another user or business.</li>
+              <li>Use Naqatar for any unlawful purpose or to harass another user or business.</li>
               <li>Attempt to access another user's or business's account or data without authorization.</li>
               <li>Use the business-number search in bulk or by automated means, or to collect business contact details.</li>
-              <li>Scrape, reverse-engineer, or interfere with the normal operation of Qufree.</li>
+              <li>Scrape, reverse-engineer, or interfere with the normal operation of Naqatar.</li>
               <li>Upload content that infringes someone else's rights or contains malware.</li>
             </ul>
           </section>
@@ -151,16 +151,16 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>10. Intellectual Property</h2>
             <p>
-              The Qufree name, logo, and platform design are owned by TechPeer. Business owners
+              The Naqatar name, logo, and platform design are owned by TechPeer. Business owners
               retain ownership of the content they upload (photos, descriptions, service details)
-              but grant Qufree a license to display it on the platform as part of the listing.
+              but grant Naqatar a license to display it on the platform as part of the listing.
             </p>
           </section>
 
           <section>
             <h2>11. Third-Party Links</h2>
             <p>
-              Qufree may link to third-party sites, including advertisers' sites. We are not
+              Naqatar may link to third-party sites, including advertisers' sites. We are not
               responsible for the content, terms, or privacy practices of sites we don't operate.
             </p>
           </section>
@@ -168,11 +168,11 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>12. Disclaimers &amp; Limitation of Liability</h2>
             <p>
-              Qufree is provided "as is". We do our best to keep business information and
+              Naqatar is provided "as is". We do our best to keep business information and
               availability accurate and the service reliable, but we don't guarantee uninterrupted
               access, that every search will find a business, or that every booking will be
               fulfilled exactly as requested — that responsibility sits with the individual
-              business. To the fullest extent permitted by law, Qufree is not liable for indirect,
+              business. To the fullest extent permitted by law, Naqatar is not liable for indirect,
               incidental, or consequential damages arising from your use of the platform.
             </p>
           </section>
@@ -181,7 +181,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <h2>13. Termination</h2>
             <p>
               We may suspend or terminate access to an account that violates these Terms, engages
-              in fraudulent activity, or misuses the platform. You may stop using Qufree, or ask
+              in fraudulent activity, or misuses the platform. You may stop using Naqatar, or ask
               us to close your account, at any time by contacting us.
             </p>
           </section>
@@ -190,7 +190,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <h2>14. Governing Law</h2>
             <p>
               These Terms are governed by the laws of Pakistan. Any dispute arising from these
-              Terms or your use of Qufree is subject to the exclusive jurisdiction of the courts
+              Terms or your use of Naqatar is subject to the exclusive jurisdiction of the courts
               of Karachi, Pakistan.
             </p>
           </section>
@@ -199,7 +199,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
             <h2>15. Changes to These Terms</h2>
             <p>
               We may update these Terms from time to time. Material changes will be reflected by
-              updating the "Last updated" date above. Continued use of Qufree after a change means
+              updating the "Last updated" date above. Continued use of Naqatar after a change means
               you accept the updated Terms.
             </p>
           </section>
@@ -207,7 +207,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
           <section>
             <h2>16. Contact Us</h2>
             <p>
-              Qufree, operated by TechPeer — Karachi, Pakistan<br />
+              Naqatar, operated by TechPeer — Karachi, Pakistan<br />
               {/* The quickest way to reach us is the <strong>Help</strong> / support chat inside the app. */}
               Email: <a href="mailto:techpeer.pk@gmail.com">techpeer.pk@gmail.com</a><br />
               You can also use the <strong>Help</strong> / support chat inside the app.
@@ -221,7 +221,7 @@ export default function TermsPage({ embedded = false, onOpenDoc } = {}) {
 
 // ═══════════════════════════════════════════════════════════════════
 // PREVIOUS VERSION (Qunjee, last updated September 18, 2026) — kept for
-// reference, fully commented out. Replaced 2026-11-17 by the Qufree text above.
+// reference, fully commented out. Replaced 2026-11-17 by the Naqatar text above.
 // ═══════════════════════════════════════════════════════════════════
 // import { Link } from 'react-router-dom';
 // import './LegalPage.css';

@@ -36,7 +36,7 @@ export default function Footer({ hasBottomNav = false }) {
           <div className="footer-brand">
             {/* <img src="/qunjee-logo-white.png" alt="Qunjee" className="footer-logo-img" width={1000} height={337} /> */}
             {/* <img src="/qufree-logo-white.png" alt="Qufree" className="footer-logo-img" width={987} height={295} /> */}
-            <img src="/qufree-wordmark-white.png" alt="Qufree" className="footer-logo-img" width={637} height={167} />
+            <img src="/brand/naqatar-lockup-white.png" alt="Naqatar" className="footer-logo-img" width={522} height={160} />
           </div>
           {/* <p className="footer-tagline">
             Instant booking for <em>Restaurant reservation, Salons &amp; Spa
@@ -44,7 +44,7 @@ export default function Footer({ hasBottomNav = false }) {
           </p> */}
           {/* 2026-11-17 Qufree rebrand */}
           <p className="footer-tagline">
-            Find any business by its number and <em>book instantly</em>.
+            Find any clinic by its number and <em>book instantly</em>.
           </p>
           <div className="footer-contact">
             {/* <span><Mail size={14} /> hello@qunjee.com</span> */}
@@ -70,7 +70,7 @@ export default function Footer({ hasBottomNav = false }) {
         <div className="footer-bottom-inner">
           <p className="footer-copy">
             {/* © {year} Qunjee. Built with <Heart size={12} fill="currentColor" /> by{' '} */}
-            © {year} Qufree. Built with <Heart size={12} fill="currentColor" /> by{' '}
+            © {year} Naqatar. Built with <Heart size={12} fill="currentColor" /> by{' '}
             {/* <a href="https://qunjee-com.web.app/index/browse" target="_blank" rel="noopener noreferrer" className="footer-link"> */}
             {/* 2026-11-17: qunjee-com now serves a static 404 → link the live app instead. */}
             {/* <a href="https://qufree.web.app/" target="_blank" rel="noopener noreferrer" className="footer-link">

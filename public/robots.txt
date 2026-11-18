@@ -1,17 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /csr
-Disallow: /superadmin
-Disallow: /eatsadmin
-Disallow: /qufreecrm
 Disallow: /index/profile
 Disallow: /index/my-appointments
 Disallow: /index/notifications
-Disallow: /qunjeeats/my-orders
-Disallow: /qunjeeats/cart
-Disallow: /qunjeeats/checkout
 
-# Sitemap: https://qunjee-com.web.app/sitemap.xml
-# 2026-11-17: qunjee-com now serves a static 404; live app is qufree.web.app.
-Sitemap: https://qufree.web.app/sitemap.xml
+Sitemap: https://naqatar.web.app/sitemap.xml

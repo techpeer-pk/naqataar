@@ -24,7 +24,7 @@ export default function PWAInstallGuideModal({ onClose }) {
           <X size={18} />
         </button>
         {/* <h3 className="pwa-guide-title">Install Qunjee on iPhone</h3> */}
-        <h3 className="pwa-guide-title">Install Qufree on iPhone</h3>
+        <h3 className="pwa-guide-title">Install Naqatar on iPhone</h3>
         <div className="pwa-guide-steps">
           {STEPS.map(({ icon: Icon, text }, i) => (
             <div className="pwa-guide-step" key={i}>

@@ -15,8 +15,7 @@ import './Navbar.css';
 // QuFree's Eats / HealthCare / Nayasaa / Rasoomat / hotel-rooms / menu-orders
 // branches were removed with their routes (see App.jsx).
 
-// P3 (branding): switch to https://naqatar.web.app/ + Naqatar title/text.
-const APP_SHARE_URL = 'https://qufree.web.app/';
+const APP_SHARE_URL = 'https://naqatar.web.app/';
 
 export default function Navbar() {
   const { user, userProfile, isCustomer, logout } = useAuth();
@@ -41,7 +40,7 @@ export default function Navbar() {
   }, []);
 
   const isAdminRoute  = pathname.startsWith('/admin');
-  const isPublicRoute = pathname === '/' || pathname.startsWith('/index');
+  const isPublicRoute = pathname === '/' || pathname === '/clinics' || pathname.startsWith('/index');
   const isHome        = pathname === '/';
 
   const handleLogout = async () => {
@@ -64,7 +63,7 @@ export default function Navbar() {
         </button>
 
         <Link to={isAdminRoute ? '/admin/dashboard' : '/'} className="navbar-brand">
-          <img src="/qufree-wordmark.png" alt="Qufree" className="navbar-logo-img" />
+          <img src="/brand/naqatar-lockup.png" alt="Naqatar" className="navbar-logo-img" width={522} height={160} />
           {isAdminRoute && <span className="brand-tag">Admin</span>}
         </Link>
 
@@ -103,8 +102,8 @@ export default function Navbar() {
           <ShareMenu
             className="navbar-share"
             url={APP_SHARE_URL}
-            title="Qufree — Find any business by its number"
-            text="Find any business by its number and book instantly on Qufree."
+            title="Naqatar: Clinic appointments made easy"
+            text="Find any clinic by its number and book an appointment instantly on Naqatar."
           />
         )}
 
