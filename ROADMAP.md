@@ -45,7 +45,7 @@
 | **P4** | Hinglish UI | 23 – 25 Nov | ~400 strings, 22 files. Ek dictionary file (`src/i18n/hinglish.js`) taa ke baad mein English add ho sake. Pehle customer screens, phir clinic admin | ✅ Done (18 Nov). *`t()` + `src/i18n/hinglish.js` (~500 entries), `npm run i18n:check`. English mein rahe: din/mahine ke naam, export ke column headers, invoice document, iPhone ke button naam* |
 | **P5** | QA (emulator) | 26 – 27 Nov | Neeche di gayi checklist (Sec. 4), mobile/responsive check, PWA install (Android Chrome, iOS Safari), smoke test mein booking aur cancel ke checks add karna | ⏳ |
 | **P6** | Launch ki tayyari *(owner ke kaam, P2–P5 ke saath saath)* | 27 Nov tak | Sec. 5 ki checklist | ⏳ |
-| **P7** | 🌐 **Web launch** | **~30 Nov** | `npm run build`, phir sirf `hosting:naqatar` deploy. Production par 1 asli test booking (test clinic) | ⏳ |
+| **P7** | 🌐 **Web launch** | **~30 Nov** | `npm run build`, phir sirf `hosting:naqatar` deploy. Production par 1 asli test booking (test clinic) | 🟡 Live (18 Nov, preview, model data). *P5 QA aur P6 Console kaam baaqi. 9/10 clinics ka `clinicType` khaali (sirf "Sab Clinics" mein dikhte hain)* |
 | **P8** | 🤖 Android (TWA) | 1 – 4 Dec build, phir review | Bubblewrap TWA, `assetlinks.json`, Play listing, privacy policy. *Agar Play account naya personal account hai: 12 testers ke saath 14 din ka closed test* | ⏳ |
 | **P9** | 🍎 iOS | Baad mein | Abhi: Safari "Add to Home Screen" guide. App Store chahiye ho to **Capacitor** wrapper (native push, Sign in with Apple) | 🔜 |
 
