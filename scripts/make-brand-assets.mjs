@@ -163,6 +163,28 @@ await (await onSquare(mark, 64, 0.96, CLEAR)).png().toFile('public/favicon-naqat
     .png().toFile('public/og-image-naqatar.png');
 }
 
+// ── 5. Compress every output (palette PNG, like pngquant) ────────────────
+// The artwork is flat teal/gold/white, so a 256-colour palette with
+// dithering is visually identical and ~70–80% smaller. A file is only
+// replaced when the result is actually smaller.
+{
+  const { readdirSync, readFileSync, writeFileSync } = await import('node:fs');
+  const files = [
+    ...readdirSync(OUT_BRAND).filter(f => f.endsWith('.png')).map(f => `${OUT_BRAND}/${f}`),
+    ...readdirSync(OUT_ICONS).filter(f => f.endsWith('.png')).map(f => `${OUT_ICONS}/${f}`),
+    'public/favicon-naqatar.png',
+    'public/og-image-naqatar.png',
+  ];
+  let before = 0, after = 0;
+  for (const f of files) {
+    const src = readFileSync(f);
+    const out = await sharp(src).png({ palette: true, quality: 90, effort: 10, dither: 1.0, compressionLevel: 9 }).toBuffer();
+    before += src.length;
+    if (out.length < src.length) { writeFileSync(f, out); after += out.length; } else after += src.length;
+  }
+  console.log(`🗜️  Compressed ${files.length} PNGs: ${Math.round(before / 1024)} KB → ${Math.round(after / 1024)} KB`);
+}
+
 console.log('✅ Brand assets generated:');
 console.log(`   ${OUT_BRAND}/   mark, logo, logo-white, wordmark(-white), lockup(-white)`);
 console.log(`   ${OUT_ICONS}/   icon-72..512, icon-maskable-192/512, apple-touch-icon, badge-monochrome`);
