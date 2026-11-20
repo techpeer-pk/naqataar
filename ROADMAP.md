@@ -7,7 +7,7 @@
 **UI language:** Hinglish (Roman Urdu/Hindi + English)
 **Host:** `naqatar.web.app`
 **Version control:** GitHub ([techpeer-pk/naqataar](https://github.com/techpeer-pk/naqataar))
-**Updated:** 18 Nov 2026
+**Updated:** 20 Nov 2026
 
 ---
 
@@ -43,9 +43,9 @@
 | **P2** | Clinic-only | 19 – 20 Nov | `App.jsx`: sirf clinic ke customer + admin routes, baaqi redirect. Home par **Medical / Aesthetic** tabs. Navbar, BottomNav, Footer mein sirf clinic links. AdminRegister mein sirf `clinic` type. Ghair-zaroori pages, assets aur dependencies hatana. *Done: `/` = QuFree ka "Find business" page (as-is, ads ke saath); clinic list `ClinicHomePage` (Sab / Medical / Aesthetic tabs + search) `/clinics` par, 132 unreachable files aur `recharts`/`react-is` hataye, My Appointments sirf clinic bookings dikhata hai. `public/` ki purani images P3 mein* | ✅ Done |
 | **P3** | Branding wire-up | 20 Nov | PWA manifest (naam, icons, theme), `index.html` meta/OG/title, ~20 jagah QuFree logos ki jagah Naqatar, gold accent. **QuFree ke Google Analytics tags hatana**. `qufree.web.app` links, sitemap, robots | ✅ Done (18 Nov). *Bank account title aur subscription invoice par "Qunjee" abhi baaqi (owner ka faisla); Terms/Privacy mein sirf naam badla, content review P6 mein; `public/ads/` rakha* |
 | **P4** | Hinglish UI | 23 – 25 Nov | ~400 strings, 22 files. Ek dictionary file (`src/i18n/hinglish.js`) taa ke baad mein English add ho sake. Pehle customer screens, phir clinic admin | ✅ Done (18 Nov). *`t()` + `src/i18n/hinglish.js` (~500 entries), `npm run i18n:check`. English mein rahe: din/mahine ke naam, export ke column headers, invoice document, iPhone ke button naam* |
-| **P5** | QA (emulator) | 26 – 27 Nov | Neeche di gayi checklist (Sec. 4), mobile/responsive check, PWA install (Android Chrome, iOS Safari), smoke test mein booking aur cancel ke checks add karna | ⏳ |
+| **P5** | QA (emulator) | 26 – 27 Nov | Neeche di gayi checklist (Sec. 4), mobile/responsive check, PWA install (Android Chrome, iOS Safari), smoke test mein booking aur cancel ke checks add karna | ✅ Done (20 Nov, owner ne test kiya). *Smoke test mein booking/cancel ke automatic checks abhi nahi (manual test hua)* |
 | **P6** | Launch ki tayyari *(owner ke kaam, P2–P5 ke saath saath)* | 27 Nov tak | Sec. 5 ki checklist | ⏳ |
-| **P7** | 🌐 **Web launch** | **~30 Nov** | `npm run build`, phir sirf `hosting:naqatar` deploy. Production par 1 asli test booking (test clinic) | 🟡 Live (18 Nov, preview, model data). *P5 QA aur P6 Console kaam baaqi. 9/10 clinics ka `clinicType` khaali (sirf "Sab Clinics" mein dikhte hain)* |
+| **P7** | 🌐 **Web launch** | **~30 Nov** | `npm run build`, phir sirf `hosting:naqatar` deploy. Production par 1 asli test booking (test clinic) | 🟡 Live (18 Nov, preview, model data). *P6 Console kaam baaqi. 9/10 clinics ka `clinicType` khaali (sirf "Sab Clinics" mein dikhte hain)* |
 | **P8** | 🤖 Android (TWA) | 1 – 4 Dec build, phir review | Bubblewrap TWA, `assetlinks.json`, Play listing, privacy policy. *Agar Play account naya personal account hai: 12 testers ke saath 14 din ka closed test* | ⏳ |
 | **P9** | 🍎 iOS | Baad mein | Abhi: Safari "Add to Home Screen" guide. App Store chahiye ho to **Capacitor** wrapper (native push, Sign in with Apple) | 🔜 |
 
@@ -60,26 +60,26 @@
 ## 4. QA checklist (P5, emulator)
 
 **Customer**
-- [ ] Home: Medical aur Aesthetic dono tabs mein sahi clinics, pending clinic nazar nahi aata
-- [ ] Clinic page: services, timings, address
-- [ ] Booking: ek aur kai services, slot picker, band din (Sunday), guzra hua waqt block
-- [ ] Do customers ek hi aakhri slot par: sirf ek ki booking ho (double-booking test)
-- [ ] Payment proof upload (Storage emulator)
-- [ ] Confirmation + bookingRef
-- [ ] My Appointments: list, cancel with reason, slot wapas free
-- [ ] Login, register, logout, Google login (web popup)
+- [x] Home: Medical aur Aesthetic dono tabs mein sahi clinics, pending clinic nazar nahi aata
+- [x] Clinic page: services, timings, address
+- [x] Booking: ek aur kai services, slot picker, band din (Sunday), guzra hua waqt block
+- [x] Do customers ek hi aakhri slot par: sirf ek ki booking ho (double-booking test)
+- [x] Payment proof upload (Storage emulator)
+- [x] Confirmation + bookingRef
+- [x] My Appointments: list, cancel with reason, slot wapas free
+- [x] Login, register, logout, Google login (web popup)
 
 **Clinic owner**
-- [ ] Register (Medical/Aesthetic), "approval pending" dashboard (`newlife@demo.com`)
-- [ ] Appointments: confirm, cancel, no-show, complete
-- [ ] Services: add, edit, delete
-- [ ] Profile, working hours, logo upload
-- [ ] Doosre clinic ka data nazar na aaye
+- [x] Register (Medical/Aesthetic), "approval pending" dashboard (`newlife@demo.com`)
+- [x] Appointments: confirm, cancel, no-show, complete
+- [x] Services: add, edit, delete
+- [x] Profile, working hours, logo upload
+- [x] Doosre clinic ka data nazar na aaye
 
 **Platform**
-- [ ] Mobile (360px), tablet, desktop
-- [ ] PWA install aur offline page
-- [ ] `npm run build` aur `npm run test:smoke` pass
+- [x] Mobile (360px), tablet, desktop
+- [x] PWA install aur offline page
+- [x] `npm run build` aur `npm run test:smoke` pass
 
 ---
 
