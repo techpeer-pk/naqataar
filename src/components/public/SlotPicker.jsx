@@ -80,7 +80,9 @@ export default function SlotPicker({ business, service, selectedDate, selectedTi
             const inMonth  = isSameMonth(date, viewMonth);
             if (!inMonth) return <div key={key} className="cal-cell empty" aria-hidden="true" />;
 
-            const isOpen   = openSet.has(key) && date >= today && date <= maxDate;
+            // No same-day bookings (owner decision 2026-11-20): matches the
+            // isFutureDayPKT() gate in firestore.rules, which rejects today.
+            const isOpen   = openSet.has(key) && date > today && date <= maxDate;
             const isSel    = selectedDate && isSameDay(date, selectedDate);
             const isToday  = isSameDay(date, today);
             return (
