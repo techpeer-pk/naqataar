@@ -15,10 +15,18 @@ import { useEmailNotifications } from '../../hooks/useEmailNotifications';
 import { useReminders }  from '../../hooks/useReminders';
 import SlotPicker from '../../components/public/SlotPicker';
 import BankDetailsCard from '../../components/shared/BankDetailsCard';
+import InAppBrowserNotice from '../../components/shared/InAppBrowserNotice';
+import { googleErrorMessage } from '../../utils/authErrors';
 import './BookingPage.css';
 import { t } from '../../i18n';
 
 const STEPS = ['Service', 'Date & Time', 'Confirm'];
+
+// Booking choices survive a redirect-based Google sign-in (the page reloads),
+// so the customer lands back on step 3 with the same services, day and time.
+const DRAFT_KEY = 'naqatar:bookingDraft';
+const readDraft = () => { try { return JSON.parse(sessionStorage.getItem(DRAFT_KEY) || 'null'); } catch { return null; } };
+const clearDraft = () => { try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } };
 
 export default function BookingPage() {
   const { businessId } = useParams();
@@ -93,6 +101,20 @@ export default function BookingPage() {
   // starting point — they can still add more from the list.
   useEffect(() => {
     if (selectedServices.length > 0 || services.length === 0) return;
+    const draft = readDraft();
+    if (draft?.businessId === businessId) {
+      clearDraft();
+      const picked = services.filter(s => draft.serviceIds?.includes(s.id));
+      if (picked.length) {
+        setSelectedServices(picked);
+        if (draft.date && draft.time) {
+          setSelectedDate(new Date(draft.date));
+          setSelectedTime(draft.time);
+          setStep(2);
+        }
+        return;
+      }
+    }
     const linked = preselectServiceId && services.find(s => s.id === preselectServiceId);
     if (linked) setSelectedServices([linked]);
     else if (services.length === 1) setSelectedServices([services[0]]);
@@ -128,10 +150,20 @@ export default function BookingPage() {
   const handleGoogleSignIn = async () => {
     setLoginLoading(true);
     try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+        businessId,
+        serviceIds: selectedServices.map(s => s.id),
+        date: selectedDate ? selectedDate.toISOString() : null,
+        time: selectedTime,
+      }));
+    } catch { /* ignore */ }
+    try {
       await loginWithGoogle('customer');
+      clearDraft();
       toast.success(t('Signed in!'));
     } catch (err) {
-      toast.error(err.message || t('Google sign-in failed.'));
+      const msg = googleErrorMessage(err);
+      if (msg) { clearDraft(); toast.error(msg); }
     } finally {
       setLoginLoading(false);
     }
@@ -331,6 +363,8 @@ export default function BookingPage() {
                     <div className="auth-gate-icon"><LogIn size={30} /></div>
                     <h2 className="step-heading">{t('Sign In to Continue')}</h2>
                     <p className="auth-gate-sub">{t("A quick sign-in confirms it's really you — no fake or prank bookings. Your date & time are held while you do this.")}</p>
+
+                    <InAppBrowserNotice />
 
                     <button
                       className="btn btn-ghost btn-full google-btn"

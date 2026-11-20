@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import PasswordField from '../../components/shared/PasswordField';
 import InstallAppButton from '../../components/shared/InstallAppButton';
+import InAppBrowserNotice from '../../components/shared/InAppBrowserNotice';
+import { googleErrorMessage } from '../../utils/authErrors';
+
+// Where to go once a redirect-based Google sign-in comes back to this page.
+const AFTER_GOOGLE_KEY = 'naqatar:afterGoogle';
 import '../admin/AdminAuth.css';
 import { t } from '../../i18n';
 
@@ -32,7 +37,7 @@ const MODES = {
 };
 
 export default function LoginPage() {
-  const { login, loginWithGoogle, resetPassword } = useAuth();
+  const { user, userProfile, login, loginWithGoogle, resetPassword } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const modeKey = pathname.startsWith('/admin') ? 'business' : 'customer';
@@ -66,14 +71,30 @@ export default function LoginPage() {
     }
   };
 
+  // Back from a redirect sign-in: continue to the page the popup path goes to.
+  useEffect(() => {
+    let target = null;
+    try { target = sessionStorage.getItem(AFTER_GOOGLE_KEY); } catch { /* ignore */ }
+    if (target && user && userProfile) {
+      try { sessionStorage.removeItem(AFTER_GOOGLE_KEY); } catch { /* ignore */ }
+      navigate(target, { replace: true });
+    }
+  }, [user, userProfile, navigate]);
+
   const handleGoogle = async () => {
     setLoading(true);
+    try { sessionStorage.setItem(AFTER_GOOGLE_KEY, mode.homeRedirect); } catch { /* ignore */ }
     try {
-      const { isSuperAdmin } = await loginWithGoogle(mode.googleRole);
+      await loginWithGoogle(mode.googleRole);
+      try { sessionStorage.removeItem(AFTER_GOOGLE_KEY); } catch { /* ignore */ }
       toast.success(t('Welcome!'));
       navigate(mode.homeRedirect); // Naqatar: no /superadmin (stays on QuFree)
     } catch (err) {
-      toast.error(err.message || t('Google sign-in failed.'));
+      const msg = googleErrorMessage(err);
+      if (msg) {
+        try { sessionStorage.removeItem(AFTER_GOOGLE_KEY); } catch { /* ignore */ }
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -118,6 +139,7 @@ export default function LoginPage() {
             removed rather than left as a dead end. */}
         {modeKey === 'customer' && (
           <>
+            <InAppBrowserNotice />
             <button className="btn btn-ghost btn-full google-btn" onClick={handleGoogle} disabled={loading}>
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width={18} />
               {t('Continue with Google')}

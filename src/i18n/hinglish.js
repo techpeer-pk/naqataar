@@ -572,4 +572,17 @@ export default {
   'Open your phone camera or the Naqatar app': 'Phone ka camera ya Naqatar app kholein',
   'Scan this QR code': 'Yeh QR code scan karein',
   'Pick a service and a time, and book': 'Service aur waqt chunein, aur book karein',
+
+  // ── Google sign-in: in-app browsers + readable errors (2026-11-20) ──
+  'Google sign-in does not work inside this app': 'Is app ke andar Google login nahi chalta',
+  'Open this page in Chrome or Safari to continue with Google, or sign in with email below.': 'Google se login ke liye yeh page Chrome ya Safari mein kholein, ya neeche email se login karein.',
+  'Open in Chrome': 'Chrome mein kholein',
+  'Copy link': 'Link copy karein',
+  'Google sign-in was closed before it finished. Please try again.': 'Google login poora hone se pehle band ho gaya. Dobara koshish karein.',
+  'The browser blocked the Google sign-in window. Allow pop-ups and try again.': 'Browser ne Google login ki window rok di. Pop-ups allow karein aur dobara koshish karein.',
+  'No internet connection. Check your connection and try again.': 'Internet nahi chal raha. Connection check karein aur dobara koshish karein.',
+  'Google sign-in does not work in this browser. Open this page in Chrome or Safari, or sign in with email.': 'Is browser mein Google login nahi chalta. Yeh page Chrome ya Safari mein kholein, ya email se login karein.',
+  'Google sign-in is not available on this site right now. Please sign in with email.': 'Abhi is site par Google login nahi chal raha. Email se login karein.',
+  'Too many attempts. Please wait a few minutes and try again.': 'Bahut zyada koshishein ho gayin. Kuch minute ruk kar dobara koshish karein.',
+  'This account has been disabled. Please contact support.': 'Yeh account band kar diya gaya hai. Support se rabta karein.',
 };

@@ -53,6 +53,11 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Firebase's reserved /__/ paths (the Google sign-in handler at
+        // /__/auth/handler, since authDomain = naqatar.web.app) must reach the
+        // network. Without this, the SPA navigation fallback answers them
+        // with index.html and Google sign-in never completes. 2026-11-20.
+        navigateFallbackDenylist: [/^\/__\//],
         // Deliberately NOT caching *.googleapis.com generally — that used to
         // include firestore.googleapis.com, identitytoolkit.googleapis.com,
         // etc. (Firebase's own SDK traffic), which meant Auth/Firestore

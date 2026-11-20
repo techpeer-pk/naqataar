@@ -4,6 +4,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   updateProfile,
   fetchSignInMethodsForEmail,
@@ -19,6 +21,18 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage
 import { auth, db, storage, googleProvider } from '../firebase';
 import { useIdleLogout } from '../hooks/useIdleLogout';
 import { t } from '../i18n';
+import toast from 'react-hot-toast';
+import { googleErrorMessage } from '../utils/authErrors';
+
+// Google sign-in falls back to a full-page redirect when the popup can't
+// run (Chrome Custom Tabs from Google Lens / QR apps, blocked pop-ups).
+// The role is parked here so the redirect result can be finished with it.
+const GOOGLE_ROLE_KEY = 'naqatar:googleRole';
+const POPUP_FALLBACK_CODES = [
+  'auth/popup-blocked',
+  'auth/operation-not-supported-in-this-environment',
+  'auth/web-storage-unsupported',
+];
 
 const AuthContext = createContext(null);
 
@@ -102,7 +116,10 @@ export function AuthProvider({ children }) {
           checkCsr(firebaseUser.uid),
           checkOps(firebaseUser.uid),
         ]);
-        setUserProfile(profile);
+        // A brand-new Google user's profile doc may not exist yet when this
+        // fires (loginWithGoogle creates it a moment later) — don't wipe a
+        // profile that loginWithGoogle already set for this same uid.
+        setUserProfile(prev => profile ?? (prev?.uid === firebaseUser.uid ? prev : null));
         setIsSuperAdmin(superAdmin);
         setIsEatsAdmin(eatsAdmin);
         setIsCsr(csr);
@@ -205,19 +222,52 @@ export function AuthProvider({ children }) {
     await sendPasswordResetEmail(auth, email);
   };
 
+  const differentCredentialError = async (err) => {
+    const methods = await fetchSignInMethodsForEmail(auth, err.customData?.email || '');
+    const method = methods[0] === 'password' ? 'email/password' : methods[0];
+    return Object.assign(new Error(t('This email is already registered via {method}. Please sign in with that method.', { method })), { code: err.code });
+  };
+
   const loginWithGoogle = async (role = 'customer') => {
     let cred;
     try {
       cred = await signInWithPopup(auth, googleProvider);
     } catch (err) {
       if (err.code === 'auth/account-exists-with-different-credential') {
-        const methods = await fetchSignInMethodsForEmail(auth, err.customData?.email || '');
-        const method = methods[0] === 'password' ? 'email/password' : methods[0];
-        throw Object.assign(new Error(t('This email is already registered via {method}. Please sign in with that method.', { method })), { code: err.code });
+        throw await differentCredentialError(err);
+      }
+      if (POPUP_FALLBACK_CODES.includes(err.code)) {
+        try { sessionStorage.setItem(GOOGLE_ROLE_KEY, role); } catch { /* ignore */ }
+        await signInWithRedirect(auth, googleProvider);
+        // The page is navigating away; callers treat this as "no toast".
+        throw Object.assign(new Error('redirecting'), { code: 'auth/redirecting' });
       }
       throw err;
     }
+    return finishGoogleSignIn(cred, role);
+  };
 
+  // Back from a redirect sign-in (see loginWithGoogle): run the same
+  // profile / role checks the popup path runs.
+  useEffect(() => {
+    let role = null;
+    try { role = sessionStorage.getItem(GOOGLE_ROLE_KEY); } catch { /* ignore */ }
+    if (!role) return;
+    try { sessionStorage.removeItem(GOOGLE_ROLE_KEY); } catch { /* ignore */ }
+    getRedirectResult(auth)
+      .then(cred => cred && finishGoogleSignIn(cred, role))
+      .then(res => { if (res) toast.success(t('Signed in!')); })
+      .catch(async (err) => {
+        const e = err.code === 'auth/account-exists-with-different-credential'
+          ? await differentCredentialError(err).catch(() => err)
+          : err;
+        const msg = googleErrorMessage(e);
+        if (msg) toast.error(msg);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const finishGoogleSignIn = async (cred, role) => {
     setUser(cred.user);
 
     // Same allowlist checks login() does — loginWithGoogle() used to skip
