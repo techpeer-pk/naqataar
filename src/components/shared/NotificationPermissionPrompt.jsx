@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, X } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { enableNotifications } from '../../hooks/usePwaPushRegistration';
 import './NotificationPermissionPrompt.css';
@@ -53,9 +53,8 @@ export default function NotificationPermissionPrompt() {
           <button className="btn btn-primary btn-sm" onClick={handleEnable}>
             {t('Enable')}
           </button>
-          <button className="notif-close" onClick={handleDismiss} aria-label={t('Dismiss')}>
-            <X size={16} />
-          </button>
+          {/* 2026-11-20: no close / "later" button (owner decision) — people
+              dismissed the prompt without reading it. Only the action stays. */}
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, X, Smartphone } from 'lucide-react';
+import { Download, Smartphone } from 'lucide-react';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import PWAInstallGuideModal from './PWAInstallGuideModal';
 import './PWAInstallPrompt.css';
@@ -71,9 +71,8 @@ export default function PWAInstallPrompt() {
               <Download size={14} /> Install
             </button>
           )}
-          <button className="pwa-close" onClick={handleDismiss} aria-label="Dismiss">
-            <X size={16} />
-          </button>
+          {/* 2026-11-20: no close / "later" button (owner decision) — people
+              dismissed the prompt without reading it. Only the action stays. */}
         </div>
       </div>
       {showGuide && <PWAInstallGuideModal onClose={() => setShowGuide(false)} />}
