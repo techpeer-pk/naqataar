@@ -1,11 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Phone, Search, X, AlertCircle, Building2, ChevronRight, CalendarCheck, Hash, MapPin } from 'lucide-react';
+import { Phone, Search, X, AlertCircle, Building2, ChevronRight, CalendarCheck, Hash, MapPin, ScanLine } from 'lucide-react';
 import AdBannerStrip from '../../components/public/AdBannerStrip';
 import AdCarousel from '../../components/public/AdCarousel';
 import { useBusinesses } from '../../hooks/useBusinesses';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { stripCountryCode } from '../../utils/validation';
+import { parseScannedText } from '../../utils/clinicQr';
+import QrScanModal from '../../components/public/QrScanModal';
 import './FindBusinessPage.css';
 import { t } from '../../i18n';
 
@@ -29,11 +31,12 @@ export default function FindBusinessPage() {
   const inputRef = useRef(null);
   usePageTitle(t('Find a clinic'));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [scanning, setScanning] = useState(false);
+
+  const search = async (value) => {
     setError('');
     setMatches([]);
-    if (!stripCountryCode(number)) {
+    if (!stripCountryCode(value)) {
       setError(t('Enter a valid number, e.g. 03001234567'));
       return;
     }
@@ -42,7 +45,7 @@ export default function FindBusinessPage() {
       // Naqatar: clinics only. fetchByPhone searches every active business
       // on the shared QuFree backend (salons, restaurants, hotels…), whose
       // booking pages don't exist in this app.
-      const found = (await fetchByPhone(number)).filter(b => b.type === 'clinic');
+      const found = (await fetchByPhone(value)).filter(b => b.type === 'clinic');
       if (found.length === 1) navigate(`/index/business/${found[0].id}`);
       else if (found.length > 1) setMatches(found);
       else setError(t('No clinic found with this number.'));
@@ -52,6 +55,23 @@ export default function FindBusinessPage() {
       setLoading(false);
     }
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    search(number);
+  };
+
+  // QR scan (2026-11-20): a clinic poster QR opens that clinic's page; a QR
+  // holding just a phone number fills the box and searches it.
+  const handleScan = useCallback((text) => {
+    setScanning(false);
+    const r = parseScannedText(text);
+    if (r.kind === 'clinic') navigate(`/index/business/${r.id}`);
+    else if (r.kind === 'phone') { setNumber(r.value); search(r.value); }
+    else { setMatches([]); setError(t('This is not a Naqatar clinic QR code.')); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+  const closeScanner = useCallback(() => setScanning(false), []);
 
   // ── Previous (v1) markup, kept for reference — replaced 2026-11-17 ──
   // return (
@@ -130,6 +150,16 @@ export default function FindBusinessPage() {
                   <X size={16} />
                 </button>
               )}
+              <button
+                type="button"
+                className="fb-scan"
+                onClick={() => setScanning(true)}
+                disabled={loading}
+                aria-label={t('Scan clinic QR')}
+                title={t('Scan clinic QR')}
+              >
+                <ScanLine size={20} />
+              </button>
             </div>
             {error
               ? <p id="fb-error" className="fb-error" role="alert"><AlertCircle size={15} /> {error}</p>
@@ -176,6 +206,7 @@ export default function FindBusinessPage() {
           <AdCarousel placement="findbusinessCarousel" />
         </div>
       </div>
+      {scanning && <QrScanModal onResult={handleScan} onClose={closeScanner} />}
     </div>
   );
 }

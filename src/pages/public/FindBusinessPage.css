@@ -296,3 +296,22 @@
   .fb-submit, .fb-input-wrap, .fb-match { transition: none; }
   .fb-spinner { animation-duration: 1.5s; }
 }
+
+/* QR scan button inside the number box (2026-11-20) */
+.fb-scan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  margin-right: 0.4rem;
+  flex-shrink: 0;
+  border: none;
+  border-left: 1.5px solid var(--qf-line);
+  border-radius: 0 10px 10px 0;
+  background: transparent;
+  color: var(--qf);
+  cursor: pointer;
+}
+.fb-scan:hover:not(:disabled) { background: var(--qf-pale); }
+.fb-scan:disabled { opacity: 0.5; cursor: default; }
+.fb-scan:focus-visible { outline: 2px solid var(--qf); outline-offset: 2px; }

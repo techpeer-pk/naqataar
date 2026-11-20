@@ -11,6 +11,7 @@ import { bookingRef, formatTime12h } from '../../utils/format';
 import { subscriptionStatus } from '../../utils/subscription';
 import Sk from '../../components/shared/Skeleton';
 import AppointmentDetailModal from '../../components/shared/AppointmentDetailModal';
+import ClinicQrCard from '../../components/shared/ClinicQrCard';
 import './Dashboard.css';
 import { t, statusLabel } from '../../i18n';
 
@@ -274,6 +275,9 @@ export default function Dashboard() {
           </div>
         </div>
         */}
+
+        {/* Clinic QR poster — 2026-11-20 */}
+        {business?.id && <ClinicQrCard business={business} />}
 
         {/* Stats */}
         <div className="stats-grid">

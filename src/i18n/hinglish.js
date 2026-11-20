@@ -554,4 +554,22 @@ export default {
   'Show app tour': 'App ka tour dekhein',
   'Replay this tour': 'Tour dobara dekhein',
   'Tap this ? anytime to see this tour again.': 'Yeh tour dobara dekhne ke liye kabhi bhi yeh ? dabayein.',
+
+  // ── Clinic QR: home scanner + owner poster (2026-11-20) ──
+  'Scan clinic QR': 'Clinic ka QR scan karein',
+  "Point the camera at the QR code on the clinic's poster.": 'Camera ko clinic ke poster par lage QR code ki taraf karein.',
+  'Camera permission was denied. Allow camera access in your browser settings and try again.': 'Camera ki ijazat nahi mili. Browser settings mein camera allow karein aur dobara koshish karein.',
+  'Could not open the camera on this device.': 'Is phone par camera nahi khul saka.',
+  'This is not a Naqatar clinic QR code.': 'Yeh Naqatar clinic ka QR code nahi hai.',
+  'Your clinic QR code': 'Aap ke clinic ka QR code',
+  'Put this in your waiting room or at reception. Patients scan it and your clinic page opens straight away to book.': 'Isay waiting room ya reception par lagayein. Mareez scan karenge to aap ke clinic ka page foran khul jayega aur woh booking kar sakenge.',
+  'Print poster': 'Poster print karein',
+  'Download QR': 'QR download karein',
+  'QR code for {name}': '{name} ka QR code',
+  'Could not create the QR code.': 'QR code nahi ban saka.',
+  'Allow pop-ups for this site to print the poster.': 'Poster print karne ke liye is site ke pop-ups allow karein.',
+  'Scan to book your appointment': 'Appointment ke liye QR scan karein',
+  'Open your phone camera or the Naqatar app': 'Phone ka camera ya Naqatar app kholein',
+  'Scan this QR code': 'Yeh QR code scan karein',
+  'Pick a service and a time, and book': 'Service aur waqt chunein, aur book karein',
 };
