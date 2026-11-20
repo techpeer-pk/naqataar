@@ -7,6 +7,7 @@ import { t } from '../../i18n';
 import { useTourActive } from '../../utils/tour';
 
 const DISMISS_KEY = 'pwa-install-dismissed';
+const AUTO_CLOSE_MS = 5000;
 
 export default function PWAInstallPrompt() {
   const { installPrompt, isIOS, isIOSNonSafari, isInstalled, promptInstall } = usePWAInstall();
@@ -29,6 +30,18 @@ export default function PWAInstallPrompt() {
       return () => clearTimeout(timer);
     }
   }, [installPrompt, isIOS, isInstalled, showPrompt, tourActive]);
+
+  // 2026-11-20 (owner): the banner closes itself after 5 seconds, on Chrome
+  // and iOS alike. It is silenced for the rest of this browser session only
+  // (sessionStorage), so it comes back the next time the app is opened.
+  // Paused while the iPhone "How?" guide is open — it lives inside this
+  // component and would vanish with it.
+  useEffect(() => {
+    if (!showPrompt || showGuide) return;
+    const timer = setTimeout(handleDismiss, AUTO_CLOSE_MS);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPrompt, showGuide]);
 
   const handleInstall = async () => {
     const choice = await promptInstall();
