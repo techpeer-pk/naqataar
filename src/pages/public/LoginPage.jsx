@@ -12,6 +12,7 @@ import { googleErrorMessage } from '../../utils/authErrors';
 const AFTER_GOOGLE_KEY = 'naqatar:afterGoogle';
 import '../admin/AdminAuth.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 const MODES = {
   customer: {
@@ -44,11 +45,12 @@ export default function LoginPage() {
   const mode = MODES[modeKey];
   const [form, setForm]     = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const { withBusy } = useBusy();
 
   const handleForgotPassword = async () => {
     if (!form.email.trim()) { toast.error(t('Enter your email above first.')); return; }
     try {
-      await resetPassword(form.email.trim());
+      await withBusy(() => resetPassword(form.email.trim()));
       toast.success(t('Password reset email sent.'));
     } catch {
       toast.error(t('Could not send reset email. Check the address and try again.'));
@@ -85,7 +87,7 @@ export default function LoginPage() {
     setLoading(true);
     try { sessionStorage.setItem(AFTER_GOOGLE_KEY, mode.homeRedirect); } catch { /* ignore */ }
     try {
-      await loginWithGoogle(mode.googleRole);
+      await withBusy(() => loginWithGoogle(mode.googleRole));
       try { sessionStorage.removeItem(AFTER_GOOGLE_KEY); } catch { /* ignore */ }
       toast.success(t('Welcome!'));
       navigate(mode.homeRedirect); // Naqatar: no /superadmin (stays on QuFree)

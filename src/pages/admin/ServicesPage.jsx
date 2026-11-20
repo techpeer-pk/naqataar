@@ -10,6 +10,7 @@ import LogoCropModal from '../../components/shared/LogoCropModal';
 import Sk from '../../components/shared/Skeleton';
 import './ServicesPage.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 const EMPTY_FORM = { name: '', description: '', duration: 30, price: '', image: null, totalRooms: 1 };
 
@@ -63,6 +64,7 @@ export default function ServicesPage() {
   const [editId, setEditId]     = useState(null);
   const [form, setForm]         = useState(EMPTY_FORM);
   const [saving, setSaving]     = useState(false);
+  const { withBusy } = useBusy();
   const [cropSrc, setCropSrc]   = useState(null);
 
   const openNew  = () => { setForm(EMPTY_FORM); setEditId(null); setShowForm(true); };
@@ -90,7 +92,7 @@ export default function ServicesPage() {
   };
 
   const handleRemoveImage = async () => {
-    await tryDeleteImage(form.image);
+    await withBusy(() => tryDeleteImage(form.image));
     setForm(f => ({ ...f, image: null }));
   };
 
@@ -115,9 +117,15 @@ export default function ServicesPage() {
   const handleDelete = async (id) => {
     if (!confirm(t('Delete this service?'))) return;
     const svc = services.find(s => s.id === id);
-    await remove(id);
-    await tryDeleteImage(svc?.image);
-    toast.success(t('Service deleted.'));
+    try {
+      await withBusy(async () => {
+        await remove(id);
+        await tryDeleteImage(svc?.image);
+      });
+      toast.success(t('Service deleted.'));
+    } catch {
+      toast.error(t('Could not delete. Please try again.'));
+    }
   };
 
   return (

@@ -7,6 +7,7 @@ import { CHAT_TOGGLE_EVENT } from '../../utils/chatEvents';
 import { linkifyParts } from '../../utils/linkify';
 import './SupportChatWidget.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 function toTime(ms) {
   return ms ? new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
@@ -28,6 +29,7 @@ export default function SupportChatWidget({ docked = false }) {
   const [typingFaq, setTypingFaq] = useState(null);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const { withBusy } = useBusy();
   const listRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -37,12 +39,14 @@ export default function SupportChatWidget({ docked = false }) {
     if (!open || !eligible) return;
     let unsub = () => {};
     (async () => {
-      await ensureChatStarted({
-        uid: user.uid,
-        subjectType: isAdmin ? 'businessAdmin' : 'customer',
-        name: userProfile?.displayName || user.email,
-        email: user.email,
-      });
+      try {
+        await withBusy(() => ensureChatStarted({
+          uid: user.uid,
+          subjectType: isAdmin ? 'businessAdmin' : 'customer',
+          name: userProfile?.displayName || user.email,
+          email: user.email,
+        }));
+      } catch { /* subscribe anyway — same as before */ }
       unsub = subscribeToMessages(user.uid, setMessages);
     })();
     return () => unsub();

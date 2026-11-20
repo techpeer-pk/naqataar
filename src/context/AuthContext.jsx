@@ -23,6 +23,7 @@ import { useIdleLogout } from '../hooks/useIdleLogout';
 import { t } from '../i18n';
 import toast from 'react-hot-toast';
 import { googleErrorMessage } from '../utils/authErrors';
+import { useBusy } from './BusyContext';
 
 // Google sign-in falls back to a full-page redirect when the popup can't
 // run (Chrome Custom Tabs from Google Lens / QR apps, blocked pop-ups).
@@ -44,6 +45,7 @@ export function AuthProvider({ children }) {
   const [isEatsAdmin, setIsEatsAdmin]   = useState(false);
   const [isCsr, setIsCsr]               = useState(false);
   const [opsRole, setOpsRole]           = useState(null);
+  const { withBusy } = useBusy();
 
   // Membership lives in a Firestore allowlist doc that only a listed uid may
   // read (self-check rule) and NO client can ever write — see firestore.rules.
@@ -254,8 +256,8 @@ export function AuthProvider({ children }) {
     try { role = sessionStorage.getItem(GOOGLE_ROLE_KEY); } catch { /* ignore */ }
     if (!role) return;
     try { sessionStorage.removeItem(GOOGLE_ROLE_KEY); } catch { /* ignore */ }
-    getRedirectResult(auth)
-      .then(cred => cred && finishGoogleSignIn(cred, role))
+    withBusy(() => getRedirectResult(auth)
+      .then(cred => cred && finishGoogleSignIn(cred, role)))
       .then(res => { if (res) toast.success(t('Signed in!')); })
       .catch(async (err) => {
         const e = err.code === 'auth/account-exists-with-different-credential'

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { X, CameraOff } from 'lucide-react';
 import './QrScanModal.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 const READER_ID = 'qr-scan-reader';
 
@@ -12,6 +13,7 @@ const READER_ID = 'qr-scan-reader';
 export default function QrScanModal({ onResult, onClose }) {
   const [error, setError] = useState('');
   const doneRef = useRef(false);
+  const { withBusy } = useBusy();
 
   useEffect(() => {
     let scanner = null;
@@ -19,7 +21,7 @@ export default function QrScanModal({ onResult, onClose }) {
 
     (async () => {
       try {
-        const { Html5Qrcode } = await import('html5-qrcode');
+        const { Html5Qrcode } = await withBusy(() => import('html5-qrcode'));
         if (cancelled) return;
         scanner = new Html5Qrcode(READER_ID, { verbose: false });
         await scanner.start(
@@ -46,7 +48,7 @@ export default function QrScanModal({ onResult, onClose }) {
       cancelled = true;
       if (scanner?.isScanning) scanner.stop().catch(() => {});
     };
-  }, [onResult]);
+  }, [onResult, withBusy]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };

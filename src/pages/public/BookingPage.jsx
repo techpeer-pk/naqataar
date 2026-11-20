@@ -19,6 +19,7 @@ import InAppBrowserNotice from '../../components/shared/InAppBrowserNotice';
 import { googleErrorMessage } from '../../utils/authErrors';
 import './BookingPage.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 const STEPS = ['Service', 'Date & Time', 'Confirm'];
 
@@ -71,6 +72,7 @@ export default function BookingPage() {
   // Inline login state (used on Step 3 gate)
   const [loginForm, setLoginForm]     = useState({ email: '', password: '' });
   const [loginLoading, setLoginLoading] = useState(false);
+  const { withBusy } = useBusy();
 
   // Pre-fill form when user signs in. Email is FORCED to the account email so
   // the booking stays readable by its owner (rules match on auth token email).
@@ -158,7 +160,7 @@ export default function BookingPage() {
       }));
     } catch { /* ignore */ }
     try {
-      await loginWithGoogle('customer');
+      await withBusy(() => loginWithGoogle('customer'));
       clearDraft();
       toast.success(t('Signed in!'));
     } catch (err) {

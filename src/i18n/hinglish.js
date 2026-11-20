@@ -585,4 +585,8 @@ export default {
   'Google sign-in is not available on this site right now. Please sign in with email.': 'Abhi is site par Google login nahi chal raha. Email se login karein.',
   'Too many attempts. Please wait a few minutes and try again.': 'Bahut zyada koshishein ho gayin. Kuch minute ruk kar dobara koshish karein.',
   'This account has been disabled. Please contact support.': 'Yeh account band kar diya gaya hai. Support se rabta karein.',
+
+  // ── Generic busy overlay (2026-11-20) ──
+  'Please wait…': 'Thora intezar karein…',
+  'Could not sign out. Please try again.': 'Sign out nahi ho saka. Dobara koshish karein.',
 };

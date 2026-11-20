@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { BusyProvider } from './context/BusyContext';
 import { CartProvider } from './context/CartContext';
 import { ProtectedRoute } from './components/shared/ProtectedRoute';
 import Navbar from './components/shared/Navbar';
@@ -180,6 +181,7 @@ function AppLayout() {
 
 export default function App() {
   return (
+    <BusyProvider>
     <AuthProvider>
       {/* BusinessPage / ConfirmationPage still import useCart (QuFree's
           dine-in pre-order). Unused for clinics; kept so they render. */}
@@ -189,5 +191,6 @@ export default function App() {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
+    </BusyProvider>
   );
 }

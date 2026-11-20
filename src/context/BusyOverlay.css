@@ -1,0 +1,19 @@
+.busy-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* above modals, navbar and the chat widget */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: progress;
+  -webkit-tap-highlight-color: transparent;
+}
+.busy-overlay-spinner { margin: 0; }
+.busy-overlay-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

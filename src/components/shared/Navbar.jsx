@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import ShareMenu from './ShareMenu';
 import './Navbar.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 // Naqatar (clinic-only): two shells — customer (public) and clinic admin.
 // QuFree's Eats / HealthCare / Nayasaa / Rasoomat / hotel-rooms / menu-orders
@@ -44,10 +45,17 @@ export default function Navbar() {
   const isPublicRoute = pathname === '/' || pathname === '/clinics' || pathname.startsWith('/index');
   const isHome        = pathname === '/';
 
+  const { withBusy } = useBusy();
   const handleLogout = async () => {
-    await logout();
-    toast.success(t('Logged out'));
-    navigate('/');
+    setDropdownOpen(false);
+    setMenuOpen(false);
+    try {
+      await withBusy(() => logout());
+      toast.success(t('Logged out'));
+      navigate('/');
+    } catch {
+      toast.error(t('Could not sign out. Please try again.'));
+    }
   };
 
   if (!isAdminRoute && !isPublicRoute) return null;

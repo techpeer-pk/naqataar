@@ -9,6 +9,7 @@ import { accountRef } from '../../utils/format';
 import { enableNotifications, disableNotifications, NOTIF_OPT_OUT_KEY } from '../../hooks/usePwaPushRegistration';
 import './CustomerProfilePage.css';
 import { t } from '../../i18n';
+import { useBusy } from '../../context/BusyContext';
 
 const notifSupported = typeof Notification !== 'undefined';
 
@@ -36,6 +37,7 @@ export default function CustomerProfilePage() {
     notifSupported && Notification.permission === 'granted' && localStorage.getItem(NOTIF_OPT_OUT_KEY) !== 'true'
   );
   const [notifBusy, setNotifBusy] = useState(false);
+  const { withBusy } = useBusy();
 
   useEffect(() => {
     if (!authLoading && !user) { navigate('/index/login', { replace: true }); return; }
@@ -134,11 +136,11 @@ export default function CustomerProfilePage() {
     setNotifBusy(true);
     try {
       if (notifOn) {
-        await disableNotifications();
+        await withBusy(() => disableNotifications());
         setNotifOn(false);
         toast.success(t('Notifications turned off.'));
       } else {
-        const token = await enableNotifications(user?.uid);
+        const token = await withBusy(() => enableNotifications(user?.uid));
         if (token) {
           setNotifOn(true);
           toast.success(t('Notifications enabled!'));
@@ -154,8 +156,12 @@ export default function CustomerProfilePage() {
   };
 
   const handleLogout = async () => {
-    await logout();
-    navigate('/index', { replace: true });
+    try {
+      await withBusy(() => logout());
+      navigate('/index', { replace: true });
+    } catch {
+      toast.error(t('Could not sign out. Please try again.'));
+    }
   };
 
   if (authLoading || !user) return <div className="loading-screen"><div className="spinner" /></div>;
