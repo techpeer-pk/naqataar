@@ -7,7 +7,7 @@
 //
 // Pure functions that take `db` as an argument, so scripts/smoke-test.mjs
 // runs the exact same transaction as the app.
-import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { doc, runTransaction, serverTimestamp, Timestamp } from 'firebase/firestore';
 
 export const MAX_TOKEN_OPTIONS = [50, 100, 200];
 
@@ -19,6 +19,12 @@ export const visitModeOf = biz => (VISIT_MODES.includes(biz?.visitMode) ? biz.vi
 export const allowsToken   = biz => visitModeOf(biz) !== 'booking';
 export const allowsBooking = biz => visitModeOf(biz) !== 'token';
 export const MAX_TOKENS_LIMIT = 1000; // mirrors isValidMaxTokens() in rules
+
+// Auto-delete after 90 days (2026-11-23). A Firestore TTL policy on expireAt
+// (app_OLD firestore.indexes.json) removes queues, locks and tokens, with the
+// patient's name + mobile. Rules accept 85–95 days ahead (isValidExpireAt).
+export const KEEP_DAYS = 90;
+export const expireAt = (now = Date.now()) => Timestamp.fromMillis(now + KEEP_DAYS * 864e5);
 
 // No 0/O/1/I so the short code is easy to read out at the counter.
 // 32 symbols ^ 16 = 80 bits: nobody can guess someone else's token link.
@@ -82,10 +88,11 @@ export async function issueToken(db, businessId, { name, mobile }) {
 
     const next = lastToken + 1;
     tx.update(qRef, { lastToken: next, updatedAt: serverTimestamp() });
+    const exp = expireAt();
     tx.set(tokenRef(db, businessId, tokenId), {
-      date, seq: next, name: cleanName, mobile: cleanMobile, status: 'waiting', createdAt: serverTimestamp(),
+      date, seq: next, name: cleanName, mobile: cleanMobile, status: 'waiting', createdAt: serverTimestamp(), expireAt: exp,
     });
-    tx.set(lockRef, { createdAt: serverTimestamp() });
+    tx.set(lockRef, { createdAt: serverTimestamp(), expireAt: exp });
     return next;
   });
 

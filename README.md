@@ -134,9 +134,16 @@ A customer takes a token in one transaction (`issueToken()` in [src/utils/dots.j
 it adds 1 to `lastToken`, creates the token, and creates the mobile lock. The rules check
 these three writes against each other, so none of them works on its own.
 
-**Backend rules.** The DOTS rules are in `K:\QuFreepp_OLDirestore.rules` (the
+**Backend rules.** The DOTS rules are in `K:\QuFree\app_OLD\firestore.rules` (the
 "DOTS" block) and are synced into `emulator/`. They are **not deployed yet**. Until they
 are deployed from app_OLD, the token pages won't work on the live site.
+
+**Auto-delete after 90 days.** Queues, mobile locks and tokens (which hold the
+patient's name and mobile) carry `expireAt` = created + 90 days (`KEEP_DAYS` in
+`src/utils/dots.js`). A Firestore TTL policy on `expireAt` deletes them, usually
+within a day of that date. The policy lives in `K:\QuFree\app_OLD\firestore.indexes.json`
+and is deployed from there (`firebase deploy --only firestore:indexes`). The rules accept
+an `expireAt` 85–95 days ahead, and allow it to be missing so older cached apps still work.
 
 **Known limit.** Customers don't log in, so a script could fill a queue with made-up
 numbers. The max-tokens limit caps the damage, and the owner can skip fake tokens.

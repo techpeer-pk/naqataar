@@ -8,7 +8,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useBusy } from '../../context/BusyContext';
 import ClinicQrCard from '../../components/shared/ClinicQrCard';
 import {
-  queueRef, tokenRef, mobileLockRef, todayPKT, shortCode, MAX_TOKEN_OPTIONS, MAX_TOKENS_LIMIT,
+  queueRef, tokenRef, mobileLockRef, expireAt, todayPKT, shortCode, MAX_TOKEN_OPTIONS, MAX_TOKENS_LIMIT,
 } from '../../utils/dots';
 import { t } from '../../i18n';
 import './DotsAdminPage.css';
@@ -85,7 +85,7 @@ export default function DotsAdminPage() {
     }
     run(() => setDoc(queueRef(db, bizId, today), {
       date: today, maxTokens: n, lastToken: 0, nowServing: 0, isOpen: true,
-      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), expireAt: expireAt(),
     }), t('Today\'s queue started'));
   };
 
@@ -95,7 +95,7 @@ export default function DotsAdminPage() {
     const b = writeBatch(db);
     b.update(tokenRef(db, bizId, tok.id), { status, updatedAt: serverTimestamp() });
     const lock = mobileLockRef(db, bizId, tok.date, tok.mobile);
-    if (status === 'waiting') b.set(lock, { createdAt: serverTimestamp() });
+    if (status === 'waiting') b.set(lock, { createdAt: serverTimestamp(), expireAt: expireAt() });
     else b.delete(lock);
     return b.commit();
   });

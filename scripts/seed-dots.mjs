@@ -9,7 +9,7 @@
  * Same doc shapes as src/utils/dots.js issueToken().
  */
 import { initializeApp } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { genTokenId, todayPKT } from '../src/utils/dots.js';
 
 const PROJECT_ID = 'demo-naqatar';
@@ -38,18 +38,19 @@ if ((await qRef.get()).exists) {
   process.exit(0);
 }
 
+const expireAt = Timestamp.fromMillis(Date.now() + 90 * 864e5); // same as expireAt() in src/utils/dots.js
 const batch = db.batch();
 batch.set(qRef, {
   date, maxTokens: MAX, lastToken: COUNT, nowServing: 1, isOpen: true,
-  createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+  createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(), expireAt,
 });
 for (let i = 1; i <= COUNT; i++) {
   const name = `${FIRST[(i - 1) % FIRST.length]} ${LAST[(i * 7) % LAST.length]}`;
   const mobile = `0300${String(1000000 + i).padStart(7, '0')}`;
   batch.set(biz.collection('dotsTokens').doc(genTokenId()), {
-    date, seq: i, name, mobile, status: 'waiting', createdAt: FieldValue.serverTimestamp(),
+    date, seq: i, name, mobile, status: 'waiting', createdAt: FieldValue.serverTimestamp(), expireAt,
   });
-  batch.set(qRef.collection('mobiles').doc(mobile), { createdAt: FieldValue.serverTimestamp() });
+  batch.set(qRef.collection('mobiles').doc(mobile), { createdAt: FieldValue.serverTimestamp(), expireAt });
 }
 await batch.commit();
 

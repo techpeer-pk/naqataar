@@ -420,6 +420,17 @@ service cloud.firestore {
       function isValidMaxTokens(n) {
         return n is int && n >= 1 && n <= 1000;
       }
+      // 2026-11-23: optional expireAt = about 90 days ahead. A Firestore TTL
+      // policy on expireAt (firestore.indexes.json) deletes queues, locks and
+      // tokens (with the patient's name + mobile) after that. Optional, so an
+      // older cached app that doesn't send it still works. 85–95 days allows
+      // for the phone's clock being off.
+      function isValidExpireAt() {
+        return !('expireAt' in request.resource.data)
+          || (request.resource.data.expireAt is timestamp
+              && request.resource.data.expireAt > request.time + duration.value(85, 'd')
+              && request.resource.data.expireAt < request.time + duration.value(95, 'd'));
+      }
       // dateStr is today in PKT (UTC+5, no DST). Mirrors todayPKT() in
       // Naqatar src/utils/dots.js. A malformed string errors in int() = deny.
       function isTodayPKT(dateStr) {
@@ -433,7 +444,8 @@ service cloud.firestore {
         // Public: holds only counters (no names / numbers).
         allow read: if true;
         allow create: if (isBizOwner() || isSuperAdmin())
-          && request.resource.data.keys().hasOnly(['date', 'maxTokens', 'lastToken', 'nowServing', 'isOpen', 'createdAt', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['date', 'maxTokens', 'lastToken', 'nowServing', 'isOpen', 'createdAt', 'updatedAt', 'expireAt'])
+          && isValidExpireAt()
           && request.resource.data.date == date
           && isTodayPKT(date)
           && isValidMaxTokens(request.resource.data.maxTokens)
@@ -468,11 +480,13 @@ service cloud.firestore {
           allow get: if true;
           allow list: if isBizOwner() || isSuperAdmin();
           allow create: if mobile.matches('^03[0-9]{9}$')
-            && request.resource.data.keys().hasOnly(['createdAt'])
+            && request.resource.data.keys().hasOnly(['createdAt', 'expireAt'])
+            && isValidExpireAt()
             && (isBizOwner() || isSuperAdmin()
               || getAfter(dotsQueuePath(date)).data.lastToken == get(dotsQueuePath(date)).data.lastToken + 1);
           allow update: if (isBizOwner() || isSuperAdmin())
-            && request.resource.data.keys().hasOnly(['createdAt']);
+            && request.resource.data.keys().hasOnly(['createdAt', 'expireAt'])
+            && isValidExpireAt();
           allow delete: if isBizOwner() || isSuperAdmin();
         }
       }
@@ -483,7 +497,8 @@ service cloud.firestore {
         allow get: if true;
         allow list: if isBizOwner() || isSuperAdmin();
         allow create: if tokenId.matches('^[A-HJ-NP-Z2-9]{16}$')
-          && request.resource.data.keys().hasOnly(['date', 'seq', 'name', 'mobile', 'status', 'createdAt'])
+          && request.resource.data.keys().hasOnly(['date', 'seq', 'name', 'mobile', 'status', 'createdAt', 'expireAt'])
+          && isValidExpireAt()
           && request.resource.data.status == 'waiting'
           && request.resource.data.name is string
           && request.resource.data.name.size() >= 2

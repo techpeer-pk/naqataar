@@ -112,6 +112,17 @@ const t2 = await issueToken(db, cfId, { name: 'Sara Ali', mobile: '+92 300 22222
 check('DOTS: next guest gets token #2', t2.seq === 2, `#${t2.seq}`);
 const tok = await getDoc(tokenRef(db, cfId, t1.tokenId));
 check('DOTS: guest can open own token by link', tok.exists() && tok.data().seq === 1);
+const expDays = tok.data().expireAt ? (tok.data().expireAt.toMillis() - Date.now()) / 864e5 : 0;
+check('DOTS: token auto-deletes in ~90 days (expireAt)', expDays > 89 && expDays < 91, `${expDays.toFixed(1)} days`);
+// Owner may write a mobile lock; only the 400-day expireAt is wrong here.
+await signInWithEmailAndPassword(auth, 'carefirst@demo.com', 'demo1234');
+await denied('DOTS: far-off expireAt is refused', () => setDoc(mobileLockRef(db, cfId, today, '03009999999'),
+  { createdAt: serverTimestamp(), expireAt: new Date(Date.now() + 400 * 864e5) }));
+try {
+  await setDoc(mobileLockRef(db, cfId, today, '03009999998'), { createdAt: serverTimestamp(), expireAt: new Date(Date.now() + 90 * 864e5) });
+  check('DOTS: 90-day expireAt is accepted', true);
+} catch (e) { check('DOTS: 90-day expireAt is accepted', false, e.code); }
+await signOut(auth);
 await denied('DOTS: guest cannot list tokens', () => getDocs(collection(db, 'businesses', cfId, 'dotsTokens')));
 await denied('DOTS: guest cannot skip numbers', () => updateDoc(queueRef(db, cfId, today), { lastToken: increment(2) }));
 await denied('DOTS: guest cannot mark served', () => updateDoc(tokenRef(db, cfId, t1.tokenId), { status: 'served' }));
