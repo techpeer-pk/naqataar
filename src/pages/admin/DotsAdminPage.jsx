@@ -6,6 +6,7 @@ import { db } from '../../firebase';
 import { useOwnBusiness } from '../../hooks/useOwnBusiness';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useBusy } from '../../context/BusyContext';
+import ClinicQrCard from '../../components/shared/ClinicQrCard';
 import {
   queueRef, tokenRef, mobileLockRef, todayPKT, shortCode, MAX_TOKEN_OPTIONS, MAX_TOKENS_LIMIT,
 } from '../../utils/dots';
@@ -162,6 +163,9 @@ export default function DotsAdminPage() {
         {!business.isActive && (
           <p className="dotsa-warn">{t('Your clinic is waiting for approval. Customers can take tokens after approval.')}</p>
         )}
+
+        {/* Token poster: QR straight to this clinic's token page */}
+        <ClinicQrCard business={business} variant="token" />
 
         {/* Customer link */}
         <div className="card dotsa-link">

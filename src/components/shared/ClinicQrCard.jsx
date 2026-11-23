@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { QrCode, Download, Printer } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { clinicQrUrl } from '../../utils/clinicQr';
+import { clinicQrUrl, tokenQrUrl } from '../../utils/clinicQr';
 import './ClinicQrCard.css';
 import { t } from '../../i18n';
 
@@ -11,12 +11,33 @@ const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
-// Clinic-owner Dashboard card (2026-11-20): the clinic's own QR, to download
-// or print as a waiting-room poster. Patients scan it from the home page
-// scanner, or with the normal phone camera, and land on the clinic's page.
-export default function ClinicQrCard({ business }) {
+// Wording per poster. English source text = i18n key (see src/i18n).
+const VARIANTS = {
+  booking: {
+    url: clinicQrUrl, file: 'naqatar-qr',
+    title: 'Your clinic QR code',
+    sub: 'Put this in your waiting room or at reception. Patients scan it and your clinic page opens straight away to book.',
+    lead: 'Scan to book your appointment',
+    steps: ['Open your phone camera or the Naqatar app', 'Scan this QR code', 'Pick a service and a time, and book'],
+  },
+  // 2026-11-23: token poster — opens /index/businessDOTS/:id directly.
+  token: {
+    url: tokenQrUrl, file: 'naqatar-token-qr',
+    title: 'Token QR code',
+    sub: 'Put this at the entrance or reception. Patients scan it, enter their name and mobile, and get a token. No login.',
+    lead: 'Scan to get your token',
+    steps: ['Open your phone camera or the Naqatar app', 'Scan this QR code', 'Enter your name and mobile, and get your token'],
+  },
+};
+
+// Clinic-owner QR card (2026-11-20): the clinic's own QR, to download or
+// print as a poster. Patients scan it from the home page scanner, or with
+// the normal phone camera. variant 'booking' (Dashboard) opens the clinic
+// page; variant 'token' (/admin/tokens) opens the token page.
+export default function ClinicQrCard({ business, variant = 'booking' }) {
   const [dataUrl, setDataUrl] = useState('');
-  const url = clinicQrUrl(business.id);
+  const v = VARIANTS[variant] || VARIANTS.booking;
+  const url = v.url(business.id);
 
   useEffect(() => {
     let alive = true;
@@ -35,7 +56,7 @@ export default function ClinicQrCard({ business }) {
   const handleDownload = () => {
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `naqatar-qr-${slug}.png`;
+    a.download = `${v.file}-${slug}.png`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -65,12 +86,10 @@ export default function ClinicQrCard({ business }) {
     <img class="logo" src="${logo}" alt="Naqatar">
     <h1>${escapeHtml(business.name)}</h1>
   </div>
-  <p class="lead">${escapeHtml(t('Scan to book your appointment'))}</p>
+  <p class="lead">${escapeHtml(t(v.lead))}</p>
   <img class="qr" src="${dataUrl}" alt="QR">
   <ol>
-    <li>${escapeHtml(t('Open your phone camera or the Naqatar app'))}</li>
-    <li>${escapeHtml(t('Scan this QR code'))}</li>
-    <li>${escapeHtml(t('Pick a service and a time, and book'))}</li>
+    ${v.steps.map(s => `<li>${escapeHtml(t(s))}</li>`).join('\n    ')}
   </ol>
   <p class="foot">naqatar.web.app</p>
 </div>
@@ -90,10 +109,8 @@ export default function ClinicQrCard({ business }) {
           {dataUrl ? <img src={dataUrl} alt={t('QR code for {name}', { name: business.name })} /> : <QrCode size={48} />}
         </div>
         <div className="clinic-qr-info">
-          <p className="clinic-qr-title">{t('Your clinic QR code')}</p>
-          <p className="text-muted clinic-qr-sub">
-            {t('Put this in your waiting room or at reception. Patients scan it and your clinic page opens straight away to book.')}
-          </p>
+          <p className="clinic-qr-title">{t(v.title)}</p>
+          <p className="text-muted clinic-qr-sub">{t(v.sub)}</p>
           <div className="clinic-qr-actions">
             <button type="button" className="btn btn-primary btn-sm" onClick={handlePrint} disabled={!dataUrl}>
               <Printer size={15} /> {t('Print poster')}

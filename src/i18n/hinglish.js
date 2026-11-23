@@ -671,4 +671,9 @@ export default {
   "Click Save Profile to apply.": "Lagu karne ke liye Save Profile dabayein.",
   "This clinic does not give online tokens.": "Yeh clinic online token nahi deta.",
   "This clinic does not take online appointments.": "Yeh clinic online appointment nahi leta.",
+  // ── Token QR poster (2026-11-23) ──
+  "Token QR code": "Token ka QR code",
+  "Put this at the entrance or reception. Patients scan it, enter their name and mobile, and get a token. No login.": "Isay darwaze ya reception par lagayein. Mareez scan karke naam aur mobile dalein aur token le lein. Login ki zaroorat nahi.",
+  "Scan to get your token": "Token lene ke liye scan karein",
+  "Enter your name and mobile, and get your token": "Naam aur mobile dalein, aur token lein",
 };

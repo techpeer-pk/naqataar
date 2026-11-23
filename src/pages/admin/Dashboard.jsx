@@ -12,6 +12,7 @@ import { subscriptionStatus } from '../../utils/subscription';
 import Sk from '../../components/shared/Skeleton';
 import AppointmentDetailModal from '../../components/shared/AppointmentDetailModal';
 import ClinicQrCard from '../../components/shared/ClinicQrCard';
+import { allowsBooking } from '../../utils/dots';
 import './Dashboard.css';
 import { t, statusLabel } from '../../i18n';
 
@@ -277,7 +278,8 @@ export default function Dashboard() {
         */}
 
         {/* Clinic QR poster — 2026-11-20 */}
-        {business?.id && <ClinicQrCard business={business} />}
+        {/* Token-only clinics get their poster on /admin/tokens instead. */}
+        {business?.id && allowsBooking(business) && <ClinicQrCard business={business} />}
 
         {/* Stats */}
         <div className="stats-grid">

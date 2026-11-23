@@ -78,6 +78,7 @@ export default function TokenHomePage() {
         if (biz) openClinic(biz); else setError(t('No clinic found with this number.'));
       } catch { setError(t('Something went wrong. Please try again.')); }
     }
+    else if (r.kind === 'token') navigate(tokenPath(r.id));
     else if (r.kind === 'phone') { setNumber(r.value); search(r.value); }
     else { setMatches([]); setError(t('This is not a Naqatar clinic QR code.')); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
