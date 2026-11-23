@@ -14,6 +14,7 @@
  *   businesses   → AdminRegister.jsx + useBusinesses.create
  *   users        → AuthContext.createUserProfile
  *   appointments → useBooking.bookAppointment (+ matching slot docs)
+ *   visitMode    → /admin/profile "Patient options" (CareFirst both, Smile Dental booking, Little Stars token; others unset = both)
  *
  * Safety: refuses to run unless it is talking to the emulator with a
  * `demo-` project id, so it can never write to production.
@@ -80,7 +81,7 @@ async function upsertUser({ email, name, role, phone = '' }) {
 const clinics = [
   // ---- Medical ----
   {
-    name: 'CareFirst Clinic', clinicType: 'medical', slotDuration: 20, slotCapacity: 1,
+    name: 'CareFirst Clinic', clinicType: 'medical', slotDuration: 20, slotCapacity: 1, visitMode: 'both',
     description: 'General medicine, specialist consultation aur basic lab tests — sab ek jagah.',
     address: 'Block G, Johar Town, Lahore', phone: '924235550101',
     workingHours: hours({ open: '09:00', close: '18:00' }, { open: '10:00', close: '14:00' }),
@@ -93,7 +94,7 @@ const clinics = [
     ],
   },
   {
-    name: 'Smile Dental Care', clinicType: 'medical', slotDuration: 30, slotCapacity: 2,
+    name: 'Smile Dental Care', clinicType: 'medical', slotDuration: 30, slotCapacity: 2, visitMode: 'booking',
     description: 'Dant ka checkup, scaling, filling aur root canal. 2 dental chairs.',
     address: 'Main Boulevard, DHA Phase 6, Lahore', phone: '924235550202',
     workingHours: hours({ open: '11:00', close: '20:00' }, { open: '11:00', close: '20:00' }),
@@ -106,7 +107,7 @@ const clinics = [
     ],
   },
   {
-    name: 'Little Stars Child Clinic', clinicType: 'medical', slotDuration: 15, slotCapacity: 1,
+    name: 'Little Stars Child Clinic', clinicType: 'medical', slotDuration: 15, slotCapacity: 1, visitMode: 'token',
     description: 'Bachon ke doctor — vaccination, growth checkup aur bukhar/khansi ka ilaj.',
     address: 'F-8 Markaz, Islamabad', phone: '925155550303',
     workingHours: hours({ open: '17:00', close: '22:00' }, { open: '10:00', close: '14:00' }),

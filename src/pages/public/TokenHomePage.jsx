@@ -1,18 +1,21 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Phone, X, AlertCircle, Building2, ChevronRight, Hash, MapPin, ScanLine, UserRound, Ticket, CalendarCheck } from 'lucide-react';
+import { Phone, X, AlertCircle, Building2, ChevronRight, Hash, MapPin, ScanLine, UserRound, Ticket, CalendarCheck, Search } from 'lucide-react';
 import AdBannerStrip from '../../components/public/AdBannerStrip';
 import { useBusinesses } from '../../hooks/useBusinesses';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { stripCountryCode } from '../../utils/validation';
 import { parseScannedText } from '../../utils/clinicQr';
 import QrScanModal from '../../components/public/QrScanModal';
+import { visitModeOf } from '../../utils/dots';
 import './FindBusinessPage.css';
 import { t } from '../../i18n';
 
-// "/" since 2026-11-23 (DOTS): customer types the clinic's number and lands
-// straight on that clinic's token page (/index/businessDOTS/:id) — never the
-// booking page. FindBusinessPage (number → booking) is temporarily off; see App.jsx.
+// "/" since 2026-11-23 (DOTS): customer types the clinic's number. What
+// happens next follows the clinic's own setting (business.visitMode, set on
+// /admin/profile): token only → its token page, booking only → its booking
+// page, both → a card with two buttons. FindBusinessPage (number → booking)
+// is temporarily off; see App.jsx.
 const STEPS = [
   { icon: Hash,       title: 'Enter the number',     text: "Type the clinic's phone number in any format." },
   { icon: UserRound,  title: 'Name and mobile',      text: 'Enter your full name and mobile number.' },
@@ -21,25 +24,30 @@ const STEPS = [
 
 const tokenPath = id => `/index/businessDOTS/${id}`;
 const bookPath  = id => `/index/business/${id}`;
-// Two buttons on one number box (2026-11-23): walk-in token or appointment booking.
-const pathFor = (intent, id) => (intent === 'book' ? bookPath(id) : tokenPath(id));
 
 export default function TokenHomePage() {
   const navigate = useNavigate();
-  const { fetchByPhone } = useBusinesses();
+  const { fetchByPhone, fetchOne } = useBusinesses();
   const [number, setNumber]   = useState('');
   const [error, setError]     = useState('');
   const [loading, setLoading] = useState(false);
-  const [matches, setMatches] = useState([]); // >1 clinic on the same number
+  const [matches, setMatches] = useState([]);   // >1 clinic on the same number
+  const [chosen, setChosen]   = useState(null); // clinic offering both → patient picks
   const [scanning, setScanning] = useState(false);
-  const [intent, setIntent]     = useState('token'); // 'token' | 'book'
   const inputRef = useRef(null);
   usePageTitle(t('Online Token'));
 
-  const search = async (value, want = intent) => {
-    setIntent(want);
+  const openClinic = (biz) => {
+    const mode = visitModeOf(biz);
+    if (mode === 'token') navigate(tokenPath(biz.id));
+    else if (mode === 'booking') navigate(bookPath(biz.id));
+    else { setMatches([]); setChosen(biz); }
+  };
+
+  const search = async (value) => {
     setError('');
     setMatches([]);
+    setChosen(null);
     if (!stripCountryCode(value)) {
       setError(t('Enter a valid number, e.g. 03001234567'));
       return;
@@ -47,7 +55,7 @@ export default function TokenHomePage() {
     setLoading(true);
     try {
       const found = (await fetchByPhone(value)).filter(b => b.type === 'clinic');
-      if (found.length === 1) navigate(pathFor(want, found[0].id));
+      if (found.length === 1) openClinic(found[0]);
       else if (found.length > 1) setMatches(found);
       else setError(t('No clinic found with this number.'));
     } catch {
@@ -57,20 +65,25 @@ export default function TokenHomePage() {
     }
   };
 
-  // Enter key / Token button = token; the second button books.
-  const handleSubmit = (e) => { e.preventDefault(); search(number, 'token'); };
+  const handleSubmit = (e) => { e.preventDefault(); search(number); };
 
-  const handleScan = useCallback((text) => {
+  // A clinic poster QR carries only the clinic id → load it to know its mode.
+  const handleScan = useCallback(async (text) => {
     setScanning(false);
     const r = parseScannedText(text);
-    if (r.kind === 'clinic') navigate(tokenPath(r.id));
-    else if (r.kind === 'phone') { setNumber(r.value); search(r.value, 'token'); }
+    if (r.kind === 'clinic') {
+      try {
+        const biz = await fetchOne(r.id);
+        if (biz) openClinic(biz); else setError(t('No clinic found with this number.'));
+      } catch { setError(t('Something went wrong. Please try again.')); }
+    }
+    else if (r.kind === 'phone') { setNumber(r.value); search(r.value); }
     else { setMatches([]); setError(t('This is not a Naqatar clinic QR code.')); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
   const closeScanner = useCallback(() => setScanning(false), []);
 
-  const clear = () => { setNumber(''); setError(''); setMatches([]); inputRef.current?.focus(); };
+  const clear = () => { setNumber(''); setError(''); setMatches([]); setChosen(null); inputRef.current?.focus(); };
 
   return (
     <div className="find-biz fb">
@@ -94,7 +107,7 @@ export default function TokenHomePage() {
                 autoComplete="off"
                 placeholder={t('e.g. 0300 1234567')}
                 value={number}
-                onChange={e => { setNumber(e.target.value); setError(''); }}
+                onChange={e => { setNumber(e.target.value); setError(''); setChosen(null); }}
                 aria-invalid={!!error}
                 aria-describedby={error ? 'fb-error' : 'fb-hint'}
                 autoFocus
@@ -114,31 +127,40 @@ export default function TokenHomePage() {
               : <p id="fb-hint" className="fb-hint">{t('Any format works: 0300…, 92300…, +92 300…')}</p>}
 
             <button type="submit" className="fb-submit" disabled={loading || !number.trim()}>
-              {loading && intent === 'token'
+              {loading
                 ? <><span className="fb-spinner" aria-hidden="true" /> {t('Searching…')}</>
-                : <><Ticket size={18} /> {t('Get Token')}</>}
+                : <><Search size={18} /> {t('Find clinic')}</>}
             </button>
-            <button type="button" className="fb-submit fb-submit-alt" disabled={loading || !number.trim()}
-              onClick={() => search(number, 'book')}>
-              {loading && intent === 'book'
-                ? <><span className="fb-spinner" aria-hidden="true" /> {t('Searching…')}</>
-                : <><CalendarCheck size={18} /> {t('Book Appointment')}</>}
-            </button>
-            <p className="fb-hint fb-hint-center">{t('Token = for today, in line. Appointment = from tomorrow, at a fixed time.')}</p>
           </form>
+
+          {/* Clinic offers both → the patient picks */}
+          {chosen && (
+            <div className="fb-card fb-choice" role="region" aria-label={chosen.name}>
+              <div className="fb-choice-head">
+                <span className="fb-match-icon"><Building2 size={18} /></span>
+                <span className="fb-match-text">
+                  <strong>{chosen.name}</strong>
+                  {chosen.address && <small><MapPin size={12} /> {chosen.address}</small>}
+                </span>
+              </div>
+              <Link to={tokenPath(chosen.id)} className="fb-submit"><Ticket size={18} /> {t('Get Token')}</Link>
+              <Link to={bookPath(chosen.id)} className="fb-submit fb-submit-alt"><CalendarCheck size={18} /> {t('Book Appointment')}</Link>
+              <p className="fb-hint fb-hint-center">{t('Token = for today, in line. Appointment = from tomorrow, at a fixed time.')}</p>
+            </div>
+          )}
 
           {matches.length > 1 && (
             <div className="fb-matches">
               <p className="fb-matches-title">{t('{count} clinics use this number. Pick one:', { count: matches.length })}</p>
               {matches.map(b => (
-                <Link key={b.id} to={pathFor(intent, b.id)} className="fb-match">
+                <button type="button" key={b.id} onClick={() => openClinic(b)} className="fb-match">
                   <span className="fb-match-icon"><Building2 size={18} /></span>
                   <span className="fb-match-text">
                     <strong>{b.name}</strong>
                     {b.address && <small><MapPin size={12} /> {b.address}</small>}
                   </span>
                   <ChevronRight size={18} className="fb-match-chevron" />
-                </Link>
+                </button>
               ))}
             </div>
           )}

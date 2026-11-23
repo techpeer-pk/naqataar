@@ -8,7 +8,7 @@ import { db } from '../../firebase';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useBusy } from '../../context/BusyContext';
 import {
-  issueToken, queueRef, tokenRef, todayPKT, shortCode, savedTokenKey, TOKEN_ID_RE,
+  issueToken, queueRef, tokenRef, todayPKT, shortCode, savedTokenKey, TOKEN_ID_RE, allowsToken, allowsBooking,
 } from '../../utils/dots';
 import { t } from '../../i18n';
 import './DotsPage.css';
@@ -201,6 +201,23 @@ export default function DotsPage() {
   }
 
   // ── Take-a-token form ──
+  // Clinic switched tokens off on /admin/profile (visitMode 'booking'). An
+  // already-issued token above still shows; only new tokens stop.
+  if (!allowsToken(biz)) {
+    return (
+      <div className="page dots-page"><div className="container dots-wrap">
+        {header}
+        <div className="card dots-card dots-empty">
+          <AlertCircle size={28} />
+          <p>{t('This clinic does not give online tokens.')}</p>
+          {allowsBooking(biz) && (
+            <button className="btn btn-primary" onClick={() => navigate(`/index/business/${businessId}`)}>{t('Book Appointment')}</button>
+          )}
+        </div>
+      </div></div>
+    );
+  }
+
   const closed = !queue || !queue.isOpen || !biz.isActive;
   const full = queue && queue.lastToken >= queue.maxTokens;
 

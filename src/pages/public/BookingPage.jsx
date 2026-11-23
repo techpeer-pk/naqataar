@@ -20,6 +20,7 @@ import { googleErrorMessage } from '../../utils/authErrors';
 import './BookingPage.css';
 import { t } from '../../i18n';
 import { useBusy } from '../../context/BusyContext';
+import { allowsBooking, allowsToken } from '../../utils/dots';
 
 const STEPS = ['Service', 'Date & Time', 'Confirm'];
 
@@ -268,6 +269,17 @@ export default function BookingPage() {
 
   if (loading) return <div className="loading-screen"><div className="spinner" /></div>;
   if (!business) return <div className="container page"><p>{t('Clinic not found.')}</p></div>;
+  // 2026-11-23: clinic set to token only on /admin/profile (visitMode 'token').
+  if (!allowsBooking(business)) {
+    return (
+      <div className="container page">
+        <p>{t('This clinic does not take online appointments.')}</p>
+        {allowsToken(business) && (
+          <Link to={`/index/businessDOTS/${business.id}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>{t('Get Token')}</Link>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="booking-page page">

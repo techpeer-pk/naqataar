@@ -659,4 +659,16 @@ export default {
   "Clinic token or appointment": "Clinic ka token ya appointment",
   "Enter the clinic's phone number, then get a token for today or book an appointment.": "Clinic ka phone number likhein, phir aaj ka token lein ya appointment book karein.",
   "Token = for today, in line. Appointment = from tomorrow, at a fixed time.": "Token = aaj ke liye, line mein. Appointment = kal se, tay waqt par.",
+  // ── Patient options / visitMode (2026-11-23) ──
+  "Patient options": "Mareez ke options",
+  "What patients see when they search your clinic number.": "Aapka clinic number dhoondne par mareez ko kya milega.",
+  "Token + Booking": "Token + Booking",
+  "Walk-in token for today, and appointments from tomorrow.": "Aaj ke liye walk-in token, aur kal se appointments.",
+  "Token only": "Sirf Token",
+  "Walk-in queue only. Appointment booking is hidden.": "Sirf walk-in line. Appointment booking chhup jayegi.",
+  "Booking only": "Sirf Booking",
+  "Appointments only. The token queue is hidden.": "Sirf appointments. Token queue chhup jayegi.",
+  "Click Save Profile to apply.": "Lagu karne ke liye Save Profile dabayein.",
+  "This clinic does not give online tokens.": "Yeh clinic online token nahi deta.",
+  "This clinic does not take online appointments.": "Yeh clinic online appointment nahi leta.",
 };

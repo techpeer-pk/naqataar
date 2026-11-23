@@ -8,6 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useBusinesses } from '../../hooks/useBusinesses';
 import { accountRef, formatDate } from '../../utils/format';
 import LogoCropModal from '../../components/shared/LogoCropModal';
+import { visitModeOf } from '../../utils/dots';
 // 2026-11-17: Basic Information is editable by the business owner again —
 // same validation as /admin/register (docs/UI-Field-Validation.md).
 import {
@@ -89,6 +90,7 @@ export default function ProfilePage() {
           requiresAdvancePayment: biz.requiresAdvancePayment || false,
           offersBooking: biz.offersBooking === true, offersPickup: biz.offersPickup !== false,
           showWorkingHours: biz.showWorkingHours !== false,
+          visitMode: visitModeOf(biz),
           bankName: biz.bankName || '', accountTitle: biz.accountTitle || '', accountNumber: biz.accountNumber || '',
         });
         setHours(biz.workingHours || {});
@@ -325,6 +327,30 @@ export default function ProfilePage() {
                     </div>
                   </>
                 )}
+              </div>
+            </div>
+
+            {/* 2026-11-23: what patients can do — walk-in token, appointments, or both.
+                Read by the home number search, DotsPage, BusinessPage and BookingPage. */}
+            <div className="card">
+              <div className="card-header"><h3>{t('Patient options')}</h3></div>
+              <div className="card-body">
+                <p className="form-hint" style={{ marginBottom: '1rem' }}>{t('What patients see when they search your clinic number.')}</p>
+                <div className="visit-mode-options" role="radiogroup" aria-label={t('Patient options')}>
+                  {[
+                    { value: 'both',    title: 'Token + Booking', text: 'Walk-in token for today, and appointments from tomorrow.' },
+                    { value: 'token',   title: 'Token only',      text: 'Walk-in queue only. Appointment booking is hidden.' },
+                    { value: 'booking', title: 'Booking only',    text: 'Appointments only. The token queue is hidden.' },
+                  ].map(o => (
+                    <label key={o.value} className={`visit-mode-option ${form.visitMode === o.value ? 'active' : ''}`}>
+                      <input type="radio" name="visitMode" value={o.value}
+                        checked={form.visitMode === o.value}
+                        onChange={() => setForm(f => ({ ...f, visitMode: o.value }))} />
+                      <span><b>{t(o.title)}</b><small>{t(o.text)}</small></span>
+                    </label>
+                  ))}
+                </div>
+                <p className="form-hint" style={{ marginTop: '0.75rem' }}>{t('Click Save Profile to apply.')}</p>
               </div>
             </div>
 

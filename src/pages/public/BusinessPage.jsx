@@ -6,6 +6,7 @@ import { useBusinesses } from '../../hooks/useBusinesses';
 import { useServices } from '../../hooks/useServices';
 import { useCart } from '../../context/CartContext';
 import { formatTime12h } from '../../utils/format';
+import { allowsToken, allowsBooking } from '../../utils/dots';
 import Sk from '../../components/shared/Skeleton';
 import './BusinessPage.css';
 import './eats/EatsBusinessPage.css';
@@ -158,11 +159,19 @@ export default function BusinessPage() {
                 per-item "Book"/"Rent" buttons below already cover booking in
                 that case. Bypassing them here would let a guest land on the
                 booking flow with no room/outfit selected. */}
-            {!(POOL_BOOKING_TYPES.includes(business.type) && services.length > 0) && (
+            {/* 2026-11-23: buttons follow the clinic's visitMode (/admin/profile). */}
+            <div className="biz-cta-group">
+            {allowsBooking(business) && !(POOL_BOOKING_TYPES.includes(business.type) && services.length > 0) && (
               <Link to={POOL_TYPE_META[business.type] ? `${POOL_TYPE_META[business.type].bookingPath}/${id}` : `/index/booking/${id}`} className="btn btn-primary btn-book-now">
                 {t(TYPE_BOOK_CTA[business.type] || 'Book Appointment')}
               </Link>
             )}
+            {allowsToken(business) && (
+              <Link to={`/index/businessDOTS/${id}`} className={`btn ${allowsBooking(business) ? 'btn-secondary' : 'btn-primary'} btn-book-now`}>
+                {t('Get Token')}
+              </Link>
+            )}
+            </div>
           </div>
         </div>
 
@@ -225,12 +234,14 @@ export default function BusinessPage() {
                               }
                               {s.price && <span className="service-price">PKR {s.price.toLocaleString()}{POOL_TYPE_META[business.type]?.priceUnit || ''}</span>}
                             </span>
+                            {allowsBooking(business) && (
                             <Link
                               to={POOL_TYPE_META[business.type] ? `${POOL_TYPE_META[business.type].bookingPath}/${id}?${POOL_TYPE_META[business.type].bookingParam}=${s.id}` : `/index/booking/${id}?service=${s.id}`}
                               className="btn btn-primary btn-sm service-book-btn"
                             >
                               {t(business.type === 'nayasaa' ? 'Rent' : 'Book')}
                             </Link>
+                            )}
                           </div>
                         </div>
                       </div>

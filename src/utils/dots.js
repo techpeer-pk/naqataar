@@ -10,6 +10,14 @@
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 
 export const MAX_TOKEN_OPTIONS = [50, 100, 200];
+
+// What a clinic offers its patients (business.visitMode, set on /admin/profile):
+// 'token' (walk-in queue), 'booking' (appointments) or 'both'. Missing or
+// unknown = 'both', so every clinic made before this setting keeps booking.
+export const VISIT_MODES = ['both', 'token', 'booking'];
+export const visitModeOf = biz => (VISIT_MODES.includes(biz?.visitMode) ? biz.visitMode : 'both');
+export const allowsToken   = biz => visitModeOf(biz) !== 'booking';
+export const allowsBooking = biz => visitModeOf(biz) !== 'token';
 export const MAX_TOKENS_LIMIT = 1000; // mirrors isValidMaxTokens() in rules
 
 // No 0/O/1/I so the short code is easy to read out at the counter.

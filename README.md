@@ -66,7 +66,7 @@ To also get today's token queue with waiting tokens, run `npm run seed:dots` aft
 | `npm run dev` | Vite dev server |
 | `npm run build` | Production build into `dist/` |
 | `npm run emulator` | Firebase emulators (project `demo-naqatar`) |
-| `npm run seed` | Clinic-only demo data; refuses to run on a non-`demo-` project |
+| `npm run seed` | Clinic-only demo data; refuses to run on a non-`demo-` project. Patient options: CareFirst both, Smile Dental booking only, Little Stars token only |
 | `npm run seed:dots` | Today's token queue for CareFirst Clinic with 25 waiting tokens (`npm run seed:dots -- 10` for 10). Run after `npm run seed` |
 | `npm run test:smoke` | Starts the emulator, seeds it, and checks the real rules (public, customer, owner reads, and the token queue), then stops |
 | `npm run test:smoke:live` | Same checks against an emulator that is **already running and seeded** (`test:smoke` can't start while ports 8080/9099 are taken) |
@@ -78,12 +78,18 @@ To also get today's token queue with waiting tokens, run `npm run seed:dots` aft
 DOTS (Digital Online Token System) is a walk-in queue. A customer takes a numbered
 token with just a name and mobile number (no login), and the clinic calls tokens in order.
 
+**Patient options (per clinic).** On `/admin/profile` the owner picks what patients get:
+**Token + Booking** (default; also used when the clinic never set it), **Token only** or
+**Booking only**. It is saved as `visitMode` (`both` / `token` / `booking`) on the
+business doc.
+
 **Home page.** `/` is now the token home ([TokenHomePage.jsx](src/pages/public/TokenHomePage.jsx)).
-The customer types the clinic's number and picks one of two buttons: **Get Token**
-(that clinic's token page) or **Book Appointment** (its booking page). The Enter key and a
-scanned clinic QR go to the token page. The old find-a-clinic-to-book home ([FindBusinessPage.jsx](src/pages/public/FindBusinessPage.jsx))
-is **temporarily switched off**. To bring it back, restore its route in `src/App.jsx`
-(the comment there shows how).
+The patient types the clinic's number (or scans its QR) and presses **Find clinic**. A
+token-only clinic opens its token page, a booking-only clinic its booking page, and a
+clinic with both shows a card with **Get Token** and **Book Appointment**. The clinic page,
+booking page and token page follow the same setting. The old find-a-clinic-to-book home
+([FindBusinessPage.jsx](src/pages/public/FindBusinessPage.jsx)) is **temporarily switched
+off**. To bring it back, restore its route in `src/App.jsx` (the comment there shows how).
 
 **Pages**
 

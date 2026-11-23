@@ -169,3 +169,7 @@
 @media (max-width: 600px) {
   .biz-header-inner.has-logo-bg::after { inset: 0; width: auto; height: auto; }
 }
+
+/* Book / Token buttons side by side (2026-11-23, visitMode) */
+.biz-cta-group { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; }
+.biz-cta-group:empty { display: none; }
