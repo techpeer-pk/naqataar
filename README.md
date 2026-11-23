@@ -79,8 +79,9 @@ DOTS (Digital Online Token System) is a walk-in queue. A customer takes a number
 token with just a name and mobile number (no login), and the clinic calls tokens in order.
 
 **Home page.** `/` is now the token home ([TokenHomePage.jsx](src/pages/public/TokenHomePage.jsx)).
-The customer types the clinic's number (or scans its QR) and goes straight to that
-clinic's token page. The old find-a-clinic-to-book home ([FindBusinessPage.jsx](src/pages/public/FindBusinessPage.jsx))
+The customer types the clinic's number and picks one of two buttons: **Get Token**
+(that clinic's token page) or **Book Appointment** (its booking page). The Enter key and a
+scanned clinic QR go to the token page. The old find-a-clinic-to-book home ([FindBusinessPage.jsx](src/pages/public/FindBusinessPage.jsx))
 is **temporarily switched off**. To bring it back, restore its route in `src/App.jsx`
 (the comment there shows how).
 
@@ -89,7 +90,7 @@ is **temporarily switched off**. To bring it back, restore its route in `src/App
 | Path | Who | What |
 |---|---|---|
 | `/index/businessDOTS/:businessId` | Customer | Name + mobile → **Get Token**. Shows "now serving" and "last token issued" |
-| `/index/businessDOTS/:businessId/:tokenId` | Customer | Their live token: number, 6-char code, people ahead, "your turn" |
+| `/index/businessDOTS/:businessId/:tokenId` | Customer | Their live token: number, 6-char code, people ahead, "your turn". **Send on WhatsApp** shares the live link; **Save to device** downloads the token card as a PNG |
 | `/admin/tokens` | Clinic owner | Start today's queue, call tokens, search, close the queue |
 
 **How it works**
@@ -107,10 +108,9 @@ is **temporarily switched off**. To bring it back, restore its route in `src/App
   the next waiting token is called. Both free the mobile number, so that customer can
   take a new token (it goes to the end of the line).
 - **Skip, explained.** Skip means "this person isn't here right now, call the next one".
-  The customer sees "your number was skipped" and either:
-  - comes to the counter, and the owner presses **Back to queue**. The token returns to
-    its **original position**, so it is usually called next; or
-  - presses **Get a new token** and joins the end of the line.
+  The customer sees "your number was skipped" and can press **Get a new token** to join
+  the end of the line. (The owner's "Back to queue" undo is commented out in
+  `DotsAdminPage.jsx` for now; un-comment it to bring it back.)
 - Skipped tokens still count toward the max, and "people ahead" is the difference in
   token numbers, so it includes skipped ones.
 - **Search.** On `/admin/tokens` the owner can search by token number (`12` or `#12`),

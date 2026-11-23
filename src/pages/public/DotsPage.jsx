@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import toast from 'react-hot-toast';
-import { Ticket, Copy, CheckCircle2, AlertCircle } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import { Ticket, CheckCircle2, AlertCircle, MessageCircle, Download } from 'lucide-react';
 import { db } from '../../firebase';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useBusy } from '../../context/BusyContext';
@@ -41,6 +42,7 @@ export default function DotsPage() {
   const [queue, setQueue] = useState(undefined);
   const [form, setForm]   = useState({ name: '', mobile: '' });
   const [error, setError] = useState('');
+  const captureRef = useRef(null); // header + token card → saved as an image
 
   usePageTitle(t('Online Token'));
 
@@ -91,12 +93,25 @@ export default function DotsPage() {
     navigate(`/index/businessDOTS/${businessId}`, { replace: true });
   };
 
-  const copyLink = async () => {
+  // Send the live token link on WhatsApp (to yourself or family).
+  const shareWhatsApp = () => {
+    const msg = t('My token at {clinic}: #{n} (code {code}). Live status: {link}', {
+      clinic: biz.name, n: token.seq, code: shortCode(token.id), link: window.location.href,
+    });
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+  };
+
+  // Save the token card as a PNG on the device (same approach as ConfirmationPage).
+  const saveImage = async () => {
+    if (!captureRef.current) return;
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success(t('Link copied'));
+      const dataUrl = await withBusy(() => toPng(captureRef.current, { backgroundColor: '#ffffff', pixelRatio: 2 }));
+      const a = document.createElement('a');
+      a.download = `token-${token.seq}-${shortCode(token.id)}.png`;
+      a.href = dataUrl;
+      a.click();
     } catch {
-      toast.error(t('Could not copy the link'));
+      toast.error(t('Could not save image. Try again.'));
     }
   };
 
@@ -150,12 +165,14 @@ export default function DotsPage() {
 
     return (
       <div className="page dots-page"><div className="container dots-wrap">
+        <div ref={captureRef} className="dots-capture">
         {header}
         <div className={`card dots-card dots-token ${myTurn ? 'is-turn' : ''}`}>
           <span className="dots-label">{t('Your token')}</span>
           <div className="dots-number">#{token.seq}</div>
           <div className="dots-code">{t('Code')}: <b>…{shortCode(token.id)}</b></div>
           <div className="dots-name">{token.name}</div>
+          <div className="dots-date">{token.date}</div>
 
           {isOld && <p className="dots-note">{t('This token was for {date}.', { date: token.date })}</p>}
           {!isOld && token.status === 'waiting' && (
@@ -168,11 +185,17 @@ export default function DotsPage() {
           {token.status === 'served' && <p className="dots-status done"><CheckCircle2 size={18} /> {t('Done. Thank you!')}</p>}
           {token.status === 'skipped' && <p className="dots-status skipped">{t('Your number was skipped. Please contact the counter.')}</p>}
         </div>
+        </div>
         {!isOld && stats}
         {(isOld || token.status !== 'waiting')
           ? <button className="btn btn-primary btn-full" onClick={takeNew}><Ticket size={16} /> {t('Get a new token')}</button>
-          : <button className="btn btn-secondary btn-full" onClick={copyLink}><Copy size={16} /> {t('Copy token link')}</button>}
-        <p className="dots-hint">{t('Save this page or take a screenshot. It updates by itself.')}</p>
+          : (
+            <div className="dots-save">
+              <button className="btn dots-wa" onClick={shareWhatsApp}><MessageCircle size={16} /> {t('Send on WhatsApp')}</button>
+              <button className="btn btn-secondary" onClick={saveImage}><Download size={16} /> {t('Save to device')}</button>
+            </div>
+          )}
+        <p className="dots-hint">{t('Keep this page open. It updates by itself.')}</p>
       </div></div>
     );
   }

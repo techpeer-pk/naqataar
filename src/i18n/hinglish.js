@@ -652,4 +652,11 @@ export default {
   "Search by token # or name": "Token # ya naam se dhoondein",
   "Search results": "Search results",
   "No token found.": "Koi token nahi mila.",
+  "My token at {clinic}: #{n} (code {code}). Live status: {link}": "{clinic} mein mera token: #{n} (code {code}). Live status: {link}",
+  "Send on WhatsApp": "WhatsApp par bhejein",
+  "Save to device": "Phone mein save karein",
+  "Keep this page open. It updates by itself.": "Yeh page khula rakhein. Yeh khud update hota hai.",
+  "Clinic token or appointment": "Clinic ka token ya appointment",
+  "Enter the clinic's phone number, then get a token for today or book an appointment.": "Clinic ka phone number likhein, phir aaj ka token lein ya appointment book karein.",
+  "Token = for today, in line. Appointment = from tomorrow, at a fixed time.": "Token = aaj ke liye, line mein. Appointment = kal se, tay waqt par.",
 };

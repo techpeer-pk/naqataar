@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { collection, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where, writeBatch } from 'firebase/firestore';
 import toast from 'react-hot-toast';
-import { Ticket, Check, SkipForward, Copy, Phone, Undo2, Lock, Unlock, Search, X } from 'lucide-react';
+import { Ticket, Check, SkipForward, Copy, Phone, /* Undo2, */ Lock, Unlock, Search, X } from 'lucide-react';
 import { db } from '../../firebase';
 import { useOwnBusiness } from '../../hooks/useOwnBusiness';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -89,7 +89,7 @@ export default function DotsAdminPage() {
   };
 
   // Served / Skip frees the mobile lock so that customer can take a new
-  // token; "Back to queue" puts it back.
+  // token; 'waiting' (the "Back to queue" undo, now commented out) puts it back.
   const setStatus = (tok, status) => run(() => {
     const b = writeBatch(db);
     b.update(tokenRef(db, bizId, tok.id), { status, updatedAt: serverTimestamp() });
@@ -128,14 +128,19 @@ export default function DotsAdminPage() {
       <span className="dotsa-seq">#{x.seq}</span>
       <span className="dotsa-li-name">{x.name}<small>{x.mobile} · …{shortCode(x.id)}</small></span>
       {(badge || x.status !== 'waiting') && statusBadge(x)}
-      {x.status === 'waiting' ? (
+      {x.status === 'waiting' && (
         <>
           <button className="btn btn-ghost btn-sm" onClick={() => setStatus(x, 'served')} title={t('Served')} aria-label={t('Served')}><Check size={15} /></button>
           <button className="btn btn-ghost btn-sm" onClick={() => setStatus(x, 'skipped')} title={t('Skip token')} aria-label={t('Skip token')}><SkipForward size={15} /></button>
         </>
-      ) : x.status === 'skipped' && (
-        <button className="btn btn-ghost btn-sm" onClick={() => setStatus(x, 'waiting')} title={t('Back to queue')} aria-label={t('Back to queue')}><Undo2 size={15} /></button>
       )}
+      {/* Skip undo ("Back to queue") — switched off 2026-11-23. A skipped
+          customer takes a new token instead. To bring it back, un-comment
+          this and Undo2 in the lucide import; setStatus(x, 'waiting')
+          already puts the mobile lock back.
+      {x.status === 'skipped' && (
+        <button className="btn btn-ghost btn-sm" onClick={() => setStatus(x, 'waiting')} title={t('Back to queue')} aria-label={t('Back to queue')}><Undo2 size={15} /></button>
+      )} */}
     </li>
   );
 
