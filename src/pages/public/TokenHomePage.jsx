@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Phone, X, AlertCircle, Building2, ChevronRight, Hash, MapPin, ScanLine, UserRound, Ticket, CalendarCheck, Search } from 'lucide-react';
 import AdBannerStrip from '../../components/public/AdBannerStrip';
+import AdCarousel from '../../components/public/AdCarousel';
 import { useBusinesses } from '../../hooks/useBusinesses';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { stripCountryCode } from '../../utils/validation';
@@ -176,6 +177,11 @@ export default function TokenHomePage() {
             </div>
           ))}
         </section>
+
+        {/* Rotating ads — SuperAdmin → Ad Management → Ad Carousel (same slot as FindBusinessPage) */}
+        <div className="find-biz-carousel">
+          <AdCarousel placement="findbusinessCarousel" />
+        </div>
       </div>
       {scanning && <QrScanModal onResult={handleScan} onClose={closeScanner} />}
     </div>
