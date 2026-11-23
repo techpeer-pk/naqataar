@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useUnreadNotificationCount } from '../../hooks/useNotifications';
 import {
   CalendarCheck, Menu, X, User, LogOut,
-  LayoutDashboard, BookOpen, Settings, ChevronDown, UserCircle,
+  LayoutDashboard, BookOpen, Ticket, Settings, ChevronDown, UserCircle,
   Receipt, Home, Bell, HelpCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -95,6 +95,9 @@ export default function Navbar() {
               </Link>
               <Link to="/admin/appointments" className={`nav-link ${pathname === '/admin/appointments' ? 'active' : ''}`}>
                 <BookOpen size={15} /> {t('Appointments')}
+              </Link>
+              <Link to="/admin/tokens"       className={`nav-link ${pathname === '/admin/tokens' ? 'active' : ''}`}>
+                <Ticket size={15} /> {t('Tokens')}
               </Link>
               <Link to="/admin/services"     className={`nav-link ${pathname === '/admin/services' ? 'active' : ''}`}>
                 {t('Services')}
@@ -240,6 +243,7 @@ export default function Navbar() {
             <>
               <Link to="/admin/dashboard"    className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Dashboard')}</Link>
               <Link to="/admin/appointments" className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Appointments')}</Link>
+              <Link to="/admin/tokens"       className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Tokens')}</Link>
               <Link to="/admin/services"     className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Services')}</Link>
               <Link to="/admin/invoices"     className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Invoices')}</Link>
               <Link to="/admin/profile"      className="mobile-link" onClick={() => setMenuOpen(false)}>{t('Clinic Profile')}</Link>

@@ -4,8 +4,6 @@ Clinic appointment web app (PWA) for **Medical** and **Aesthetic** clinics, in H
 Naqatar is a clinic-only frontend built from the QuFree codebase (`K:\QuFree\app_OLD`).
 It uses the **same Firebase backend** (project `qunjee-com`).
 
-> **Status:** setup stage. The code is still a copy of QuFree. Clinic-only trimming,
-> Naqatar branding and the Hinglish UI come next.
 > All development happens against the **local emulator**, never production.
 
 ## Backend rules (important)
@@ -45,6 +43,8 @@ npm run dev
 ```
 
 The emulator starts empty each time it starts. Run `npm run seed` again after every restart.
+To also get today's token queue with waiting tokens, run `npm run seed:dots` after `npm run seed`
+(see [Online token queue](#online-token-queue-dots)).
 
 ### Demo accounts (password for all: `demo1234`)
 
@@ -67,10 +67,73 @@ The emulator starts empty each time it starts. Run `npm run seed` again after ev
 | `npm run build` | Production build into `dist/` |
 | `npm run emulator` | Firebase emulators (project `demo-naqatar`) |
 | `npm run seed` | Clinic-only demo data; refuses to run on a non-`demo-` project |
-| `npm run test:smoke` | Starts the emulator, seeds it, and checks reads under the real rules (public, customer, owner), then stops |
+| `npm run seed:dots` | Today's token queue for CareFirst Clinic with 25 waiting tokens (`npm run seed:dots -- 10` for 10). Run after `npm run seed` |
+| `npm run test:smoke` | Starts the emulator, seeds it, and checks the real rules (public, customer, owner reads, and the token queue), then stops |
 | `npm run test:smoke:live` | Same checks against an emulator that is **already running and seeded** (`test:smoke` can't start while ports 8080/9099 are taken) |
 | `npm run brand:assets` | Regenerates logos and icons from `brand/source/` |
 | `npm run sync:rules` | Refreshes `emulator/` from `K:\QuFree\app_OLD` after its rules change |
+
+## Online token queue (DOTS)
+
+DOTS (Digital Online Token System) is a walk-in queue. A customer takes a numbered
+token with just a name and mobile number (no login), and the clinic calls tokens in order.
+
+**Home page.** `/` is now the token home ([TokenHomePage.jsx](src/pages/public/TokenHomePage.jsx)).
+The customer types the clinic's number (or scans its QR) and goes straight to that
+clinic's token page. The old find-a-clinic-to-book home ([FindBusinessPage.jsx](src/pages/public/FindBusinessPage.jsx))
+is **temporarily switched off**. To bring it back, restore its route in `src/App.jsx`
+(the comment there shows how).
+
+**Pages**
+
+| Path | Who | What |
+|---|---|---|
+| `/index/businessDOTS/:businessId` | Customer | Name + mobile → **Get Token**. Shows "now serving" and "last token issued" |
+| `/index/businessDOTS/:businessId/:tokenId` | Customer | Their live token: number, 6-char code, people ahead, "your turn" |
+| `/admin/tokens` | Clinic owner | Start today's queue, call tokens, search, close the queue |
+
+**How it works**
+
+- **Daily reset.** Each day has its own queue (date in Pakistan time). Nothing carries
+  over, and the owner starts a new queue each day.
+- **Max tokens.** The owner picks 50, 100, 200 or any number up to 1000, and can raise
+  it later. When it's reached, customers see "all tokens for today are taken".
+- **Token number and ID.** The number is sequential (#1, #2, …). Each token also gets a
+  random 16-character ID that nobody can guess. It is the customer's link to their token,
+  and its last 6 characters are shown as a **code** the counter can check.
+- **One mobile, one waiting token.** A mobile number can't take a second token while its
+  first one is still waiting.
+- **Served / Skip.** The owner marks the token at the counter **Served** or **Skip**, and
+  the next waiting token is called. Both free the mobile number, so that customer can
+  take a new token (it goes to the end of the line).
+- **Skip, explained.** Skip means "this person isn't here right now, call the next one".
+  The customer sees "your number was skipped" and either:
+  - comes to the counter, and the owner presses **Back to queue**. The token returns to
+    its **original position**, so it is usually called next; or
+  - presses **Get a new token** and joins the end of the line.
+- Skipped tokens still count toward the max, and "people ahead" is the difference in
+  token numbers, so it includes skipped ones.
+- **Search.** On `/admin/tokens` the owner can search by token number (`12` or `#12`),
+  name, or code.
+
+**Data (Firestore)**, all under `businesses/{businessId}`:
+
+| Path | Holds | Who can read |
+|---|---|---|
+| `dotsQueues/{yyyy-MM-dd}` | `maxTokens`, `lastToken`, `nowServing`, `isOpen` | Anyone (counters only, no names) |
+| `dotsQueues/{date}/mobiles/{mobile}` | Empty lock doc, exists while that mobile has a waiting token | Anyone can check one number; only the owner can list |
+| `dotsTokens/{16-char id}` | `date`, `seq`, `name`, `mobile`, `status` (`waiting` / `served` / `skipped`) | Anyone with the link; only the owner can list |
+
+A customer takes a token in one transaction (`issueToken()` in [src/utils/dots.js](src/utils/dots.js)):
+it adds 1 to `lastToken`, creates the token, and creates the mobile lock. The rules check
+these three writes against each other, so none of them works on its own.
+
+**Backend rules.** The DOTS rules are in `K:\QuFreepp_OLDirestore.rules` (the
+"DOTS" block) and are synced into `emulator/`. They are **not deployed yet**. Until they
+are deployed from app_OLD, the token pages won't work on the live site.
+
+**Known limit.** Customers don't log in, so a script could fill a queue with made-up
+numbers. The max-tokens limit caps the damage, and the owner can skip fake tokens.
 
 ## Known limits
 

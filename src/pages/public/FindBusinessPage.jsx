@@ -8,6 +8,9 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { stripCountryCode } from '../../utils/validation';
 import { parseScannedText } from '../../utils/clinicQr';
 import QrScanModal from '../../components/public/QrScanModal';
+import { getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { queueRef, todayPKT } from '../../utils/dots';
 import './FindBusinessPage.css';
 import { t } from '../../i18n';
 
@@ -33,6 +36,17 @@ export default function FindBusinessPage() {
 
   const [scanning, setScanning] = useState(false);
 
+  // DOTS (2026-11-23): a clinic running today's token queue opens straight on
+  // its token page; every other clinic keeps opening its booking page.
+  const openClinic = async (id) => {
+    let dots = false;
+    try {
+      const q = await getDoc(queueRef(db, id, todayPKT()));
+      dots = q.exists() && q.data().isOpen === true;
+    } catch { /* no queue info → normal clinic page */ }
+    navigate(dots ? `/index/businessDOTS/${id}` : `/index/business/${id}`);
+  };
+
   const search = async (value) => {
     setError('');
     setMatches([]);
@@ -46,7 +60,7 @@ export default function FindBusinessPage() {
       // on the shared QuFree backend (salons, restaurants, hotels…), whose
       // booking pages don't exist in this app.
       const found = (await fetchByPhone(value)).filter(b => b.type === 'clinic');
-      if (found.length === 1) navigate(`/index/business/${found[0].id}`);
+      if (found.length === 1) await openClinic(found[0].id);
       else if (found.length > 1) setMatches(found);
       else setError(t('No clinic found with this number.'));
     } catch {

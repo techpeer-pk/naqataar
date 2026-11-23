@@ -400,6 +400,107 @@ service cloud.firestore {
           && request.resource.data.booked <= request.resource.data.capacity);
         allow delete: if isSuperAdmin();
       }
+
+      // ── DOTS: Digital Online Token System (2026-11-23, Naqatar) ──
+      // One queue doc per business per day (id = 'yyyy-MM-dd', Pakistan
+      // time), so the count resets every day without any cron. A guest (no
+      // login, just name + mobile) takes a token in ONE transaction:
+      //   queue.lastToken +1  +  dotsTokens/{16-char id}  +  mobiles/{mobile} lock
+      // The rules below check each other with get()/getAfter(), so a token
+      // can't be written without the +1 and the mobile lock. Known gap (same
+      // as guest booking): a script can still fill the queue with made-up
+      // numbers. The owner's maxTokens caps it and the owner can Skip them.
+      function isBizOwner() {
+        return request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/businesses/$(businessId)).data.adminUid;
+      }
+      function dotsQueuePath(date) {
+        return /databases/$(database)/documents/businesses/$(businessId)/dotsQueues/$(date);
+      }
+      function isValidMaxTokens(n) {
+        return n is int && n >= 1 && n <= 1000;
+      }
+      // dateStr is today in PKT (UTC+5, no DST). Mirrors todayPKT() in
+      // Naqatar src/utils/dots.js. A malformed string errors in int() = deny.
+      function isTodayPKT(dateStr) {
+        let start = timestamp.date(int(dateStr[0:4]), int(dateStr[5:7]), int(dateStr[8:10])) - duration.value(5, 'h');
+        return dateStr.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && start <= request.time
+          && request.time < start + duration.value(24, 'h');
+      }
+
+      match /dotsQueues/{date} {
+        // Public: holds only counters (no names / numbers).
+        allow read: if true;
+        allow create: if (isBizOwner() || isSuperAdmin())
+          && request.resource.data.keys().hasOnly(['date', 'maxTokens', 'lastToken', 'nowServing', 'isOpen', 'createdAt', 'updatedAt'])
+          && request.resource.data.date == date
+          && isTodayPKT(date)
+          && isValidMaxTokens(request.resource.data.maxTokens)
+          && request.resource.data.lastToken == 0
+          && request.resource.data.nowServing == 0
+          && request.resource.data.isOpen is bool;
+        allow update: if (
+            (isBizOwner() || isSuperAdmin())
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['maxTokens', 'nowServing', 'isOpen', 'updatedAt'])
+            && isValidMaxTokens(request.resource.data.maxTokens)
+            && request.resource.data.maxTokens >= resource.data.lastToken
+            && request.resource.data.nowServing is int
+            && request.resource.data.nowServing >= 0
+            && request.resource.data.nowServing <= resource.data.lastToken
+            && request.resource.data.isOpen is bool
+          ) || (
+            // Guest taking a token: exactly +1, within the limit, today, while open.
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastToken', 'updatedAt'])
+            && resource.data.isOpen == true
+            && isTodayPKT(date)
+            && request.resource.data.lastToken == resource.data.lastToken + 1
+            && request.resource.data.lastToken <= resource.data.maxTokens
+          );
+        allow delete: if isSuperAdmin();
+
+        // One mobile = one WAITING token at a time. Holds no data, so a public
+        // get() only says "this number has a token in the queue right now".
+        // The lock lives only while that mobile's token is waiting: the owner
+        // deletes it on Served / Skip (so the customer can take a new token)
+        // and writes it back on "Back to queue".
+        match /mobiles/{mobile} {
+          allow get: if true;
+          allow list: if isBizOwner() || isSuperAdmin();
+          allow create: if mobile.matches('^03[0-9]{9}$')
+            && request.resource.data.keys().hasOnly(['createdAt'])
+            && (isBizOwner() || isSuperAdmin()
+              || getAfter(dotsQueuePath(date)).data.lastToken == get(dotsQueuePath(date)).data.lastToken + 1);
+          allow update: if (isBizOwner() || isSuperAdmin())
+            && request.resource.data.keys().hasOnly(['createdAt']);
+          allow delete: if isBizOwner() || isSuperAdmin();
+        }
+      }
+
+      // Token id = 16 random chars (unguessable) — the customer's link to
+      // their own token, so a single get() is public; listing is owner-only.
+      match /dotsTokens/{tokenId} {
+        allow get: if true;
+        allow list: if isBizOwner() || isSuperAdmin();
+        allow create: if tokenId.matches('^[A-HJ-NP-Z2-9]{16}$')
+          && request.resource.data.keys().hasOnly(['date', 'seq', 'name', 'mobile', 'status', 'createdAt'])
+          && request.resource.data.status == 'waiting'
+          && request.resource.data.name is string
+          && request.resource.data.name.size() >= 2
+          && request.resource.data.name.size() <= 60
+          && request.resource.data.mobile is string
+          && request.resource.data.mobile.matches('^03[0-9]{9}$')
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.seq == getAfter(dotsQueuePath(request.resource.data.date)).data.lastToken
+          && request.resource.data.seq == get(dotsQueuePath(request.resource.data.date)).data.lastToken + 1
+          && existsAfter(/databases/$(database)/documents/businesses/$(businessId)/dotsQueues/$(request.resource.data.date)/mobiles/$(request.resource.data.mobile))
+          && get(/databases/$(database)/documents/businesses/$(businessId)).data.isActive == true
+          && isSubscriptionActive(businessId);
+        allow update: if (isBizOwner() || isSuperAdmin())
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+          && request.resource.data.status in ['waiting', 'served', 'skipped'];
+        allow delete: if isSuperAdmin();
+      }
     }
 
     // ── Appointments ──

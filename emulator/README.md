@@ -9,7 +9,7 @@ Firebase Emulator (`npm run emulator`).
 | `storage.rules` | `K:\QuFree\app_OLD\storage.rules` |
 | `database.rules.json` | `K:\QuFree\app_OLD\database.rules.json` |
 
-- Snapshot taken: 2026-11-18 (app_OLD commit `4e1dbf2`).
+- Snapshot taken: 2026-11-23 (app_OLD commit `4e1dbf2` + uncommitted DOTS token-queue rules, not deployed yet).
 - **Do not edit here** to change real security. Edit in app_OLD and deploy from there.
 - Refresh the snapshot with `npm run sync:rules` after app_OLD's rules change.
 - Every deploy from this repo is blocked by `scripts/block-deploy.mjs`.

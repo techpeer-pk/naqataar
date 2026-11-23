@@ -34,7 +34,9 @@ import { useAppShutdown } from './hooks/useAppShutdown';
 const SupportChatWidget = lazy(() => import('./components/shared/SupportChatWidget'));
 
 // Customer pages
-import FindBusinessPage    from './pages/public/FindBusinessPage';
+// FindBusinessPage (number → booking page) temporarily off since 2026-11-23 — "/" is TokenHomePage.
+// import FindBusinessPage    from './pages/public/FindBusinessPage';
+import TokenHomePage       from './pages/public/TokenHomePage';
 import ClinicHomePage      from './pages/public/ClinicHomePage';
 import BusinessPage        from './pages/public/BusinessPage';
 import BookingPage         from './pages/public/BookingPage';
@@ -44,6 +46,7 @@ import LoginPage           from './pages/public/LoginPage';
 import CustomerRegister    from './pages/public/CustomerRegister';
 import CustomerProfilePage from './pages/public/CustomerProfilePage';
 import NotificationsPage   from './pages/public/NotificationsPage';
+import DotsPage            from './pages/public/DotsPage';
 
 // Legal pages — rarely visited, lazy so they stay out of the booking bundle
 const TermsPage   = lazy(() => import('./pages/public/TermsPage'));
@@ -56,6 +59,7 @@ import AppointmentsPage  from './pages/admin/AppointmentsPage';
 import ServicesPage      from './pages/admin/ServicesPage';
 import ProfilePage       from './pages/admin/ProfilePage';
 import AdminInvoicesPage from './pages/admin/InvoicesPage';
+import DotsAdminPage     from './pages/admin/DotsAdminPage';
 
 import './styles/global.css';
 
@@ -111,8 +115,11 @@ function AppLayout() {
       <main className={showBottomNav ? 'has-bottom-nav' : ''}>
       <Routes>
         {/* Customer */}
-        {/* "/" = QuFree's find-a-business-by-number page (as-is). */}
-        <Route path="/"                             element={<FindBusinessPage />} />
+        {/* "/" = clinic number → that clinic's token page (DOTS), 2026-11-23.
+            TEMP DISABLED: find-a-clinic-to-book page. To restore, put
+            <FindBusinessPage /> back here and un-comment its import. */}
+        <Route path="/"                             element={<TokenHomePage />} />
+        {/* <Route path="/"                             element={<FindBusinessPage />} /> */}
         {/* Clinic list with Medical/Aesthetic tabs (was "/" in P2). */}
         <Route path="/clinics"                      element={<ClinicHomePage />} />
         <Route path="/index/business/:id"           element={<BusinessPage />} />
@@ -123,6 +130,9 @@ function AppLayout() {
         <Route path="/index/my-appointments"        element={<MyAppointmentsPage />} />
         <Route path="/index/profile"                element={<CustomerProfilePage />} />
         <Route path="/index/notifications"          element={<NotificationsPage />} />
+        {/* DOTS — Digital Online Token System (name + mobile, no login) */}
+        <Route path="/index/businessDOTS/:businessId"          element={<DotsPage />} />
+        <Route path="/index/businessDOTS/:businessId/:tokenId" element={<DotsPage />} />
         <Route path="/terms"   element={<Suspense fallback={<Loading />}><TermsPage /></Suspense>} />
         <Route path="/privacy" element={<Suspense fallback={<Loading />}><PrivacyPage /></Suspense>} />
 
@@ -141,6 +151,7 @@ function AppLayout() {
         <Route path="/admin/services"     element={<ProtectedRoute><ServicesPage /></ProtectedRoute>} />
         <Route path="/admin/profile"      element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/admin/invoices"     element={<ProtectedRoute><AdminInvoicesPage /></ProtectedRoute>} />
+        <Route path="/admin/tokens"       element={<ProtectedRoute><DotsAdminPage /></ProtectedRoute>} />
 
         {/* Anything else (incl. QuFree-only URLs) → clinic home */}
         <Route path="*" element={<Navigate to="/" replace />} />

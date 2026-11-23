@@ -1,0 +1,50 @@
+.dotsa { max-width: 720px; display: flex; flex-direction: column; gap: 16px; }
+.dotsa-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.dotsa-header h1 { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.dotsa-date { color: var(--text-muted); font-size: 0.9rem; }
+.dotsa-warn { background: var(--gold-pale); color: var(--gold-dark); border-radius: 10px; padding: 10px 14px; margin: 0; font-size: 0.9rem; }
+.dotsa-h3 { margin: 0 0 12px; }
+
+.dotsa-link-row { display: flex; gap: 8px; align-items: center; }
+.dotsa-link-row code {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  background: var(--bg-alt); border-radius: 8px; padding: 8px 10px; font-size: 0.82rem;
+}
+
+.dotsa-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.dotsa-chip {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 999px; padding: 8px 18px; font-weight: 600; cursor: pointer;
+}
+.dotsa-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.dotsa-num { width: 100px; }
+
+.dotsa-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.dotsa-stats > div { background: var(--primary-pale); border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.dotsa-stats span { font-size: 0.78rem; color: var(--text-mid); }
+.dotsa-stats strong { font-size: 1.2rem; color: var(--primary); font-variant-numeric: tabular-nums; }
+.dotsa-stats strong.ok { color: #065F46; }
+.dotsa-stats strong.off { color: #B91C1C; }
+
+.dotsa-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.dotsa-maxedit { display: inline-flex; gap: 6px; align-items: center; }
+
+.dotsa-current { border-top: 4px solid var(--gold); text-align: center; }
+.dotsa-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.dotsa-number { font-size: 4rem; font-weight: 800; line-height: 1.1; color: var(--primary); font-variant-numeric: tabular-nums; }
+.dotsa-who { display: flex; flex-direction: column; gap: 4px; align-items: center; margin: 6px 0 16px; }
+.dotsa-who a { display: inline-flex; align-items: center; gap: 4px; color: var(--accent-dark); }
+.dotsa-code { font-size: 0.85rem; color: var(--text-mid); font-family: ui-monospace, Menlo, Consolas, monospace; }
+.dotsa-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dotsa-empty { color: var(--text-muted); }
+
+.dotsa-list { list-style: none; margin: 0; padding: 0; }
+.dotsa-list li { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--border); }
+.dotsa-list li.is-done { opacity: 0.8; }
+.dotsa-seq { font-weight: 700; color: var(--primary); min-width: 44px; font-variant-numeric: tabular-nums; }
+.dotsa-li-name { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dotsa-li-name small { color: var(--text-muted); }
+
+.dotsa-search { position: relative; display: flex; align-items: center; gap: 6px; }
+.dotsa-search > svg { position: absolute; left: 12px; color: var(--text-muted); pointer-events: none; }
+.dotsa-search .form-control { padding-left: 36px; }
